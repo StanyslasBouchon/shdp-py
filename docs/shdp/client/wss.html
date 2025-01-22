@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.client.ws API documentation</title>
+<title>shdp.client.wss API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
@@ -33,7 +33,7 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.client.ws</code></h1>
+<h1 class="title">Module <code>shdp.client.wss</code></h1>
 </header>
 <section id="section-intro">
 </section>
@@ -46,7 +46,7 @@ el.replaceWith(d);
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="shdp.client.ws.ShdpWsClient"><code class="flex name class">
+<dt id="shdp.client.wss.ShdpWsClient"><code class="flex name class">
 <span>class <span class="ident">ShdpWsClient</span></span>
 </code></dt>
 <dd>
@@ -57,7 +57,7 @@ el.replaceWith(d);
 <pre><code class="python">class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
     &#34;&#34;&#34;WebSocket implementation of the SHDP client protocol.
 
-    This class implements a WebSocket client that handles SHDP protocol connections.
+    This class implements a secure WebSocket client that handles SHDP protocol connections.
     It manages the connection to a server and provides methods for client operations.
 
     Attributes:
@@ -107,11 +107,17 @@ el.replaceWith(d);
                                        Err with error details if failed
         &#34;&#34;&#34;
         try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+            ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
+
             client = ShdpWsClient()
-            uri = f&#34;ws://{to[0]}:{to[1]}&#34;
+            uri = f&#34;wss://{to[0]}:{to[1]}&#34;
 
             client._websocket = await websockets.connect(
-                uri, ping_interval=20, ping_timeout=20
+                uri, ssl=ssl_context, ping_interval=20, ping_timeout=20
             )
             client._address = to
 
@@ -220,7 +226,7 @@ el.replaceWith(d);
             return Result.Err(Error.new(ErrorKind.USER_DEFINED, str(e)))</code></pre>
 </details>
 <div class="desc"><p>WebSocket implementation of the SHDP client protocol.</p>
-<p>This class implements a WebSocket client that handles SHDP protocol connections.
+<p>This class implements a secure WebSocket client that handles SHDP protocol connections.
 It manages the connection to a server and provides methods for client operations.</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
@@ -238,7 +244,7 @@ It manages the connection to a server and provides methods for client operations
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="shdp.client.ws.ShdpWsClient.connect"><code class="name flex">
+<dt id="shdp.client.wss.ShdpWsClient.connect"><code class="name flex">
 <span>async def <span class="ident">connect</span></span>(<span>to: Tuple[str, int]) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.lib.IShdpClient" href="../lib.html#shdp.lib.IShdpClient">IShdpClient</a>[websockets.legacy.client.WebSocketClientProtocol], <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
@@ -260,11 +266,17 @@ async def connect(
                                    Err with error details if failed
     &#34;&#34;&#34;
     try:
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+        ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
+
         client = ShdpWsClient()
-        uri = f&#34;ws://{to[0]}:{to[1]}&#34;
+        uri = f&#34;wss://{to[0]}:{to[1]}&#34;
 
         client._websocket = await websockets.connect(
-            uri, ping_interval=20, ping_timeout=20
+            uri, ssl=ssl_context, ping_interval=20, ping_timeout=20
         )
         client._address = to
 
@@ -290,7 +302,7 @@ async def connect(
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>Result[<a title="shdp.client.ws.ShdpWsClient" href="#shdp.client.ws.ShdpWsClient">ShdpWsClient</a>, Error]</code></dt>
+<dt><code>Result[<a title="shdp.client.wss.ShdpWsClient" href="#shdp.client.wss.ShdpWsClient">ShdpWsClient</a>, Error]</code></dt>
 <dd>Ok with client instance if successful,
 Err with error details if failed</dd>
 </dl></div>
@@ -298,7 +310,7 @@ Err with error details if failed</dd>
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="shdp.client.ws.ShdpWsClient.disconnect"><code class="name flex">
+<dt id="shdp.client.wss.ShdpWsClient.disconnect"><code class="name flex">
 <span>async def <span class="ident">disconnect</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[None, <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
@@ -335,7 +347,7 @@ Err with error details if failed</dd>
 <dd>Ok(None) if disconnected successfully, Err if failed</dd>
 </dl></div>
 </dd>
-<dt id="shdp.client.ws.ShdpWsClient.get_address"><code class="name flex">
+<dt id="shdp.client.wss.ShdpWsClient.get_address"><code class="name flex">
 <span>def <span class="ident">get_address</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[typing.Tuple[str, int], <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
@@ -364,7 +376,7 @@ Err with error details if failed</dd>
 Err if not connected</dd>
 </dl></div>
 </dd>
-<dt id="shdp.client.ws.ShdpWsClient.send"><code class="name flex">
+<dt id="shdp.client.wss.ShdpWsClient.send"><code class="name flex">
 <span>async def <span class="ident">send</span></span>(<span>self,<br>event: <a title="shdp.protocol.managers.event.EventEncoder" href="../protocol/managers/event.html#shdp.protocol.managers.event.EventEncoder">EventEncoder</a>) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[None, <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
@@ -425,12 +437,12 @@ Err if not connected</dd>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="shdp.client.ws.ShdpWsClient" href="#shdp.client.ws.ShdpWsClient">ShdpWsClient</a></code></h4>
+<h4><code><a title="shdp.client.wss.ShdpWsClient" href="#shdp.client.wss.ShdpWsClient">ShdpWsClient</a></code></h4>
 <ul class="">
-<li><code><a title="shdp.client.ws.ShdpWsClient.connect" href="#shdp.client.ws.ShdpWsClient.connect">connect</a></code></li>
-<li><code><a title="shdp.client.ws.ShdpWsClient.disconnect" href="#shdp.client.ws.ShdpWsClient.disconnect">disconnect</a></code></li>
-<li><code><a title="shdp.client.ws.ShdpWsClient.get_address" href="#shdp.client.ws.ShdpWsClient.get_address">get_address</a></code></li>
-<li><code><a title="shdp.client.ws.ShdpWsClient.send" href="#shdp.client.ws.ShdpWsClient.send">send</a></code></li>
+<li><code><a title="shdp.client.wss.ShdpWsClient.connect" href="#shdp.client.wss.ShdpWsClient.connect">connect</a></code></li>
+<li><code><a title="shdp.client.wss.ShdpWsClient.disconnect" href="#shdp.client.wss.ShdpWsClient.disconnect">disconnect</a></code></li>
+<li><code><a title="shdp.client.wss.ShdpWsClient.get_address" href="#shdp.client.wss.ShdpWsClient.get_address">get_address</a></code></li>
+<li><code><a title="shdp.client.wss.ShdpWsClient.send" href="#shdp.client.wss.ShdpWsClient.send">send</a></code></li>
 </ul>
 </li>
 </ul>

@@ -4,15 +4,17 @@ This test suite verifies the WebSocket client's ability to connect to a server,
 handle connection states, and properly manage disconnection scenarios.
 """
 
+import asyncio
 import logging
 import socket
+from pathlib import Path
 
 import pytest
 
-from shdp.client.ws import ShdpWsClient
+from shdp.client.wss import ShdpWsClient
 from shdp.lib import Error, Result
 from shdp.protocol.errors import ErrorKind
-from shdp.server.ws import ShdpWsServer
+from shdp.server.wss import ShdpWsServer
 
 
 def find_free_port():
@@ -30,13 +32,22 @@ async def test_client_connection():
     logging.basicConfig(level=logging.DEBUG)
 
     test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
+    keys_dir = Path(__file__).parent / "keys"
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / "cert.pem",
+        key_path=keys_dir / "key.pem",
+    )
     assert (
         server_result.is_ok()
     ), f"Server failed to start: {server_result.unwrap_err()}"
     server = server_result.unwrap()
 
     try:
+
+        # Attendre que la connexion soit établie
+        await asyncio.sleep(10)
+
         # Créer une instance du client pour les tests
         client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
             ("localhost", test_port)
@@ -62,6 +73,7 @@ async def test_client_connection():
             await client.disconnect()
 
     finally:
+        # Nettoyage final
         await server.stop()
 
 
@@ -79,11 +91,17 @@ async def test_client_invalid_connection():
 async def test_client_double_disconnect():
     """Test client behavior when attempting to disconnect twice."""
     test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
+    keys_dir = Path(__file__).parent / "keys"
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / "cert.pem",
+        key_path=keys_dir / "key.pem",
+    )
     assert server_result.is_ok()
     server = server_result.unwrap()
 
     try:
+
         # Créer une instance du client pour les tests
         client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
             ("localhost", test_port)
@@ -105,6 +123,7 @@ async def test_client_double_disconnect():
             await client.disconnect()
 
     finally:
+        # Nettoyage final
         await server.stop()
 
 

@@ -7,11 +7,12 @@ and properly manage shutdown scenarios.
 import asyncio
 import logging
 import socket
+from pathlib import Path
 
 import pytest
 
 from shdp.protocol.errors import ErrorKind
-from shdp.server.ws import ShdpWsServer
+from shdp.server.wss import ShdpWsServer
 
 
 def find_free_port():
@@ -25,11 +26,24 @@ def find_free_port():
 
 @pytest.mark.asyncio
 async def test_server_opening():
-    """Test successful WebSocket server startup and shutdown."""
+    """Test successful WebSocket server startup and shutdown.
+
+    This test:
+    1. Starts a WebSocket server on test port
+    2. Verifies server is operational
+    3. Checks initial client list
+    4. Performs clean shutdown
+    """
     logging.basicConfig(level=logging.DEBUG)
 
     test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
+    keys_dir = Path(__file__).parent / "keys"
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / "cert.pem",
+        key_path=keys_dir / "key.pem",
+    )
+
     assert (
         server_result.is_ok()
     ), f"Server failed to start: {server_result.unwrap_err()}"
@@ -55,7 +69,12 @@ async def test_server_opening():
 async def test_server_invalid_port():
     """Test server behavior when starting on invalid port."""
     invalid_port = -1
-    server_result = await ShdpWsServer.listen(port=invalid_port)
+    keys_dir = Path(__file__).parent / "keys"
+    server_result = await ShdpWsServer.listen(
+        port=invalid_port,
+        cert_path=keys_dir / "cert.pem",
+        key_path=keys_dir / "key.pem",
+    )
 
     assert server_result.is_err(), "Server should fail to start on invalid port"
     error = server_result.unwrap_err()
@@ -65,8 +84,13 @@ async def test_server_invalid_port():
 @pytest.mark.asyncio
 async def test_server_double_close():
     """Test server behavior when attempting to close twice."""
+    keys_dir = Path(__file__).parent / "keys"
     test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / "cert.pem",
+        key_path=keys_dir / "key.pem",
+    )
     assert server_result.is_ok()
     server = server_result.unwrap()
 

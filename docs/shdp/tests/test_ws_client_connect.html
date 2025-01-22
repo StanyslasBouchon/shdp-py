@@ -79,22 +79,13 @@ async def test_client_connection():
     logging.basicConfig(level=logging.DEBUG)
 
     test_port = find_free_port()
-    keys_dir = Path(__file__).parent / &#34;keys&#34;
-    server_result = await ShdpWsServer.listen(
-        port=test_port,
-        cert_path=keys_dir / &#34;cert.pem&#34;,
-        key_path=keys_dir / &#34;key.pem&#34;,
-    )
+    server_result = await ShdpWsServer.listen(port=test_port)
     assert (
         server_result.is_ok()
     ), f&#34;Server failed to start: {server_result.unwrap_err()}&#34;
     server = server_result.unwrap()
 
     try:
-
-        # Attendre que la connexion soit établie
-        await asyncio.sleep(10)
-
         # Créer une instance du client pour les tests
         client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
             (&#34;localhost&#34;, test_port)
@@ -120,7 +111,6 @@ async def test_client_connection():
             await client.disconnect()
 
     finally:
-        # Nettoyage final
         await server.stop()</code></pre>
 </details>
 <div class="desc"><p>Test successful WebSocket client connection to server.</p></div>
@@ -137,17 +127,11 @@ async def test_client_connection():
 async def test_client_double_disconnect():
     &#34;&#34;&#34;Test client behavior when attempting to disconnect twice.&#34;&#34;&#34;
     test_port = find_free_port()
-    keys_dir = Path(__file__).parent / &#34;keys&#34;
-    server_result = await ShdpWsServer.listen(
-        port=test_port,
-        cert_path=keys_dir / &#34;cert.pem&#34;,
-        key_path=keys_dir / &#34;key.pem&#34;,
-    )
+    server_result = await ShdpWsServer.listen(port=test_port)
     assert server_result.is_ok()
     server = server_result.unwrap()
 
     try:
-
         # Créer une instance du client pour les tests
         client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
             (&#34;localhost&#34;, test_port)
@@ -169,7 +153,6 @@ async def test_client_double_disconnect():
             await client.disconnect()
 
     finally:
-        # Nettoyage final
         await server.stop()</code></pre>
 </details>
 <div class="desc"><p>Test client behavior when attempting to disconnect twice.</p></div>

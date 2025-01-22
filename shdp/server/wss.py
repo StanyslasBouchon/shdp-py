@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import ssl
+from pathlib import Path
 from typing import Dict, Optional, Set
 
 import websockets
@@ -26,32 +28,55 @@ class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
         _clients (Dict[str, WebSocketServerProtocol]): Dictionary of connected clients
     """
 
-    def __init__(self):
+    _cert_path: Path
+    _key_path: Path
+
+    def __init__(self, cert_path: Path, key_path: Path):
         """Initialize a new SHDP WebSocket server instance."""
         self._server: Optional[websockets.server.WebSocketServer] = None
         self._clients: Dict[str, WebSocketServerProtocol] = {}
+        self._cert_path = cert_path
+        self._key_path = key_path
         self._active_connections: Set[WebSocketServerProtocol] = set()
 
     @staticmethod
     async def listen(
         port: int = 15150,
+        *,
+        cert_path: Path | None = None,
+        key_path: Path | None = None,
     ) -> Result[IShdpServer[WebSocketServerProtocol, None], Error]:
         """Start listening for WebSocket connections on the specified port.
 
         Args:
             port: Port number to listen on, defaults to 15150
+            cert_path: Path to the certificate file
+            key_path: Path to the private key file
 
         Returns:
             Result[IShdpServer[WebSocketServerProtocol], Error]: Ok with server instance if successful,
                                           Err with error details if failed
         """
+        if cert_path is None or key_path is None:
+            return Result[IShdpServer[WebSocketServerProtocol, None], Error].Err(
+                Error.new(ErrorKind.EXPECTATION_FAILED, "cert_path or key_path is None")
+            )
+
         try:
-            ws_server = ShdpWsServer()
+            ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+            ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
+            ssl_context.load_cert_chain(cert_path, key_path)
+
+            ws_server = ShdpWsServer(cert_path, key_path)
 
             server = await serve(
                 ws_server._accept,
                 host="0.0.0.0",
                 port=port,
+                ssl=ssl_context,
                 ping_interval=20,
                 ping_timeout=20,
             )

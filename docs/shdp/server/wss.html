@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.server.ws API documentation</title>
+<title>shdp.server.wss API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
@@ -33,7 +33,7 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.server.ws</code></h1>
+<h1 class="title">Module <code>shdp.server.wss</code></h1>
 </header>
 <section id="section-intro">
 </section>
@@ -46,8 +46,9 @@ el.replaceWith(d);
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="shdp.server.ws.ShdpWsServer"><code class="flex name class">
+<dt id="shdp.server.wss.ShdpWsServer"><code class="flex name class">
 <span>class <span class="ident">ShdpWsServer</span></span>
+<span>(</span><span>cert_path: pathlib.Path, key_path: pathlib.Path)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -65,32 +66,55 @@ el.replaceWith(d);
         _clients (Dict[str, WebSocketServerProtocol]): Dictionary of connected clients
     &#34;&#34;&#34;
 
-    def __init__(self):
+    _cert_path: Path
+    _key_path: Path
+
+    def __init__(self, cert_path: Path, key_path: Path):
         &#34;&#34;&#34;Initialize a new SHDP WebSocket server instance.&#34;&#34;&#34;
         self._server: Optional[websockets.server.WebSocketServer] = None
         self._clients: Dict[str, WebSocketServerProtocol] = {}
+        self._cert_path = cert_path
+        self._key_path = key_path
         self._active_connections: Set[WebSocketServerProtocol] = set()
 
     @staticmethod
     async def listen(
         port: int = 15150,
+        *,
+        cert_path: Path | None = None,
+        key_path: Path | None = None,
     ) -&gt; Result[IShdpServer[WebSocketServerProtocol, None], Error]:
         &#34;&#34;&#34;Start listening for WebSocket connections on the specified port.
 
         Args:
             port: Port number to listen on, defaults to 15150
+            cert_path: Path to the certificate file
+            key_path: Path to the private key file
 
         Returns:
             Result[IShdpServer[WebSocketServerProtocol], Error]: Ok with server instance if successful,
                                           Err with error details if failed
         &#34;&#34;&#34;
+        if cert_path is None or key_path is None:
+            return Result[IShdpServer[WebSocketServerProtocol, None], Error].Err(
+                Error.new(ErrorKind.EXPECTATION_FAILED, &#34;cert_path or key_path is None&#34;)
+            )
+
         try:
-            ws_server = ShdpWsServer()
+            ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+            ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
+            ssl_context.load_cert_chain(cert_path, key_path)
+
+            ws_server = ShdpWsServer(cert_path, key_path)
 
             server = await serve(
                 ws_server._accept,
                 host=&#34;0.0.0.0&#34;,
                 port=port,
+                ssl=ssl_context,
                 ping_interval=20,
                 ping_timeout=20,
             )
@@ -228,8 +252,8 @@ It manages client connections and provides methods for server operations.</p>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="shdp.server.ws.ShdpWsServer.listen"><code class="name flex">
-<span>async def <span class="ident">listen</span></span>(<span>port: int = 15150) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.lib.IShdpServer" href="../lib.html#shdp.lib.IShdpServer">IShdpServer</a>[websockets.legacy.server.WebSocketServerProtocol, None], <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+<dt id="shdp.server.wss.ShdpWsServer.listen"><code class="name flex">
+<span>async def <span class="ident">listen</span></span>(<span>port: int = 15150,<br>*,<br>cert_path: pathlib.Path | None = None,<br>key_path: pathlib.Path | None = None) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.lib.IShdpServer" href="../lib.html#shdp.lib.IShdpServer">IShdpServer</a>[websockets.legacy.server.WebSocketServerProtocol, None], <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -239,23 +263,41 @@ It manages client connections and provides methods for server operations.</p>
 <pre><code class="python">@staticmethod
 async def listen(
     port: int = 15150,
+    *,
+    cert_path: Path | None = None,
+    key_path: Path | None = None,
 ) -&gt; Result[IShdpServer[WebSocketServerProtocol, None], Error]:
     &#34;&#34;&#34;Start listening for WebSocket connections on the specified port.
 
     Args:
         port: Port number to listen on, defaults to 15150
+        cert_path: Path to the certificate file
+        key_path: Path to the private key file
 
     Returns:
         Result[IShdpServer[WebSocketServerProtocol], Error]: Ok with server instance if successful,
                                       Err with error details if failed
     &#34;&#34;&#34;
+    if cert_path is None or key_path is None:
+        return Result[IShdpServer[WebSocketServerProtocol, None], Error].Err(
+            Error.new(ErrorKind.EXPECTATION_FAILED, &#34;cert_path or key_path is None&#34;)
+        )
+
     try:
-        ws_server = ShdpWsServer()
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+        ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
+        ssl_context.load_cert_chain(cert_path, key_path)
+
+        ws_server = ShdpWsServer(cert_path, key_path)
 
         server = await serve(
             ws_server._accept,
             host=&#34;0.0.0.0&#34;,
             port=port,
+            ssl=ssl_context,
             ping_interval=20,
             ping_timeout=20,
         )
@@ -276,6 +318,10 @@ async def listen(
 <dl>
 <dt><strong><code>port</code></strong></dt>
 <dd>Port number to listen on, defaults to 15150</dd>
+<dt><strong><code>cert_path</code></strong></dt>
+<dd>Path to the certificate file</dd>
+<dt><strong><code>key_path</code></strong></dt>
+<dd>Path to the private key file</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -287,7 +333,7 @@ Err with error details if failed</dd>
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="shdp.server.ws.ShdpWsServer.get_clients"><code class="name flex">
+<dt id="shdp.server.wss.ShdpWsServer.get_clients"><code class="name flex">
 <span>def <span class="ident">get_clients</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[typing.Dict[str, websockets.legacy.server.WebSocketServerProtocol], <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
@@ -312,7 +358,7 @@ Err with error details if failed</dd>
 Err if failed</dd>
 </dl></div>
 </dd>
-<dt id="shdp.server.ws.ShdpWsServer.stop"><code class="name flex">
+<dt id="shdp.server.wss.ShdpWsServer.stop"><code class="name flex">
 <span>async def <span class="ident">stop</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../utils/result.html#shdp.utils.result.Result">Result</a>[None, <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
@@ -375,11 +421,11 @@ Err if failed</dd>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="shdp.server.ws.ShdpWsServer" href="#shdp.server.ws.ShdpWsServer">ShdpWsServer</a></code></h4>
+<h4><code><a title="shdp.server.wss.ShdpWsServer" href="#shdp.server.wss.ShdpWsServer">ShdpWsServer</a></code></h4>
 <ul class="">
-<li><code><a title="shdp.server.ws.ShdpWsServer.get_clients" href="#shdp.server.ws.ShdpWsServer.get_clients">get_clients</a></code></li>
-<li><code><a title="shdp.server.ws.ShdpWsServer.listen" href="#shdp.server.ws.ShdpWsServer.listen">listen</a></code></li>
-<li><code><a title="shdp.server.ws.ShdpWsServer.stop" href="#shdp.server.ws.ShdpWsServer.stop">stop</a></code></li>
+<li><code><a title="shdp.server.wss.ShdpWsServer.get_clients" href="#shdp.server.wss.ShdpWsServer.get_clients">get_clients</a></code></li>
+<li><code><a title="shdp.server.wss.ShdpWsServer.listen" href="#shdp.server.wss.ShdpWsServer.listen">listen</a></code></li>
+<li><code><a title="shdp.server.wss.ShdpWsServer.stop" href="#shdp.server.wss.ShdpWsServer.stop">stop</a></code></li>
 </ul>
 </li>
 </ul>

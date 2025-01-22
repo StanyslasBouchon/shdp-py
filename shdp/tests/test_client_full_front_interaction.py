@@ -14,7 +14,7 @@ from typing import cast
 
 import pytest
 
-from shdp.client.ws import ShdpWsClient
+from shdp.client.wss import ShdpWsClient
 from shdp.lib import Error, Result
 from shdp.protocol.args import Arg
 from shdp.protocol.client.versions.v1.c0x0000 import (
@@ -26,7 +26,7 @@ from shdp.protocol.managers.registry import EVENT_REGISTRY_MSB
 from shdp.protocol.server.versions.v1.r0x0000 import ComponentNeedsRequest
 from shdp.protocol.server.versions.v1.r0x0005 import InteractionRequest
 from shdp.protocol.versions import Version
-from shdp.server.ws import ShdpWsServer
+from shdp.server.wss import ShdpWsServer
 
 
 def component_needs_request_listen(decoder: EventDecoder) -> list[Arg]:

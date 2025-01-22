@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.tests.test_ws_server_opening API documentation</title>
-<meta name="description" content="Tests for WebSocket server initialization and management …">
+<title>shdp.tests.test_wss_server_errors API documentation</title>
+<meta name="description" content="Tests for WebSocket server error handling …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,12 +33,12 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.tests.test_ws_server_opening</code></h1>
+<h1 class="title">Module <code>shdp.tests.test_wss_server_errors</code></h1>
 </header>
 <section id="section-intro">
-<p>Tests for WebSocket server initialization and management.</p>
-<p>This test suite verifies the WebSocket server's ability to start up, handle connections,
-and properly manage shutdown scenarios.</p>
+<p>Tests for WebSocket server error handling.</p>
+<p>This test suite verifies the error handling behavior of the WebSocket server implementation,
+focusing on error cases and edge conditions.</p>
 </section>
 <section>
 </section>
@@ -47,26 +47,8 @@ and properly manage shutdown scenarios.</p>
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="shdp.tests.test_ws_server_opening.find_free_port"><code class="name flex">
-<span>def <span class="ident">find_free_port</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def find_free_port():
-    &#34;&#34;&#34;Trouve un port disponible sur le système.&#34;&#34;&#34;
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((&#34;&#34;, 0))
-        s.listen(1)
-        port = s.getsockname()[1]
-        return port</code></pre>
-</details>
-<div class="desc"><p>Trouve un port disponible sur le système.</p></div>
-</dd>
-<dt id="shdp.tests.test_ws_server_opening.test_server_double_close"><code class="name flex">
-<span>async def <span class="ident">test_server_double_close</span></span>(<span>)</span>
+<dt id="shdp.tests.test_wss_server_errors.test_server_get_clients_success"><code class="name flex">
+<span>async def <span class="ident">test_server_get_clients_success</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -74,24 +56,22 @@ and properly manage shutdown scenarios.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@pytest.mark.asyncio
-async def test_server_double_close():
-    &#34;&#34;&#34;Test server behavior when attempting to close twice.&#34;&#34;&#34;
-    test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
-    assert server_result.is_ok()
-    server = server_result.unwrap()
+async def test_server_get_clients_success():
+    &#34;&#34;&#34;Test getting clients list from server.
 
-    close_result = await server.stop()
-    assert close_result.is_ok()
+    Should return empty dictionary when no clients are connected.
+    &#34;&#34;&#34;
+    server = ShdpWsServer(cert_path=Path(&#34;cert.pem&#34;), key_path=Path(&#34;key.pem&#34;))
 
-    close_result = await server.stop()
-    assert close_result.is_err()
-    assert close_result.unwrap_err().kind == ErrorKind.SERVICE_UNAVAILABLE</code></pre>
+    result = server.get_clients()
+    assert result.is_ok()
+    assert len(result.unwrap()) == 0</code></pre>
 </details>
-<div class="desc"><p>Test server behavior when attempting to close twice.</p></div>
+<div class="desc"><p>Test getting clients list from server.</p>
+<p>Should return empty dictionary when no clients are connected.</p></div>
 </dd>
-<dt id="shdp.tests.test_ws_server_opening.test_server_invalid_port"><code class="name flex">
-<span>async def <span class="ident">test_server_invalid_port</span></span>(<span>)</span>
+<dt id="shdp.tests.test_wss_server_errors.test_server_invalid_certificates"><code class="name flex">
+<span>async def <span class="ident">test_server_invalid_certificates</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -99,19 +79,27 @@ async def test_server_double_close():
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@pytest.mark.asyncio
-async def test_server_invalid_port():
-    &#34;&#34;&#34;Test server behavior when starting on invalid port.&#34;&#34;&#34;
-    invalid_port = -1
-    server_result = await ShdpWsServer.listen(port=invalid_port)
+async def test_server_invalid_certificates():
+    &#34;&#34;&#34;Test server initialization with invalid certificate files.
 
-    assert server_result.is_err(), &#34;Server should fail to start on invalid port&#34;
+    Should return USER_DEFINED error when certificate files are invalid.
+    &#34;&#34;&#34;
+    invalid_path = Path(&#34;/nonexistent/path&#34;)
+    server_result = await ShdpWsServer.listen(
+        port=8000,
+        cert_path=invalid_path / &#34;cert.pem&#34;,
+        key_path=invalid_path / &#34;key.pem&#34;,
+    )
+
+    assert server_result.is_err()
     error = server_result.unwrap_err()
-    assert error.kind == ErrorKind.USER_DEFINED, &#34;Incorrect error type returned&#34;</code></pre>
+    assert error.kind == ErrorKind.USER_DEFINED</code></pre>
 </details>
-<div class="desc"><p>Test server behavior when starting on invalid port.</p></div>
+<div class="desc"><p>Test server initialization with invalid certificate files.</p>
+<p>Should return USER_DEFINED error when certificate files are invalid.</p></div>
 </dd>
-<dt id="shdp.tests.test_ws_server_opening.test_server_opening"><code class="name flex">
-<span>async def <span class="ident">test_server_opening</span></span>(<span>)</span>
+<dt id="shdp.tests.test_wss_server_errors.test_server_missing_certificates"><code class="name flex">
+<span>async def <span class="ident">test_server_missing_certificates</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -119,33 +107,83 @@ async def test_server_invalid_port():
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@pytest.mark.asyncio
-async def test_server_opening():
-    &#34;&#34;&#34;Test successful WebSocket server startup and shutdown.&#34;&#34;&#34;
-    logging.basicConfig(level=logging.DEBUG)
+async def test_server_missing_certificates():
+    &#34;&#34;&#34;Test server initialization with missing certificate files.
 
-    test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
-    assert (
-        server_result.is_ok()
-    ), f&#34;Server failed to start: {server_result.unwrap_err()}&#34;
-    server = server_result.unwrap()
+    Should return EXPECTATION_FAILED error when cert_path or key_path is None.
+    &#34;&#34;&#34;
+    server_result = await ShdpWsServer.listen(
+        port=8000,
+        cert_path=None,
+        key_path=None,
+    )
 
-    try:
-        assert server._server is not None, &#34;Invalid server internal state&#34;
-
-        clients_result = server.get_clients()
-        assert clients_result.is_ok(), &#34;Failed to get client list&#34;
-        assert len(clients_result.unwrap()) == 0, &#34;New server should have no clients&#34;
-
-        await asyncio.sleep(0.1)
-
-    finally:
-        close_result = await server.stop()
-        assert (
-            close_result.is_ok()
-        ), f&#34;Server failed to close: {close_result.unwrap_err()}&#34;</code></pre>
+    assert server_result.is_err()
+    error = server_result.unwrap_err()
+    assert error.kind == ErrorKind.EXPECTATION_FAILED
+    assert error.message == &#34;cert_path or key_path is None&#34;</code></pre>
 </details>
-<div class="desc"><p>Test successful WebSocket server startup and shutdown.</p></div>
+<div class="desc"><p>Test server initialization with missing certificate files.</p>
+<p>Should return EXPECTATION_FAILED error when cert_path or key_path is None.</p></div>
+</dd>
+<dt id="shdp.tests.test_wss_server_errors.test_server_stop_error"><code class="name flex">
+<span>async def <span class="ident">test_server_stop_error</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_server_stop_error():
+    &#34;&#34;&#34;Test error handling during server shutdown.
+
+    Should return USER_DEFINED error when an exception occurs during shutdown.
+    &#34;&#34;&#34;
+
+    class BrokenWebSocket:
+        async def close(self):
+            raise websockets.exceptions.ConnectionClosed(
+                rcvd=None, sent=None, code=1006, reason=&#34;Test error&#34;
+            )
+
+    # Create a server with a broken client connection
+    server = ShdpWsServer(cert_path=Path(&#34;cert.pem&#34;), key_path=Path(&#34;key.pem&#34;))
+    server._server = True  # Simulate server running
+    server._active_connections.add(BrokenWebSocket())
+
+    result = await server.stop()
+    assert result.is_err()
+    error = result.unwrap_err()
+    assert error.kind == ErrorKind.USER_DEFINED</code></pre>
+</details>
+<div class="desc"><p>Test error handling during server shutdown.</p>
+<p>Should return USER_DEFINED error when an exception occurs during shutdown.</p></div>
+</dd>
+<dt id="shdp.tests.test_wss_server_errors.test_stop_server_not_listening"><code class="name flex">
+<span>async def <span class="ident">test_stop_server_not_listening</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_stop_server_not_listening():
+    &#34;&#34;&#34;Test stopping a server that isn&#39;t listening.
+
+    Should return SERVICE_UNAVAILABLE error.
+    &#34;&#34;&#34;
+    server = ShdpWsServer(cert_path=Path(&#34;cert.pem&#34;), key_path=Path(&#34;key.pem&#34;))
+
+    result = await server.stop()
+    assert result.is_err()
+    error = result.unwrap_err()
+    assert error.kind == ErrorKind.SERVICE_UNAVAILABLE
+    assert error.message == &#34;Server not listening&#34;</code></pre>
+</details>
+<div class="desc"><p>Test stopping a server that isn't listening.</p>
+<p>Should return SERVICE_UNAVAILABLE error.</p></div>
 </dd>
 </dl>
 </section>
@@ -164,10 +202,11 @@ async def test_server_opening():
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="shdp.tests.test_ws_server_opening.find_free_port" href="#shdp.tests.test_ws_server_opening.find_free_port">find_free_port</a></code></li>
-<li><code><a title="shdp.tests.test_ws_server_opening.test_server_double_close" href="#shdp.tests.test_ws_server_opening.test_server_double_close">test_server_double_close</a></code></li>
-<li><code><a title="shdp.tests.test_ws_server_opening.test_server_invalid_port" href="#shdp.tests.test_ws_server_opening.test_server_invalid_port">test_server_invalid_port</a></code></li>
-<li><code><a title="shdp.tests.test_ws_server_opening.test_server_opening" href="#shdp.tests.test_ws_server_opening.test_server_opening">test_server_opening</a></code></li>
+<li><code><a title="shdp.tests.test_wss_server_errors.test_server_get_clients_success" href="#shdp.tests.test_wss_server_errors.test_server_get_clients_success">test_server_get_clients_success</a></code></li>
+<li><code><a title="shdp.tests.test_wss_server_errors.test_server_invalid_certificates" href="#shdp.tests.test_wss_server_errors.test_server_invalid_certificates">test_server_invalid_certificates</a></code></li>
+<li><code><a title="shdp.tests.test_wss_server_errors.test_server_missing_certificates" href="#shdp.tests.test_wss_server_errors.test_server_missing_certificates">test_server_missing_certificates</a></code></li>
+<li><code><a title="shdp.tests.test_wss_server_errors.test_server_stop_error" href="#shdp.tests.test_wss_server_errors.test_server_stop_error">test_server_stop_error</a></code></li>
+<li><code><a title="shdp.tests.test_wss_server_errors.test_stop_server_not_listening" href="#shdp.tests.test_wss_server_errors.test_stop_server_not_listening">test_stop_server_not_listening</a></code></li>
 </ul>
 </li>
 </ul>

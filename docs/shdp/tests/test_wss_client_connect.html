@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.tests.test_ws_server_opening API documentation</title>
-<meta name="description" content="Tests for WebSocket server initialization and management …">
+<title>shdp.tests.test_wss_client_connect API documentation</title>
+<meta name="description" content="Tests for WebSocket client connection functionality …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,12 +33,12 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.tests.test_ws_server_opening</code></h1>
+<h1 class="title">Module <code>shdp.tests.test_wss_client_connect</code></h1>
 </header>
 <section id="section-intro">
-<p>Tests for WebSocket server initialization and management.</p>
-<p>This test suite verifies the WebSocket server's ability to start up, handle connections,
-and properly manage shutdown scenarios.</p>
+<p>Tests for WebSocket client connection functionality.</p>
+<p>This test suite verifies the WebSocket client's ability to connect to a server,
+handle connection states, and properly manage disconnection scenarios.</p>
 </section>
 <section>
 </section>
@@ -47,7 +47,7 @@ and properly manage shutdown scenarios.</p>
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="shdp.tests.test_ws_server_opening.find_free_port"><code class="name flex">
+<dt id="shdp.tests.test_wss_client_connect.find_free_port"><code class="name flex">
 <span>def <span class="ident">find_free_port</span></span>(<span>)</span>
 </code></dt>
 <dd>
@@ -65,8 +65,8 @@ and properly manage shutdown scenarios.</p>
 </details>
 <div class="desc"><p>Trouve un port disponible sur le système.</p></div>
 </dd>
-<dt id="shdp.tests.test_ws_server_opening.test_server_double_close"><code class="name flex">
-<span>async def <span class="ident">test_server_double_close</span></span>(<span>)</span>
+<dt id="shdp.tests.test_wss_client_connect.test_client_connection"><code class="name flex">
+<span>async def <span class="ident">test_client_connection</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -74,78 +74,124 @@ and properly manage shutdown scenarios.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@pytest.mark.asyncio
-async def test_server_double_close():
-    &#34;&#34;&#34;Test server behavior when attempting to close twice.&#34;&#34;&#34;
-    test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
-    assert server_result.is_ok()
-    server = server_result.unwrap()
-
-    close_result = await server.stop()
-    assert close_result.is_ok()
-
-    close_result = await server.stop()
-    assert close_result.is_err()
-    assert close_result.unwrap_err().kind == ErrorKind.SERVICE_UNAVAILABLE</code></pre>
-</details>
-<div class="desc"><p>Test server behavior when attempting to close twice.</p></div>
-</dd>
-<dt id="shdp.tests.test_ws_server_opening.test_server_invalid_port"><code class="name flex">
-<span>async def <span class="ident">test_server_invalid_port</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@pytest.mark.asyncio
-async def test_server_invalid_port():
-    &#34;&#34;&#34;Test server behavior when starting on invalid port.&#34;&#34;&#34;
-    invalid_port = -1
-    server_result = await ShdpWsServer.listen(port=invalid_port)
-
-    assert server_result.is_err(), &#34;Server should fail to start on invalid port&#34;
-    error = server_result.unwrap_err()
-    assert error.kind == ErrorKind.USER_DEFINED, &#34;Incorrect error type returned&#34;</code></pre>
-</details>
-<div class="desc"><p>Test server behavior when starting on invalid port.</p></div>
-</dd>
-<dt id="shdp.tests.test_ws_server_opening.test_server_opening"><code class="name flex">
-<span>async def <span class="ident">test_server_opening</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@pytest.mark.asyncio
-async def test_server_opening():
-    &#34;&#34;&#34;Test successful WebSocket server startup and shutdown.&#34;&#34;&#34;
+async def test_client_connection():
+    &#34;&#34;&#34;Test successful WebSocket client connection to server.&#34;&#34;&#34;
     logging.basicConfig(level=logging.DEBUG)
 
     test_port = find_free_port()
-    server_result = await ShdpWsServer.listen(port=test_port)
+    keys_dir = Path(__file__).parent / &#34;keys&#34;
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / &#34;cert.pem&#34;,
+        key_path=keys_dir / &#34;key.pem&#34;,
+    )
     assert (
         server_result.is_ok()
     ), f&#34;Server failed to start: {server_result.unwrap_err()}&#34;
     server = server_result.unwrap()
 
     try:
-        assert server._server is not None, &#34;Invalid server internal state&#34;
 
-        clients_result = server.get_clients()
-        assert clients_result.is_ok(), &#34;Failed to get client list&#34;
-        assert len(clients_result.unwrap()) == 0, &#34;New server should have no clients&#34;
+        # Attendre que la connexion soit établie
+        await asyncio.sleep(10)
 
-        await asyncio.sleep(0.1)
+        # Créer une instance du client pour les tests
+        client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
+            (&#34;localhost&#34;, test_port)
+        )
+        assert client_result.is_ok(), client_result.unwrap_err()
+        client = client_result.unwrap()
+
+        try:
+            addr_result = client.get_address()
+            assert addr_result.is_ok(), &#34;Failed to get client address&#34;
+            assert addr_result.unwrap() == (
+                &#34;localhost&#34;,
+                test_port,
+            ), &#34;Client address mismatch&#34;
+
+            clients_result = server.get_clients()
+            assert clients_result.is_ok(), &#34;Failed to get server clients&#34;
+            assert (
+                len(clients_result.unwrap()) == 1
+            ), &#34;Server should have exactly one client&#34;
+
+        finally:
+            await client.disconnect()
 
     finally:
-        close_result = await server.stop()
-        assert (
-            close_result.is_ok()
-        ), f&#34;Server failed to close: {close_result.unwrap_err()}&#34;</code></pre>
+        # Nettoyage final
+        await server.stop()</code></pre>
 </details>
-<div class="desc"><p>Test successful WebSocket server startup and shutdown.</p></div>
+<div class="desc"><p>Test successful WebSocket client connection to server.</p></div>
+</dd>
+<dt id="shdp.tests.test_wss_client_connect.test_client_double_disconnect"><code class="name flex">
+<span>async def <span class="ident">test_client_double_disconnect</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_client_double_disconnect():
+    &#34;&#34;&#34;Test client behavior when attempting to disconnect twice.&#34;&#34;&#34;
+    test_port = find_free_port()
+    keys_dir = Path(__file__).parent / &#34;keys&#34;
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / &#34;cert.pem&#34;,
+        key_path=keys_dir / &#34;key.pem&#34;,
+    )
+    assert server_result.is_ok()
+    server = server_result.unwrap()
+
+    try:
+
+        # Créer une instance du client pour les tests
+        client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
+            (&#34;localhost&#34;, test_port)
+        )
+        assert client_result.is_ok(), client_result.unwrap_err()
+        client = client_result.unwrap()
+
+        try:
+            # Premier disconnect
+            disconnect_result = await client.disconnect()
+            assert disconnect_result.is_ok()
+
+            # Second disconnect
+            disconnect_result = await client.disconnect()
+            assert disconnect_result.is_err()
+            assert disconnect_result.unwrap_err().kind == ErrorKind.SERVICE_UNAVAILABLE
+
+        finally:
+            await client.disconnect()
+
+    finally:
+        # Nettoyage final
+        await server.stop()</code></pre>
+</details>
+<div class="desc"><p>Test client behavior when attempting to disconnect twice.</p></div>
+</dd>
+<dt id="shdp.tests.test_wss_client_connect.test_client_invalid_connection"><code class="name flex">
+<span>async def <span class="ident">test_client_invalid_connection</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_client_invalid_connection():
+    &#34;&#34;&#34;Test client behavior when connecting to invalid address.&#34;&#34;&#34;
+    invalid_port = -1
+    result = await ShdpWsClient.connect((&#34;localhost&#34;, invalid_port))
+    assert result.is_err(), &#34;Client should fail to connect to invalid port&#34;
+    error = result.unwrap_err()
+    assert error.kind == ErrorKind.USER_DEFINED, &#34;Incorrect error type returned&#34;</code></pre>
+</details>
+<div class="desc"><p>Test client behavior when connecting to invalid address.</p></div>
 </dd>
 </dl>
 </section>
@@ -164,10 +210,10 @@ async def test_server_opening():
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="shdp.tests.test_ws_server_opening.find_free_port" href="#shdp.tests.test_ws_server_opening.find_free_port">find_free_port</a></code></li>
-<li><code><a title="shdp.tests.test_ws_server_opening.test_server_double_close" href="#shdp.tests.test_ws_server_opening.test_server_double_close">test_server_double_close</a></code></li>
-<li><code><a title="shdp.tests.test_ws_server_opening.test_server_invalid_port" href="#shdp.tests.test_ws_server_opening.test_server_invalid_port">test_server_invalid_port</a></code></li>
-<li><code><a title="shdp.tests.test_ws_server_opening.test_server_opening" href="#shdp.tests.test_ws_server_opening.test_server_opening">test_server_opening</a></code></li>
+<li><code><a title="shdp.tests.test_wss_client_connect.find_free_port" href="#shdp.tests.test_wss_client_connect.find_free_port">find_free_port</a></code></li>
+<li><code><a title="shdp.tests.test_wss_client_connect.test_client_connection" href="#shdp.tests.test_wss_client_connect.test_client_connection">test_client_connection</a></code></li>
+<li><code><a title="shdp.tests.test_wss_client_connect.test_client_double_disconnect" href="#shdp.tests.test_wss_client_connect.test_client_double_disconnect">test_client_double_disconnect</a></code></li>
+<li><code><a title="shdp.tests.test_wss_client_connect.test_client_invalid_connection" href="#shdp.tests.test_wss_client_connect.test_client_invalid_connection">test_client_invalid_connection</a></code></li>
 </ul>
 </li>
 </ul>

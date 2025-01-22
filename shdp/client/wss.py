@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import ssl
 from typing import Optional, Tuple
 
 import websockets
@@ -19,7 +20,7 @@ from ..utils.result import Result
 class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
     """WebSocket implementation of the SHDP client protocol.
 
-    This class implements a WebSocket client that handles SHDP protocol connections.
+    This class implements a secure WebSocket client that handles SHDP protocol connections.
     It manages the connection to a server and provides methods for client operations.
 
     Attributes:
@@ -69,11 +70,17 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
                                        Err with error details if failed
         """
         try:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+            ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
+
             client = ShdpWsClient()
-            uri = f"ws://{to[0]}:{to[1]}"
+            uri = f"wss://{to[0]}:{to[1]}"
 
             client._websocket = await websockets.connect(
-                uri, ping_interval=20, ping_timeout=20
+                uri, ssl=ssl_context, ping_interval=20, ping_timeout=20
             )
             client._address = to
 
