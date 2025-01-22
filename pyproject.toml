@@ -1,0 +1,17 @@
+[project]
+name = "shdp"
+version = "1.0.0"
+authors = [
+  { name="Stanyslas Bouchon", email="stanyslas.bouchon@gmail.com" },
+]
+description = "A new way to interact with web servers"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Network protocol",
+    "Frontend",
+]
+
+[project.urls]
+Homepage = "https://github.com/StanyslasBouchon/shdp-py"
+Issues = "https://github.com/StanyslasBouchon/shdp-py/issues"
