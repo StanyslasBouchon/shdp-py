@@ -16,14 +16,14 @@ except UnicodeDecodeError:
 
 setup(
     name="shdp",
-    version="1.1.0",
+    version="1.1.1",
     author="Devling",
     author_email="contact@devling.fr",
     description="A new network protocol",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/StanyslasBouchon/shdp-py",
-    packages=find_packages(),
+    packages=find_packages(include=["shdp", "shdp.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
