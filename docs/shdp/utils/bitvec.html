@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>shdp.utils.bitvec API documentation</title>
+<meta name="description" content="BitVec implementation for handling bit vectors …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>shdp.utils.bitvec</code></h1>
+</header>
+<section id="section-intro">
+<p>BitVec implementation for handling bit vectors.</p>
+<p>This module provides a specialized list type for handling bit vectors,
+with utility methods for bit manipulation and conversion to various formats.</p>
+<h2 id="examples">Examples</h2>
+<p>Basic usage:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; bits = BitVec([1, 0, 1])  # Create from list
+&gt;&gt;&gt; bits.append(1)            # Add a bit
+&gt;&gt;&gt; bits
+[1, 0, 1, 1]
+&gt;&gt;&gt; bits.extend([0, 0])      # Add multiple bits
+&gt;&gt;&gt; bits
+[1, 0, 1, 1, 0, 0]
+</code></pre>
+<p>Bit ordering:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class MsbBitVec(BitVec[Msb]): pass  # MSB-first ordering
+&gt;&gt;&gt; class LsbBitVec(BitVec[Lsb]): pass  # LSB-first ordering
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # MSB-first: bits are read from left to right
+&gt;&gt;&gt; msb = MsbBitVec([1,0,1,0, 0,0,0,0])
+&gt;&gt;&gt; msb.to_bytes()
+[160]  # 10100000 = 0xA0
+&gt;&gt;&gt; msb.to_int()
+Ok(160)
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # LSB-first: bits are read from right to left
+&gt;&gt;&gt; lsb = LsbBitVec([1,0,1,0, 0,0,0,0])
+&gt;&gt;&gt; lsb.to_bytes()
+[5]    # 00001010 = 0x05
+&gt;&gt;&gt; lsb.to_int()
+Ok(5)
+</code></pre>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="shdp.utils.bitvec.reverse_bit_order"><code class="name flex">
+<span>def <span class="ident">reverse_bit_order</span></span>(<span>order: Type[~R]) ‑> Type[<a title="shdp.utils.bitvec.Lsb" href="#shdp.utils.bitvec.Lsb">Lsb</a> | <a title="shdp.utils.bitvec.Msb" href="#shdp.utils.bitvec.Msb">Msb</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reverse_bit_order(order: Type[R]) -&gt; Type[Union[Lsb, Msb]]:
+    &#34;&#34;&#34;Reverses the bit ordering.
+    
+    Args:
+        order: Current bit order (Lsb or Msb)
+    
+    Returns:
+        The opposite bit order
+    &#34;&#34;&#34;
+    if order is Lsb:
+        return Msb
+    return Lsb</code></pre>
+</details>
+<div class="desc"><p>Reverses the bit ordering.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>order</code></strong></dt>
+<dd>Current bit order (Lsb or Msb)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The opposite bit order</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="shdp.utils.bitvec.BitOrder"><code class="flex name class">
+<span>class <span class="ident">BitOrder</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BitOrder(Enum):
+    &#34;&#34;&#34;Bit ordering enumeration.
+    
+    Attributes:
+        LSB: Least Significant Bit first
+        MSB: Most Significant Bit first
+    &#34;&#34;&#34;
+    LSB = 0
+    MSB = 1</code></pre>
+</details>
+<div class="desc"><p>Bit ordering enumeration.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>LSB</code></strong></dt>
+<dd>Least Significant Bit first</dd>
+<dt><strong><code>MSB</code></strong></dt>
+<dd>Most Significant Bit first</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="shdp.utils.bitvec.BitOrder.LSB"><code class="name">var <span class="ident">LSB</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.utils.bitvec.BitOrder.MSB"><code class="name">var <span class="ident">MSB</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.utils.bitvec.BitVec"><code class="flex name class">
+<span>class <span class="ident">BitVec</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BitVec(Generic[R], list[bool]):
+    &#34;&#34;&#34;A specialized list for handling bit vectors with configurable bit ordering.
+
+    BitVec extends the built-in list to provide specialized handling of boolean values
+    representing bits. It supports both MSB-first and LSB-first bit ordering through
+    type parameters.
+
+    The bit ordering affects how the bits are interpreted when converting to other
+    formats (bytes, integers).
+
+    Examples:
+        Basic operations:
+        &gt;&gt;&gt; bits = BitVec([1, 0, 1])
+        &gt;&gt;&gt; bits.append(0)
+        &gt;&gt;&gt; bits
+        [1, 0, 1, 0]
+        &gt;&gt;&gt; bits[1:3]  # Slicing returns a new BitVec
+        [0, 1]
+        
+        Converting to other formats:
+        &gt;&gt;&gt; class MsbBits(BitVec[Msb]): pass
+        &gt;&gt;&gt; bits = MsbBits([1,1,0,0, 0,1,0,1])
+        &gt;&gt;&gt; bits.to_bytes()  # Convert to bytes
+        [197]  # 11000101 = 0xC5
+        &gt;&gt;&gt; bits.to_int()    # Convert to integer
+        Ok(197)
+        &gt;&gt;&gt; bits.to_hex()    # Convert to hex string
+        [&#39;c5&#39;]
+    &#34;&#34;&#34;
+
+    def __init__(self, *args, **kwargs):
+        &#34;&#34;&#34;Initialize a new bit vector.
+
+        Args:
+            *args: Arguments passed to list constructor
+            **kwargs: Keyword arguments passed to list constructor
+        &#34;&#34;&#34;
+        super().__init__(*args, **kwargs)
+
+    @property
+    def is_msb(self) -&gt; bool:
+        &#34;&#34;&#34;Check if this BitVec uses MSB-first ordering.
+        
+        Returns:
+            bool: True if MSB-first, False otherwise
+        &#34;&#34;&#34;
+        return isinstance(self, BitVec[Msb])
+
+    @property
+    def is_lsb(self) -&gt; bool:
+        &#34;&#34;&#34;Check if this BitVec uses LSB-first ordering.
+        
+        Returns:
+            bool: True if LSB-first, False otherwise
+        &#34;&#34;&#34;
+        return isinstance(self, BitVec[Lsb])
+
+    def __getitem__(self, index):
+        &#34;&#34;&#34;Get a bit or slice of bits at the specified index.
+
+        Args:
+            index: An integer index or slice object
+
+        Returns:
+            bool: Single bit if index is integer
+            BitVec: New BitVec if index is slice
+
+        Examples:
+            &gt;&gt;&gt; bits = BitVec([1,1,1,1, 0,0,0,0])
+            &gt;&gt;&gt; bits[2]  # Get single bit
+            1
+            &gt;&gt;&gt; bits[2:5]  # Get slice
+            BitVec([1,1,0])
+        &#34;&#34;&#34;
+        result = super().__getitem__(index)
+        if isinstance(index, slice):
+            return BitVec(result)
+        return result
+
+    def __setitem__(self, index, value):
+        &#34;&#34;&#34;Set a bit at the specified index, ensuring boolean value.
+
+        Args:
+            index: The index to set
+            value: The value to set (converted to bool)
+        &#34;&#34;&#34;
+        super().__setitem__(index, bool(value))
+
+    def __str__(self) -&gt; str:
+        return str([1 if bit else 0 for bit in self])
+
+    def append(self, value):
+        &#34;&#34;&#34;Append a new bit, ensuring boolean value.
+
+        Args:
+            value: The value to append (converted to bool)
+        &#34;&#34;&#34;
+        super().append(bool(value))
+
+    def extend(self, values):
+        &#34;&#34;&#34;Extend with multiple bits, ensuring boolean values.
+
+        Args:
+            values: Iterable of values to append (each converted to bool)
+        &#34;&#34;&#34;
+        super().extend(bool(v) for v in values)
+
+    def to_int(self) -&gt; Result[int, Error]:
+        &#34;&#34;&#34;Convert the bit vector to an integer value.
+
+        This method converts the BitVec to an integer, with the following constraints:
+        - The length must be a multiple of 8 bits
+        - The maximum length is 64 bits (8 bytes)
+
+        The conversion is performed using big-endian byte order.
+
+        Returns:
+            Result[int, Error]: A Result containing either:
+                - Ok(int): The integer value if conversion succeeds
+                - Err(Error): An error if length constraints are violated
+
+        Examples:
+            &gt;&gt;&gt; bits = BitVec([0,0,0,0, 1,0,1,0])  # 8 bits = 0x0A
+            &gt;&gt;&gt; bits.to_int()
+            Ok(10)
+
+            &gt;&gt;&gt; bits = BitVec([1,1,1,1, 0,0,0,0, 1,0,1,0, 0,0,0,0])  # 16 bits = 0xF0A0
+            &gt;&gt;&gt; bits.to_int()
+            Ok(61600)
+
+            &gt;&gt;&gt; bits = BitVec([1,0,1])  # Not multiple of 8
+            &gt;&gt;&gt; bits.to_int()
+            Err(Error(SIZE_CONSTRAINT_VIOLATION, &#34;BitVec length must be a multiple of 8, got 3&#34;))
+
+            &gt;&gt;&gt; # 72 bits (9 bytes) exceeds maximum
+            &gt;&gt;&gt; long_bits = BitVec([1] * 72)
+            &gt;&gt;&gt; long_bits.to_int()
+            Err(Error(SIZE_CONSTRAINT_VIOLATION, &#34;BitVec length must be less than 64 bits, got 72&#34;))
+        &#34;&#34;&#34;
+        if len(self) % 8 != 0:
+            for _ in range(len(self) % 8):
+                self.insert(0, False)
+
+        if len(self) &gt; 8 * 8:
+            return Result.Err(
+                Error.new(
+                    ErrorKind.SIZE_CONSTRAINT_VIOLATION,
+                    f&#34;BitVec length must be less than 64 bits, got {len(self)}&#34;,
+                )
+            )
+
+        result: int = 0
+        for i, bit in enumerate(self):
+            if self.is_msb:
+                result |= bit &lt;&lt; i
+            else:
+                result |= bit &lt;&lt; (len(self) - i - 1)
+        return Result.Ok(result)
+
+    def to_bytes(self) -&gt; list[int]:
+        &#34;&#34;&#34;Converts the list of bits to a list of bytes.
+
+        The conversion uses MSB-first or LSB-first ordering based on the class type.
+
+        Returns:
+            list[int]: List of bytes (0-255)
+        &#34;&#34;&#34;
+        bytes_list = []
+        for i in range(0, len(self), 8):
+            byte = 0
+            for j in range(min(8, len(self) - i)):
+                if self[i + j]:
+                    if self.is_msb:
+                        byte |= 1 &lt;&lt; j  # LSB: bits from right to left
+                    else:
+                        byte |= 1 &lt;&lt; (7 - j)  # MSB: bits from left to right
+            bytes_list.append(byte)
+        return bytes_list
+
+    def to_hex(self) -&gt; str:
+        return str([f&#34;{byte:02x}&#34; for byte in self.to_bytes()])</code></pre>
+</details>
+<div class="desc"><p>A specialized list for handling bit vectors with configurable bit ordering.</p>
+<p>BitVec extends the built-in list to provide specialized handling of boolean values
+representing bits. It supports both MSB-first and LSB-first bit ordering through
+type parameters.</p>
+<p>The bit ordering affects how the bits are interpreted when converting to other
+formats (bytes, integers).</p>
+<h2 id="examples">Examples</h2>
+<p>Basic operations:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; bits = BitVec([1, 0, 1])
+&gt;&gt;&gt; bits.append(0)
+&gt;&gt;&gt; bits
+[1, 0, 1, 0]
+&gt;&gt;&gt; bits[1:3]  # Slicing returns a new BitVec
+[0, 1]
+</code></pre>
+<p>Converting to other formats:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class MsbBits(BitVec[Msb]): pass
+&gt;&gt;&gt; bits = MsbBits([1,1,0,0, 0,1,0,1])
+&gt;&gt;&gt; bits.to_bytes()  # Convert to bytes
+[197]  # 11000101 = 0xC5
+&gt;&gt;&gt; bits.to_int()    # Convert to integer
+Ok(197)
+&gt;&gt;&gt; bits.to_hex()    # Convert to hex string
+['c5']
+</code></pre>
+<p>Initialize a new bit vector.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*args</code></strong></dt>
+<dd>Arguments passed to list constructor</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments passed to list constructor</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>typing.Generic</li>
+<li>builtins.list</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="shdp.utils.bitvec.BitVec.is_lsb"><code class="name">prop <span class="ident">is_lsb</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def is_lsb(self) -&gt; bool:
+    &#34;&#34;&#34;Check if this BitVec uses LSB-first ordering.
+    
+    Returns:
+        bool: True if LSB-first, False otherwise
+    &#34;&#34;&#34;
+    return isinstance(self, BitVec[Lsb])</code></pre>
+</details>
+<div class="desc"><p>Check if this BitVec uses LSB-first ordering.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if LSB-first, False otherwise</dd>
+</dl></div>
+</dd>
+<dt id="shdp.utils.bitvec.BitVec.is_msb"><code class="name">prop <span class="ident">is_msb</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def is_msb(self) -&gt; bool:
+    &#34;&#34;&#34;Check if this BitVec uses MSB-first ordering.
+    
+    Returns:
+        bool: True if MSB-first, False otherwise
+    &#34;&#34;&#34;
+    return isinstance(self, BitVec[Msb])</code></pre>
+</details>
+<div class="desc"><p>Check if this BitVec uses MSB-first ordering.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if MSB-first, False otherwise</dd>
+</dl></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.utils.bitvec.BitVec.append"><code class="name flex">
+<span>def <span class="ident">append</span></span>(<span>self, value)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def append(self, value):
+    &#34;&#34;&#34;Append a new bit, ensuring boolean value.
+
+    Args:
+        value: The value to append (converted to bool)
+    &#34;&#34;&#34;
+    super().append(bool(value))</code></pre>
+</details>
+<div class="desc"><p>Append a new bit, ensuring boolean value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>value</code></strong></dt>
+<dd>The value to append (converted to bool)</dd>
+</dl></div>
+</dd>
+<dt id="shdp.utils.bitvec.BitVec.extend"><code class="name flex">
+<span>def <span class="ident">extend</span></span>(<span>self, values)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extend(self, values):
+    &#34;&#34;&#34;Extend with multiple bits, ensuring boolean values.
+
+    Args:
+        values: Iterable of values to append (each converted to bool)
+    &#34;&#34;&#34;
+    super().extend(bool(v) for v in values)</code></pre>
+</details>
+<div class="desc"><p>Extend with multiple bits, ensuring boolean values.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>values</code></strong></dt>
+<dd>Iterable of values to append (each converted to bool)</dd>
+</dl></div>
+</dd>
+<dt id="shdp.utils.bitvec.BitVec.to_bytes"><code class="name flex">
+<span>def <span class="ident">to_bytes</span></span>(<span>self) ‑> list[int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_bytes(self) -&gt; list[int]:
+    &#34;&#34;&#34;Converts the list of bits to a list of bytes.
+
+    The conversion uses MSB-first or LSB-first ordering based on the class type.
+
+    Returns:
+        list[int]: List of bytes (0-255)
+    &#34;&#34;&#34;
+    bytes_list = []
+    for i in range(0, len(self), 8):
+        byte = 0
+        for j in range(min(8, len(self) - i)):
+            if self[i + j]:
+                if self.is_msb:
+                    byte |= 1 &lt;&lt; j  # LSB: bits from right to left
+                else:
+                    byte |= 1 &lt;&lt; (7 - j)  # MSB: bits from left to right
+        bytes_list.append(byte)
+    return bytes_list</code></pre>
+</details>
+<div class="desc"><p>Converts the list of bits to a list of bytes.</p>
+<p>The conversion uses MSB-first or LSB-first ordering based on the class type.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[int]</code></dt>
+<dd>List of bytes (0-255)</dd>
+</dl></div>
+</dd>
+<dt id="shdp.utils.bitvec.BitVec.to_hex"><code class="name flex">
+<span>def <span class="ident">to_hex</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_hex(self) -&gt; str:
+    return str([f&#34;{byte:02x}&#34; for byte in self.to_bytes()])</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.utils.bitvec.BitVec.to_int"><code class="name flex">
+<span>def <span class="ident">to_int</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="result.html#shdp.utils.result.Result">Result</a>[int, <a title="shdp.protocol.errors.Error" href="../protocol/errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_int(self) -&gt; Result[int, Error]:
+    &#34;&#34;&#34;Convert the bit vector to an integer value.
+
+    This method converts the BitVec to an integer, with the following constraints:
+    - The length must be a multiple of 8 bits
+    - The maximum length is 64 bits (8 bytes)
+
+    The conversion is performed using big-endian byte order.
+
+    Returns:
+        Result[int, Error]: A Result containing either:
+            - Ok(int): The integer value if conversion succeeds
+            - Err(Error): An error if length constraints are violated
+
+    Examples:
+        &gt;&gt;&gt; bits = BitVec([0,0,0,0, 1,0,1,0])  # 8 bits = 0x0A
+        &gt;&gt;&gt; bits.to_int()
+        Ok(10)
+
+        &gt;&gt;&gt; bits = BitVec([1,1,1,1, 0,0,0,0, 1,0,1,0, 0,0,0,0])  # 16 bits = 0xF0A0
+        &gt;&gt;&gt; bits.to_int()
+        Ok(61600)
+
+        &gt;&gt;&gt; bits = BitVec([1,0,1])  # Not multiple of 8
+        &gt;&gt;&gt; bits.to_int()
+        Err(Error(SIZE_CONSTRAINT_VIOLATION, &#34;BitVec length must be a multiple of 8, got 3&#34;))
+
+        &gt;&gt;&gt; # 72 bits (9 bytes) exceeds maximum
+        &gt;&gt;&gt; long_bits = BitVec([1] * 72)
+        &gt;&gt;&gt; long_bits.to_int()
+        Err(Error(SIZE_CONSTRAINT_VIOLATION, &#34;BitVec length must be less than 64 bits, got 72&#34;))
+    &#34;&#34;&#34;
+    if len(self) % 8 != 0:
+        for _ in range(len(self) % 8):
+            self.insert(0, False)
+
+    if len(self) &gt; 8 * 8:
+        return Result.Err(
+            Error.new(
+                ErrorKind.SIZE_CONSTRAINT_VIOLATION,
+                f&#34;BitVec length must be less than 64 bits, got {len(self)}&#34;,
+            )
+        )
+
+    result: int = 0
+    for i, bit in enumerate(self):
+        if self.is_msb:
+            result |= bit &lt;&lt; i
+        else:
+            result |= bit &lt;&lt; (len(self) - i - 1)
+    return Result.Ok(result)</code></pre>
+</details>
+<div class="desc"><p>Convert the bit vector to an integer value.</p>
+<p>This method converts the BitVec to an integer, with the following constraints:
+- The length must be a multiple of 8 bits
+- The maximum length is 64 bits (8 bytes)</p>
+<p>The conversion is performed using big-endian byte order.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Result[int, Error]</code></dt>
+<dd>A Result containing either:
+- Ok(int): The integer value if conversion succeeds
+- Err(Error): An error if length constraints are violated</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; bits = BitVec([0,0,0,0, 1,0,1,0])  # 8 bits = 0x0A
+&gt;&gt;&gt; bits.to_int()
+Ok(10)
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; bits = BitVec([1,1,1,1, 0,0,0,0, 1,0,1,0, 0,0,0,0])  # 16 bits = 0xF0A0
+&gt;&gt;&gt; bits.to_int()
+Ok(61600)
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; bits = BitVec([1,0,1])  # Not multiple of 8
+&gt;&gt;&gt; bits.to_int()
+Err(Error(SIZE_CONSTRAINT_VIOLATION, &quot;BitVec length must be a multiple of 8, got 3&quot;))
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # 72 bits (9 bytes) exceeds maximum
+&gt;&gt;&gt; long_bits = BitVec([1] * 72)
+&gt;&gt;&gt; long_bits.to_int()
+Err(Error(SIZE_CONSTRAINT_VIOLATION, &quot;BitVec length must be less than 64 bits, got 72&quot;))
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.utils.bitvec.Lsb"><code class="flex name class">
+<span>class <span class="ident">Lsb</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Lsb:
+    &#34;&#34;&#34;Marker class for LSB-first bit ordering.
+    
+    Used as a type parameter for BitVec to indicate that bits should be processed
+    from least significant (rightmost) to most significant (leftmost).
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<div class="desc"><p>Marker class for LSB-first bit ordering.</p>
+<p>Used as a type parameter for BitVec to indicate that bits should be processed
+from least significant (rightmost) to most significant (leftmost).</p></div>
+</dd>
+<dt id="shdp.utils.bitvec.Msb"><code class="flex name class">
+<span>class <span class="ident">Msb</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Msb:
+    &#34;&#34;&#34;Marker class for MSB-first bit ordering.
+    
+    Used as a type parameter for BitVec to indicate that bits should be processed
+    from most significant (leftmost) to least significant (rightmost).
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<div class="desc"><p>Marker class for MSB-first bit ordering.</p>
+<p>Used as a type parameter for BitVec to indicate that bits should be processed
+from most significant (leftmost) to least significant (rightmost).</p></div>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="shdp.utils" href="index.html">shdp.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="shdp.utils.bitvec.reverse_bit_order" href="#shdp.utils.bitvec.reverse_bit_order">reverse_bit_order</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="shdp.utils.bitvec.BitOrder" href="#shdp.utils.bitvec.BitOrder">BitOrder</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.utils.bitvec.BitOrder.LSB" href="#shdp.utils.bitvec.BitOrder.LSB">LSB</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitOrder.MSB" href="#shdp.utils.bitvec.BitOrder.MSB">MSB</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.utils.bitvec.BitVec" href="#shdp.utils.bitvec.BitVec">BitVec</a></code></h4>
+<ul class="two-column">
+<li><code><a title="shdp.utils.bitvec.BitVec.append" href="#shdp.utils.bitvec.BitVec.append">append</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.extend" href="#shdp.utils.bitvec.BitVec.extend">extend</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.is_lsb" href="#shdp.utils.bitvec.BitVec.is_lsb">is_lsb</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.is_msb" href="#shdp.utils.bitvec.BitVec.is_msb">is_msb</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.to_bytes" href="#shdp.utils.bitvec.BitVec.to_bytes">to_bytes</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.to_hex" href="#shdp.utils.bitvec.BitVec.to_hex">to_hex</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.to_int" href="#shdp.utils.bitvec.BitVec.to_int">to_int</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.utils.bitvec.Lsb" href="#shdp.utils.bitvec.Lsb">Lsb</a></code></h4>
+</li>
+<li>
+<h4><code><a title="shdp.utils.bitvec.Msb" href="#shdp.utils.bitvec.Msb">Msb</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>shdp.protocol.server.versions.v1.c0x0001 API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>shdp.protocol.server.versions.v1.c0x0001</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="shdp.protocol.server.versions.v1.c0x0001.HtmlFileResponse"><code class="flex name class">
+<span>class <span class="ident">HtmlFileResponse</span></span>
+<span>(</span><span>path: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HtmlFileResponse(EventEncoder[Lsb]):
+    &#34;&#34;&#34;HTML file response encoder for SHDP protocol.
+
+    This class handles encoding of HTML files for transmission, including:
+    - File name encoding
+    - HTML content minification
+    - Tag structure preservation
+    - Attribute handling
+    - Text content encoding
+
+    Attributes:
+        encoder (BitEncoder[Lsb]): Bit encoder for the response
+        path (str): Path to the HTML file
+
+    Example:
+        &gt;&gt;&gt; response = HtmlFileResponse(&#34;templates/page.html&#34;)
+        &gt;&gt;&gt; response.encode()
+        &gt;&gt;&gt; encoder = response.get_encoder()
+    &#34;&#34;&#34;
+
+    def __init__(self, path: str):
+        &#34;&#34;&#34;Initialize HTML file response.
+
+        Args:
+            path: Path to the HTML file to encode
+        &#34;&#34;&#34;
+        logging.debug(
+            f&#34;[\x1b[38;5;227mSHDP\x1b[0m] \x1b[38;5;205m0x0001\x1b[0m created ({path})&#34;
+        )
+
+        self.encoder = BitEncoder[Lsb]()
+        self.path = path
+
+    def _append_text(self, node: PageElement, text: str) -&gt; Result[None, Error]:
+        &#34;&#34;&#34;Append text content to the encoder.
+
+        Handles text node encoding with special cases:
+        - Ignores empty text (whitespace only)
+        - Skips text without parent
+        - Preserves text in &lt;pre&gt; tags
+
+        Args:
+            node: Parent tag containing the text
+            text: Text content to encode
+
+        Returns:
+            Result[None, Error]: Ok(None) if text was encoded successfully
+        &#34;&#34;&#34;
+        if text.strip() == &#34;&#34;:
+            return Result.Ok(None)
+
+        if node.parent is None:
+            return Result.Ok(None)
+
+        parent = node.parent
+
+        if parent.name == &#34;pre&#34;:
+            return Result.Ok(None)
+
+        Result.hide()
+
+        self.encoder.add_data(0, 10)
+        self.encoder.add_data(len(text), 15)
+        self.encoder.add_bytes(text.encode(&#34;utf-8&#34;))
+
+        return Result.reveal()
+
+    def _append_fyve_text(self, text: str) -&gt; Result[None, Error]:
+        &#34;&#34;&#34;Encode text using the CHARS mapping.
+
+        Converts each character to its corresponding CHARS code.
+
+        Args:
+            text: Text to encode using CHARS mapping
+
+        Returns:
+            Result[None, Error]: Ok(None) if encoding succeeds,
+                               Err if text is empty
+        &#34;&#34;&#34;
+        if text.strip() == &#34;&#34;:
+            return Result.Err(Error.new(ErrorKind.BAD_REQUEST, &#34;Text is empty&#34;))
+
+        chars = list(text)
+
+        Result.hide()
+
+        for char in chars:
+            self.encoder.add_vec(CHARS[char])
+
+        return Result.reveal()
+
+    def _process_node(
+        self, node: PageElement, open_elements: list[str]
+    ) -&gt; Result[None, Error]:
+        &#34;&#34;&#34;Process an HTML node recursively.
+
+        Handles different node types:
+        - Tag nodes: Processes name, attributes and children
+        - Text nodes: Encodes text content
+        Maintains stack of open elements for proper nesting.
+
+        Args:
+            node: HTML node to process
+            open_elements: Stack of currently open element names
+
+        Returns:
+            Result[None, Error]: Ok(None) if node was processed successfully
+        &#34;&#34;&#34;
+        Result.hide()
+
+        if isinstance(node, Tag):
+            element_name = node.name
+
+            open_elements.append(element_name)
+
+            self.encoder.add_data(16, 10)
+            self._append_fyve_text(element_name)
+
+            if len(node.attrs) &gt; 0:
+                self.encoder.add_data(17, 10)
+
+                for attr_name, attr_value in node.attrs.items():
+                    self._append_fyve_text(attr_name)
+                    self._append_text(node, attr_value)
+
+            self.encoder.add_data(24, 10)
+
+            for child in node.contents:
+                self._process_node(child, open_elements)
+
+            open_elements.pop()
+
+            self.encoder.add_data(25, 10)
+
+        elif isinstance(node, NavigableString):
+            self._append_text(node, str(node))
+
+        return Result.reveal()
+
+    def encode(self) -&gt; Result[None, Error]:
+        &#34;&#34;&#34;Encode the complete HTML file.
+
+        Process includes:
+        1. Encoding the filename
+        2. Reading and minifying HTML content
+        3. Parsing with BeautifulSoup
+        4. Processing all nodes recursively
+
+        Returns:
+            Result[None, Error]: Ok(None) if encoding succeeds
+        &#34;&#34;&#34;
+        if sys.platform == &#34;win32&#34;:
+            html_file_name = self.path.split(&#34;\\&#34;)[-1]
+        else:
+            html_file_name = self.path.split(&#34;/&#34;)[-1]
+
+        Result.hide()
+
+        self.encoder.add_bytes(html_file_name.encode(&#34;utf-8&#34;))
+        self.encoder.add_data(0, 8)
+
+        with open(self.path, &#34;r&#34;, encoding=&#34;utf-8&#34;) as file:
+            html_content = file.read()
+
+        minified_html = minify(
+            html_content, remove_comments=True, remove_empty_space=False
+        )
+        document = BeautifulSoup(minified_html, &#34;html.parser&#34;)
+
+        open_elements: list[str] = []
+        for node in document.contents:
+            self._process_node(node, open_elements)
+
+        return Result.reveal()
+
+    def get_encoder(self) -&gt; BitEncoder[Lsb]:
+        return self.encoder
+
+    def get_event(self) -&gt; int:
+        return 0x0001</code></pre>
+</details>
+<div class="desc"><p>HTML file response encoder for SHDP protocol.</p>
+<p>This class handles encoding of HTML files for transmission, including:
+- File name encoding
+- HTML content minification
+- Tag structure preservation
+- Attribute handling
+- Text content encoding</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>encoder</code></strong> :&ensp;<code>BitEncoder[Lsb]</code></dt>
+<dd>Bit encoder for the response</dd>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the HTML file</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; response = HtmlFileResponse(&quot;templates/page.html&quot;)
+&gt;&gt;&gt; response.encode()
+&gt;&gt;&gt; encoder = response.get_encoder()
+</code></pre>
+<p>Initialize HTML file response.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>Path to the HTML file to encode</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="shdp.protocol.managers.event.EventEncoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventEncoder">EventEncoder</a></li>
+<li>typing.Generic</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.server.versions.v1.c0x0001.HtmlFileResponse.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../../../../utils/result.html#shdp.utils.result.Result">Result</a>[None, <a title="shdp.protocol.errors.Error" href="../../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def encode(self) -&gt; Result[None, Error]:
+    &#34;&#34;&#34;Encode the complete HTML file.
+
+    Process includes:
+    1. Encoding the filename
+    2. Reading and minifying HTML content
+    3. Parsing with BeautifulSoup
+    4. Processing all nodes recursively
+
+    Returns:
+        Result[None, Error]: Ok(None) if encoding succeeds
+    &#34;&#34;&#34;
+    if sys.platform == &#34;win32&#34;:
+        html_file_name = self.path.split(&#34;\\&#34;)[-1]
+    else:
+        html_file_name = self.path.split(&#34;/&#34;)[-1]
+
+    Result.hide()
+
+    self.encoder.add_bytes(html_file_name.encode(&#34;utf-8&#34;))
+    self.encoder.add_data(0, 8)
+
+    with open(self.path, &#34;r&#34;, encoding=&#34;utf-8&#34;) as file:
+        html_content = file.read()
+
+    minified_html = minify(
+        html_content, remove_comments=True, remove_empty_space=False
+    )
+    document = BeautifulSoup(minified_html, &#34;html.parser&#34;)
+
+    open_elements: list[str] = []
+    for node in document.contents:
+        self._process_node(node, open_elements)
+
+    return Result.reveal()</code></pre>
+</details>
+<div class="desc"><p>Encode the complete HTML file.</p>
+<p>Process includes:
+1. Encoding the filename
+2. Reading and minifying HTML content
+3. Parsing with BeautifulSoup
+4. Processing all nodes recursively</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Result[None, Error]</code></dt>
+<dd>Ok(None) if encoding succeeds</dd>
+</dl></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="shdp.protocol.managers.event.EventEncoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventEncoder">EventEncoder</a></b></code>:
+<ul class="hlist">
+<li><code><a title="shdp.protocol.managers.event.EventEncoder.get_encoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventEncoder.get_encoder">get_encoder</a></code></li>
+<li><code><a title="shdp.protocol.managers.event.EventEncoder.get_event" href="../../../managers/event.html#shdp.protocol.managers.event.EventEncoder.get_event">get_event</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="shdp.protocol.server.versions.v1" href="index.html">shdp.protocol.server.versions.v1</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="shdp.protocol.server.versions.v1.c0x0001.HtmlFileResponse" href="#shdp.protocol.server.versions.v1.c0x0001.HtmlFileResponse">HtmlFileResponse</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.server.versions.v1.c0x0001.HtmlFileResponse.encode" href="#shdp.protocol.server.versions.v1.c0x0001.HtmlFileResponse.encode">encode</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

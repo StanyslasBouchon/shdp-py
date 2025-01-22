@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>shdp.protocol.client.bits.utils API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>shdp.protocol.client.bits.utils</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.FyveImpl"><code class="flex name class">
+<span>class <span class="ident">FyveImpl</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FyveImpl:
+    &#34;&#34;&#34;Implementation of 5-bit (fyve) operations for the SHDP protocol.
+
+    Provides static methods for reading and processing fyve sequences.
+
+    Examples:
+        &gt;&gt;&gt; decoder = BitDecoder()
+        &gt;&gt;&gt; fyve = FyveImpl.read_fyve(decoder)  # Reads next 5 bits
+        &gt;&gt;&gt; operation = FyveImpl.get_op(decoder)  # Gets complete operation
+    &#34;&#34;&#34;
+
+    @staticmethod
+    def get_op(decoder: BitDecoder[Msb]) -&gt; Result[&#34;Operation&#34;, Error]:
+        &#34;&#34;&#34;Read and construct a complete Operation from the bit stream.
+
+        Args:
+            decoder: Bit decoder for reading 5-bit sequences
+
+        Returns:
+            Result[Operation, Error]: Constructed Operation instance
+
+        Example:
+            &gt;&gt;&gt; decoder = BitDecoder(bytes([0x00, 0x10]))  # START_OF_TAG
+            &gt;&gt;&gt; op = FyveImpl.get_op(decoder)
+            &gt;&gt;&gt; op.kind == OperatingCode.SYSTEM
+            True
+            &gt;&gt;&gt; op.code == OperationCode.START_OF_TAG
+            True
+        &#34;&#34;&#34;
+        op = FyveImpl.read_fyve(decoder)
+        if op.is_err():
+            return Result[Operation, Error].Err(op.unwrap_err())
+
+        return Operation.from_fyve(op.unwrap(), decoder)
+
+    @staticmethod
+    def read_fyve(decoder: BitDecoder[Msb]) -&gt; Result[int, Error]:
+        &#34;&#34;&#34;Read a single 5-bit value from the decoder.
+
+        Args:
+            decoder: Bit decoder for reading values
+
+        Returns:
+            Result[int, Error]: 5-bit integer value (0-31)
+
+        Example:
+            &gt;&gt;&gt; decoder = BitDecoder(bytes([0x1f]))
+            &gt;&gt;&gt; FyveImpl.read_fyve(decoder)
+            Result.Ok(31)  # 0x1f
+        &#34;&#34;&#34;
+        return decoder.read_data(5).unwrap().to_int()</code></pre>
+</details>
+<div class="desc"><p>Implementation of 5-bit (fyve) operations for the SHDP protocol.</p>
+<p>Provides static methods for reading and processing fyve sequences.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder()
+&gt;&gt;&gt; fyve = FyveImpl.read_fyve(decoder)  # Reads next 5 bits
+&gt;&gt;&gt; operation = FyveImpl.get_op(decoder)  # Gets complete operation
+</code></pre></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.FyveImpl.get_op"><code class="name flex">
+<span>def <span class="ident">get_op</span></span>(<span>decoder: <a title="shdp.protocol.managers.bits.decoder.BitDecoder" href="../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.BitDecoder">BitDecoder</a>[<a title="shdp.utils.bitvec.Msb" href="../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>]) ‑> <a title="shdp.utils.result.Result" href="../../../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.protocol.client.bits.utils.Operation" href="#shdp.protocol.client.bits.utils.Operation">Operation</a>, <a title="shdp.protocol.errors.Error" href="../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_op(decoder: BitDecoder[Msb]) -&gt; Result[&#34;Operation&#34;, Error]:
+    &#34;&#34;&#34;Read and construct a complete Operation from the bit stream.
+
+    Args:
+        decoder: Bit decoder for reading 5-bit sequences
+
+    Returns:
+        Result[Operation, Error]: Constructed Operation instance
+
+    Example:
+        &gt;&gt;&gt; decoder = BitDecoder(bytes([0x00, 0x10]))  # START_OF_TAG
+        &gt;&gt;&gt; op = FyveImpl.get_op(decoder)
+        &gt;&gt;&gt; op.kind == OperatingCode.SYSTEM
+        True
+        &gt;&gt;&gt; op.code == OperationCode.START_OF_TAG
+        True
+    &#34;&#34;&#34;
+    op = FyveImpl.read_fyve(decoder)
+    if op.is_err():
+        return Result[Operation, Error].Err(op.unwrap_err())
+
+    return Operation.from_fyve(op.unwrap(), decoder)</code></pre>
+</details>
+<div class="desc"><p>Read and construct a complete Operation from the bit stream.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>decoder</code></strong></dt>
+<dd>Bit decoder for reading 5-bit sequences</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Result[<a title="shdp.protocol.client.bits.utils.Operation" href="#shdp.protocol.client.bits.utils.Operation">Operation</a>, Error]</code></dt>
+<dd>Constructed Operation instance</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder(bytes([0x00, 0x10]))  # START_OF_TAG
+&gt;&gt;&gt; op = FyveImpl.get_op(decoder)
+&gt;&gt;&gt; op.kind == OperatingCode.SYSTEM
+True
+&gt;&gt;&gt; op.code == OperationCode.START_OF_TAG
+True
+</code></pre></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.FyveImpl.read_fyve"><code class="name flex">
+<span>def <span class="ident">read_fyve</span></span>(<span>decoder: <a title="shdp.protocol.managers.bits.decoder.BitDecoder" href="../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.BitDecoder">BitDecoder</a>[<a title="shdp.utils.bitvec.Msb" href="../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>]) ‑> <a title="shdp.utils.result.Result" href="../../../utils/result.html#shdp.utils.result.Result">Result</a>[int, <a title="shdp.protocol.errors.Error" href="../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def read_fyve(decoder: BitDecoder[Msb]) -&gt; Result[int, Error]:
+    &#34;&#34;&#34;Read a single 5-bit value from the decoder.
+
+    Args:
+        decoder: Bit decoder for reading values
+
+    Returns:
+        Result[int, Error]: 5-bit integer value (0-31)
+
+    Example:
+        &gt;&gt;&gt; decoder = BitDecoder(bytes([0x1f]))
+        &gt;&gt;&gt; FyveImpl.read_fyve(decoder)
+        Result.Ok(31)  # 0x1f
+    &#34;&#34;&#34;
+    return decoder.read_data(5).unwrap().to_int()</code></pre>
+</details>
+<div class="desc"><p>Read a single 5-bit value from the decoder.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>decoder</code></strong></dt>
+<dd>Bit decoder for reading values</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Result[int, Error]</code></dt>
+<dd>5-bit integer value (0-31)</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder(bytes([0x1f]))
+&gt;&gt;&gt; FyveImpl.read_fyve(decoder)
+Result.Ok(31)  # 0x1f
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperatingCode"><code class="flex name class">
+<span>class <span class="ident">OperatingCode</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OperatingCode(Enum):
+    &#34;&#34;&#34;Operating code for the SHDP protocol.
+
+    Used to distinguish between system operations and character data.
+
+    Examples:
+        &gt;&gt;&gt; op = OperatingCode.from_fyve(0x00)
+        &gt;&gt;&gt; op == OperatingCode.SYSTEM
+        True
+
+        &gt;&gt;&gt; op = OperatingCode.from_fyve(0x1f)
+        &gt;&gt;&gt; op == OperatingCode.CHARACTER
+        True
+    &#34;&#34;&#34;
+
+    SYSTEM = 0x00
+    CHARACTER = 0x1F
+
+    @classmethod
+    def from_fyve(cls, fyve: int) -&gt; &#34;OperatingCode&#34;:
+        &#34;&#34;&#34;Convert a 5-bit value (fyve) to an OperatingCode.
+
+        Args:
+            fyve: 5-bit integer value (0x00 or other)
+
+        Returns:
+            OperatingCode.SYSTEM for 0x00, OperatingCode.CHARACTER otherwise
+
+        Example:
+            &gt;&gt;&gt; OperatingCode.from_fyve(0x00)
+            OperatingCode.SYSTEM
+            &gt;&gt;&gt; OperatingCode.from_fyve(0x1f)
+            OperatingCode.CHARACTER
+        &#34;&#34;&#34;
+        if fyve == 0x00:
+            return cls.SYSTEM
+        else:
+            return cls.CHARACTER
+
+    def to_fyve(self) -&gt; int:
+        &#34;&#34;&#34;Convert the OperatingCode to its 5-bit representation.
+
+        Returns:
+            Integer value (0x00 for SYSTEM, 0x1f for CHARACTER)
+
+        Example:
+            &gt;&gt;&gt; OperatingCode.SYSTEM.to_fyve()
+            0x00
+            &gt;&gt;&gt; OperatingCode.CHARACTER.to_fyve()
+            0x1f
+        &#34;&#34;&#34;
+        return self.value
+
+    def __repr__(self) -&gt; str:
+        return f&#34;{self.__class__.__name__}.{self.name}&#34;</code></pre>
+</details>
+<div class="desc"><p>Operating code for the SHDP protocol.</p>
+<p>Used to distinguish between system operations and character data.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; op = OperatingCode.from_fyve(0x00)
+&gt;&gt;&gt; op == OperatingCode.SYSTEM
+True
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; op = OperatingCode.from_fyve(0x1f)
+&gt;&gt;&gt; op == OperatingCode.CHARACTER
+True
+</code></pre></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.OperatingCode.CHARACTER"><code class="name">var <span class="ident">CHARACTER</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperatingCode.SYSTEM"><code class="name">var <span class="ident">SYSTEM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.OperatingCode.from_fyve"><code class="name flex">
+<span>def <span class="ident">from_fyve</span></span>(<span>fyve: int) ‑> <a title="shdp.protocol.client.bits.utils.OperatingCode" href="#shdp.protocol.client.bits.utils.OperatingCode">OperatingCode</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert a 5-bit value (fyve) to an OperatingCode.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fyve</code></strong></dt>
+<dd>5-bit integer value (0x00 or other)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>OperatingCode.SYSTEM for 0x00, OperatingCode.CHARACTER otherwise</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; OperatingCode.from_fyve(0x00)
+OperatingCode.SYSTEM
+&gt;&gt;&gt; OperatingCode.from_fyve(0x1f)
+OperatingCode.CHARACTER
+</code></pre></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.OperatingCode.to_fyve"><code class="name flex">
+<span>def <span class="ident">to_fyve</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_fyve(self) -&gt; int:
+    &#34;&#34;&#34;Convert the OperatingCode to its 5-bit representation.
+
+    Returns:
+        Integer value (0x00 for SYSTEM, 0x1f for CHARACTER)
+
+    Example:
+        &gt;&gt;&gt; OperatingCode.SYSTEM.to_fyve()
+        0x00
+        &gt;&gt;&gt; OperatingCode.CHARACTER.to_fyve()
+        0x1f
+    &#34;&#34;&#34;
+    return self.value</code></pre>
+</details>
+<div class="desc"><p>Convert the OperatingCode to its 5-bit representation.</p>
+<h2 id="returns">Returns</h2>
+<p>Integer value (0x00 for SYSTEM, 0x1f for CHARACTER)</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; OperatingCode.SYSTEM.to_fyve()
+0x00
+&gt;&gt;&gt; OperatingCode.CHARACTER.to_fyve()
+0x1f
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.Operation"><code class="flex name class">
+<span>class <span class="ident">Operation</span></span>
+<span>(</span><span>kind: <a title="shdp.protocol.client.bits.utils.OperatingCode" href="#shdp.protocol.client.bits.utils.OperatingCode">OperatingCode</a>,<br>code: <a title="shdp.protocol.client.bits.utils.OperationCode" href="#shdp.protocol.client.bits.utils.OperationCode">OperationCode</a> | None,<br>values: list[int])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Operation:
+    &#34;&#34;&#34;Represents a complete SHDP protocol operation.
+
+    Handles both system operations and character data by decoding 5-bit sequences (fyves).
+
+    Examples:
+        # Decoding a character operation
+        &gt;&gt;&gt; decoder = BitDecoder()
+        &gt;&gt;&gt; op = Operation.from_fyve(0x1f, decoder)  # For multi-fyve character
+        &gt;&gt;&gt; char = op.get_char()  # Returns the decoded character
+
+        # Decoding a system operation
+        &gt;&gt;&gt; op = Operation.from_fyve(0x00, decoder)
+        &gt;&gt;&gt; op.kind == OperatingCode.SYSTEM
+        True
+        &gt;&gt;&gt; op.code == OperationCode.START_OF_TAG  # If next fyve was 0x10
+        True
+    &#34;&#34;&#34;
+
+    kind: OperatingCode
+    code: OperationCode | None
+    values: list[int] = []
+
+    def __init__(
+        self, kind: OperatingCode, code: OperationCode | None, values: list[int]
+    ):
+        &#34;&#34;&#34;Initialize a new operation instance.
+
+        Args:
+            kind (OperatingCode): The type of operation being performed.
+            code (OperationCode | None): The specific operation code. Can be None for certain operation types.
+            values (list[int]): List of integer values associated with this operation.
+
+        Examples:
+            &gt;&gt;&gt; # Create a basic operation
+            &gt;&gt;&gt; op = Operation(OperatingCode.READ, OperationCode.GET_STATUS, [1, 2, 3])
+
+            &gt;&gt;&gt; # Create an operation without a specific code
+            &gt;&gt;&gt; op = Operation(OperatingCode.WRITE, None, [255, 128])
+
+            &gt;&gt;&gt; # Create an operation with empty values
+            &gt;&gt;&gt; op = Operation(OperatingCode.QUERY, OperationCode.LIST_DEVICES, [])
+
+        Note:
+            The values list typically contains byte values (0-255) that will be used
+            in the operation&#39;s execution.
+        &#34;&#34;&#34;
+        self.kind = kind
+        self.code = code
+        self.values = values
+
+    @staticmethod
+    def from_fyve(fyve: int, decoder: BitDecoder[Msb]) -&gt; Result[&#34;Operation&#34;, Error]:
+        &#34;&#34;&#34;Create an Operation from an initial fyve and subsequent bits.
+
+        Args:
+            fyve: Initial 5-bit value determining operation type
+            decoder: Bit decoder for reading additional values
+
+        Returns:
+            Result[Operation, Error]: New Operation instance
+
+        Example:
+            &gt;&gt;&gt; decoder = BitDecoder(bytes([0x1f, 0x03]))  # Character &#39;a&#39;
+            &gt;&gt;&gt; op = Operation.from_fyve(0x1f, decoder)
+            &gt;&gt;&gt; op.kind == OperatingCode.CHARACTER
+            True
+            &gt;&gt;&gt; op.get_char()
+            Result.Ok(&#39;a&#39;)
+        &#34;&#34;&#34;
+        Result.hide()
+
+        op = OperatingCode.from_fyve(fyve)
+
+        code: OperationCode | None = None
+
+        values: list[int] = []
+        values.append(fyve)
+
+        if op == OperatingCode.SYSTEM:
+            operator = decoder.read_data(5).unwrap().to_int().unwrap()
+
+            code = OperationCode.from_fyve(operator)
+            values.append(operator)
+        else:
+            op = OperatingCode.CHARACTER
+
+            if fyve == 0x1F:
+                next_fyve = decoder.read_data(5).unwrap().to_int().unwrap()
+                values.append(next_fyve)
+
+                while next_fyve == 0x1F:
+                    next_fyve = decoder.read_data(5).unwrap().to_int().unwrap()
+                    values.append(next_fyve)
+
+        r: Result[None, Error] = Result.reveal()
+        if r.is_err():
+            return Result[Operation, Error].Err(r.unwrap_err())
+
+        return Result.Ok(Operation(kind=op, code=code, values=values))
+
+    def get_char(self) -&gt; Result[str, Error]:
+        &#34;&#34;&#34;Convert stored fyve values to a character using CHARS mapping.
+
+        The method combines multiple 5-bit values into a single integer
+        and looks up the corresponding character in the CHARS dictionary.
+
+        Returns:
+            Result[str, Error]: Decoded character string
+
+        Raises:
+            Error: If the computed value isn&#39;t in CHARS dictionary
+
+        Example:
+            &gt;&gt;&gt; op = Operation(kind=OperatingCode.CHARACTER,
+            ...              code=None,
+            ...              values=[0x1f, 0x03])
+            &gt;&gt;&gt; op.get_char()
+            Result.Ok(&#39;a&#39;)
+        &#34;&#34;&#34;
+        values = self.values
+        values.reverse()
+
+        value = 0
+        for i, v in enumerate(values):
+            value |= v &lt;&lt; (i * 5)
+
+        if value in CHARS:
+            return Result.Ok(CHARS[value])
+        else:
+            return Result.Err(
+                Error(0, ErrorKind.BAD_REQUEST, f&#34;Unknown character value: {value}&#34;)
+            )</code></pre>
+</details>
+<div class="desc"><p>Represents a complete SHDP protocol operation.</p>
+<p>Handles both system operations and character data by decoding 5-bit sequences (fyves).</p>
+<h2 id="examples">Examples</h2>
+<h1 id="decoding-a-character-operation">Decoding a character operation</h1>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder()
+&gt;&gt;&gt; op = Operation.from_fyve(0x1f, decoder)  # For multi-fyve character
+&gt;&gt;&gt; char = op.get_char()  # Returns the decoded character
+</code></pre>
+<h1 id="decoding-a-system-operation">Decoding a system operation</h1>
+<pre><code class="language-python-repl">&gt;&gt;&gt; op = Operation.from_fyve(0x00, decoder)
+&gt;&gt;&gt; op.kind == OperatingCode.SYSTEM
+True
+&gt;&gt;&gt; op.code == OperationCode.START_OF_TAG  # If next fyve was 0x10
+True
+</code></pre>
+<p>Initialize a new operation instance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kind</code></strong> :&ensp;<code><a title="shdp.protocol.client.bits.utils.OperatingCode" href="#shdp.protocol.client.bits.utils.OperatingCode">OperatingCode</a></code></dt>
+<dd>The type of operation being performed.</dd>
+<dt><strong><code>code</code></strong> :&ensp;<code>OperationCode | None</code></dt>
+<dd>The specific operation code. Can be None for certain operation types.</dd>
+<dt><strong><code>values</code></strong> :&ensp;<code>list[int]</code></dt>
+<dd>List of integer values associated with this operation.</dd>
+</dl>
+<h2 id="examples_1">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Create a basic operation
+&gt;&gt;&gt; op = Operation(OperatingCode.READ, OperationCode.GET_STATUS, [1, 2, 3])
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Create an operation without a specific code
+&gt;&gt;&gt; op = Operation(OperatingCode.WRITE, None, [255, 128])
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Create an operation with empty values
+&gt;&gt;&gt; op = Operation(OperatingCode.QUERY, OperationCode.LIST_DEVICES, [])
+</code></pre>
+<h2 id="note">Note</h2>
+<p>The values list typically contains byte values (0-255) that will be used
+in the operation's execution.</p></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.Operation.code"><code class="name">var <span class="ident">code</span> : <a title="shdp.protocol.client.bits.utils.OperationCode" href="#shdp.protocol.client.bits.utils.OperationCode">OperationCode</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.Operation.kind"><code class="name">var <span class="ident">kind</span> : <a title="shdp.protocol.client.bits.utils.OperatingCode" href="#shdp.protocol.client.bits.utils.OperatingCode">OperatingCode</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.Operation.values"><code class="name">var <span class="ident">values</span> : list[int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.Operation.from_fyve"><code class="name flex">
+<span>def <span class="ident">from_fyve</span></span>(<span>fyve: int,<br>decoder: <a title="shdp.protocol.managers.bits.decoder.BitDecoder" href="../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.BitDecoder">BitDecoder</a>[<a title="shdp.utils.bitvec.Msb" href="../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>]) ‑> <a title="shdp.utils.result.Result" href="../../../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.protocol.client.bits.utils.Operation" href="#shdp.protocol.client.bits.utils.Operation">Operation</a>, <a title="shdp.protocol.errors.Error" href="../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def from_fyve(fyve: int, decoder: BitDecoder[Msb]) -&gt; Result[&#34;Operation&#34;, Error]:
+    &#34;&#34;&#34;Create an Operation from an initial fyve and subsequent bits.
+
+    Args:
+        fyve: Initial 5-bit value determining operation type
+        decoder: Bit decoder for reading additional values
+
+    Returns:
+        Result[Operation, Error]: New Operation instance
+
+    Example:
+        &gt;&gt;&gt; decoder = BitDecoder(bytes([0x1f, 0x03]))  # Character &#39;a&#39;
+        &gt;&gt;&gt; op = Operation.from_fyve(0x1f, decoder)
+        &gt;&gt;&gt; op.kind == OperatingCode.CHARACTER
+        True
+        &gt;&gt;&gt; op.get_char()
+        Result.Ok(&#39;a&#39;)
+    &#34;&#34;&#34;
+    Result.hide()
+
+    op = OperatingCode.from_fyve(fyve)
+
+    code: OperationCode | None = None
+
+    values: list[int] = []
+    values.append(fyve)
+
+    if op == OperatingCode.SYSTEM:
+        operator = decoder.read_data(5).unwrap().to_int().unwrap()
+
+        code = OperationCode.from_fyve(operator)
+        values.append(operator)
+    else:
+        op = OperatingCode.CHARACTER
+
+        if fyve == 0x1F:
+            next_fyve = decoder.read_data(5).unwrap().to_int().unwrap()
+            values.append(next_fyve)
+
+            while next_fyve == 0x1F:
+                next_fyve = decoder.read_data(5).unwrap().to_int().unwrap()
+                values.append(next_fyve)
+
+    r: Result[None, Error] = Result.reveal()
+    if r.is_err():
+        return Result[Operation, Error].Err(r.unwrap_err())
+
+    return Result.Ok(Operation(kind=op, code=code, values=values))</code></pre>
+</details>
+<div class="desc"><p>Create an Operation from an initial fyve and subsequent bits.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fyve</code></strong></dt>
+<dd>Initial 5-bit value determining operation type</dd>
+<dt><strong><code>decoder</code></strong></dt>
+<dd>Bit decoder for reading additional values</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Result[<a title="shdp.protocol.client.bits.utils.Operation" href="#shdp.protocol.client.bits.utils.Operation">Operation</a>, Error]</code></dt>
+<dd>New Operation instance</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder(bytes([0x1f, 0x03]))  # Character 'a'
+&gt;&gt;&gt; op = Operation.from_fyve(0x1f, decoder)
+&gt;&gt;&gt; op.kind == OperatingCode.CHARACTER
+True
+&gt;&gt;&gt; op.get_char()
+Result.Ok('a')
+</code></pre></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.Operation.get_char"><code class="name flex">
+<span>def <span class="ident">get_char</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../../../utils/result.html#shdp.utils.result.Result">Result</a>[str, <a title="shdp.protocol.errors.Error" href="../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_char(self) -&gt; Result[str, Error]:
+    &#34;&#34;&#34;Convert stored fyve values to a character using CHARS mapping.
+
+    The method combines multiple 5-bit values into a single integer
+    and looks up the corresponding character in the CHARS dictionary.
+
+    Returns:
+        Result[str, Error]: Decoded character string
+
+    Raises:
+        Error: If the computed value isn&#39;t in CHARS dictionary
+
+    Example:
+        &gt;&gt;&gt; op = Operation(kind=OperatingCode.CHARACTER,
+        ...              code=None,
+        ...              values=[0x1f, 0x03])
+        &gt;&gt;&gt; op.get_char()
+        Result.Ok(&#39;a&#39;)
+    &#34;&#34;&#34;
+    values = self.values
+    values.reverse()
+
+    value = 0
+    for i, v in enumerate(values):
+        value |= v &lt;&lt; (i * 5)
+
+    if value in CHARS:
+        return Result.Ok(CHARS[value])
+    else:
+        return Result.Err(
+            Error(0, ErrorKind.BAD_REQUEST, f&#34;Unknown character value: {value}&#34;)
+        )</code></pre>
+</details>
+<div class="desc"><p>Convert stored fyve values to a character using CHARS mapping.</p>
+<p>The method combines multiple 5-bit values into a single integer
+and looks up the corresponding character in the CHARS dictionary.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Result[str, Error]</code></dt>
+<dd>Decoded character string</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Error</code></dt>
+<dd>If the computed value isn't in CHARS dictionary</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; op = Operation(kind=OperatingCode.CHARACTER,
+...              code=None,
+...              values=[0x1f, 0x03])
+&gt;&gt;&gt; op.get_char()
+Result.Ok('a')
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperationCode"><code class="flex name class">
+<span>class <span class="ident">OperationCode</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OperationCode(Enum):
+    &#34;&#34;&#34;Operation codes for different SHDP protocol actions.
+
+    Defines the specific operations that can be performed in SYSTEM mode:
+    - UTF8_CHAIN: Handle UTF-8 encoded character sequences
+    - START_OF_TAG: Begin a new XML/HTML tag
+    - START_OF_ATTRIBUTE: Begin a tag attribute
+    - START_OF_DATA: Begin data content
+    - END_OF_DATA: End data content
+
+    Examples:
+        &gt;&gt;&gt; op = OperationCode.from_fyve(0x10)
+        &gt;&gt;&gt; op == OperationCode.START_OF_TAG
+        True
+    &#34;&#34;&#34;
+
+    UTF8_CHAIN = 0x00
+    START_OF_TAG = 0x10
+    START_OF_ATTRIBUTES = 0x11
+    START_OF_DATA = 0x18
+    END_OF_DATA = 0x19
+    UNKNOWN = 0xFF
+
+    @classmethod
+    def from_fyve(cls, fyve: int) -&gt; &#34;OperationCode&#34;:
+        &#34;&#34;&#34;Convert a 5-bit value to an OperationCode.
+
+        Args:
+            fyve: 5-bit integer value representing the operation
+
+        Returns:
+            Corresponding OperationCode or UNKNOWN if value not recognized
+
+        Example:
+            &gt;&gt;&gt; OperationCode.from_fyve(0x10)
+            OperationCode.START_OF_TAG
+            &gt;&gt;&gt; OperationCode.from_fyve(0x18)
+            OperationCode.START_OF_DATA
+        &#34;&#34;&#34;
+        if fyve == 0x00:
+            return cls.UTF8_CHAIN
+        elif fyve == 0x10:
+            return cls.START_OF_TAG
+        elif fyve == 0x11:
+            return cls.START_OF_ATTRIBUTES
+        elif fyve == 0x18:
+            return cls.START_OF_DATA
+        elif fyve == 0x19:
+            return cls.END_OF_DATA
+        else:
+            return cls.UNKNOWN
+
+    def to_fyve(self) -&gt; int:
+        &#34;&#34;&#34;Convert the OperationCode to its 5-bit representation.
+
+        Returns:
+            Integer value corresponding to the operation code
+
+        Example:
+            &gt;&gt;&gt; OperationCode.START_OF_TAG.to_fyve()
+            0x10
+            &gt;&gt;&gt; OperationCode.END_OF_DATA.to_fyve()
+            0x19
+        &#34;&#34;&#34;
+        return self.value
+
+    def __repr__(self) -&gt; str:
+        return f&#34;{self.__class__.__name__}.{self.name}&#34;</code></pre>
+</details>
+<div class="desc"><p>Operation codes for different SHDP protocol actions.</p>
+<p>Defines the specific operations that can be performed in SYSTEM mode:
+- UTF8_CHAIN: Handle UTF-8 encoded character sequences
+- START_OF_TAG: Begin a new XML/HTML tag
+- START_OF_ATTRIBUTE: Begin a tag attribute
+- START_OF_DATA: Begin data content
+- END_OF_DATA: End data content</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; op = OperationCode.from_fyve(0x10)
+&gt;&gt;&gt; op == OperationCode.START_OF_TAG
+True
+</code></pre></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.END_OF_DATA"><code class="name">var <span class="ident">END_OF_DATA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.START_OF_ATTRIBUTES"><code class="name">var <span class="ident">START_OF_ATTRIBUTES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.START_OF_DATA"><code class="name">var <span class="ident">START_OF_DATA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.START_OF_TAG"><code class="name">var <span class="ident">START_OF_TAG</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.UNKNOWN"><code class="name">var <span class="ident">UNKNOWN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.UTF8_CHAIN"><code class="name">var <span class="ident">UTF8_CHAIN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.from_fyve"><code class="name flex">
+<span>def <span class="ident">from_fyve</span></span>(<span>fyve: int) ‑> <a title="shdp.protocol.client.bits.utils.OperationCode" href="#shdp.protocol.client.bits.utils.OperationCode">OperationCode</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert a 5-bit value to an OperationCode.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fyve</code></strong></dt>
+<dd>5-bit integer value representing the operation</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Corresponding OperationCode or UNKNOWN if value not recognized</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; OperationCode.from_fyve(0x10)
+OperationCode.START_OF_TAG
+&gt;&gt;&gt; OperationCode.from_fyve(0x18)
+OperationCode.START_OF_DATA
+</code></pre></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.client.bits.utils.OperationCode.to_fyve"><code class="name flex">
+<span>def <span class="ident">to_fyve</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_fyve(self) -&gt; int:
+    &#34;&#34;&#34;Convert the OperationCode to its 5-bit representation.
+
+    Returns:
+        Integer value corresponding to the operation code
+
+    Example:
+        &gt;&gt;&gt; OperationCode.START_OF_TAG.to_fyve()
+        0x10
+        &gt;&gt;&gt; OperationCode.END_OF_DATA.to_fyve()
+        0x19
+    &#34;&#34;&#34;
+    return self.value</code></pre>
+</details>
+<div class="desc"><p>Convert the OperationCode to its 5-bit representation.</p>
+<h2 id="returns">Returns</h2>
+<p>Integer value corresponding to the operation code</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; OperationCode.START_OF_TAG.to_fyve()
+0x10
+&gt;&gt;&gt; OperationCode.END_OF_DATA.to_fyve()
+0x19
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="shdp.protocol.client.bits" href="index.html">shdp.protocol.client.bits</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="shdp.protocol.client.bits.utils.FyveImpl" href="#shdp.protocol.client.bits.utils.FyveImpl">FyveImpl</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.client.bits.utils.FyveImpl.get_op" href="#shdp.protocol.client.bits.utils.FyveImpl.get_op">get_op</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.FyveImpl.read_fyve" href="#shdp.protocol.client.bits.utils.FyveImpl.read_fyve">read_fyve</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.protocol.client.bits.utils.OperatingCode" href="#shdp.protocol.client.bits.utils.OperatingCode">OperatingCode</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.client.bits.utils.OperatingCode.CHARACTER" href="#shdp.protocol.client.bits.utils.OperatingCode.CHARACTER">CHARACTER</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperatingCode.SYSTEM" href="#shdp.protocol.client.bits.utils.OperatingCode.SYSTEM">SYSTEM</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperatingCode.from_fyve" href="#shdp.protocol.client.bits.utils.OperatingCode.from_fyve">from_fyve</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperatingCode.to_fyve" href="#shdp.protocol.client.bits.utils.OperatingCode.to_fyve">to_fyve</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.protocol.client.bits.utils.Operation" href="#shdp.protocol.client.bits.utils.Operation">Operation</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.client.bits.utils.Operation.code" href="#shdp.protocol.client.bits.utils.Operation.code">code</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.Operation.from_fyve" href="#shdp.protocol.client.bits.utils.Operation.from_fyve">from_fyve</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.Operation.get_char" href="#shdp.protocol.client.bits.utils.Operation.get_char">get_char</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.Operation.kind" href="#shdp.protocol.client.bits.utils.Operation.kind">kind</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.Operation.values" href="#shdp.protocol.client.bits.utils.Operation.values">values</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.protocol.client.bits.utils.OperationCode" href="#shdp.protocol.client.bits.utils.OperationCode">OperationCode</a></code></h4>
+<ul class="two-column">
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.END_OF_DATA" href="#shdp.protocol.client.bits.utils.OperationCode.END_OF_DATA">END_OF_DATA</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.START_OF_ATTRIBUTES" href="#shdp.protocol.client.bits.utils.OperationCode.START_OF_ATTRIBUTES">START_OF_ATTRIBUTES</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.START_OF_DATA" href="#shdp.protocol.client.bits.utils.OperationCode.START_OF_DATA">START_OF_DATA</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.START_OF_TAG" href="#shdp.protocol.client.bits.utils.OperationCode.START_OF_TAG">START_OF_TAG</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.UNKNOWN" href="#shdp.protocol.client.bits.utils.OperationCode.UNKNOWN">UNKNOWN</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.UTF8_CHAIN" href="#shdp.protocol.client.bits.utils.OperationCode.UTF8_CHAIN">UTF8_CHAIN</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.from_fyve" href="#shdp.protocol.client.bits.utils.OperationCode.from_fyve">from_fyve</a></code></li>
+<li><code><a title="shdp.protocol.client.bits.utils.OperationCode.to_fyve" href="#shdp.protocol.client.bits.utils.OperationCode.to_fyve">to_fyve</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

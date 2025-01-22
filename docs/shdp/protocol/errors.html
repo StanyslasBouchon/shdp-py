@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>shdp.protocol.errors API documentation</title>
+<meta name="description" content="Error handling for SHDP protocol …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>shdp.protocol.errors</code></h1>
+</header>
+<section id="section-intro">
+<p>Error handling for SHDP protocol.</p>
+<p>This module provides error types and handling for the SHDP protocol,
+including standard error kinds and custom error creation.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="shdp.protocol.errors.Error"><code class="flex name class">
+<span>class <span class="ident">Error</span></span>
+<span>(</span><span>code: int,<br>kind: <a title="shdp.protocol.errors.ErrorKind" href="#shdp.protocol.errors.ErrorKind">ErrorKind</a>,<br>message: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Error:
+    &#34;&#34;&#34;Represents an error in the SHDP protocol.
+
+    This class combines an error code, kind, and message to provide detailed
+    error information for protocol operations.
+
+    Attributes:
+        code (int): Numeric error code
+        kind (ErrorKind): The category of error
+        message (str): Detailed error message
+
+    Examples:
+        &gt;&gt;&gt; # Create a not found error
+        &gt;&gt;&gt; error = Error(404, ErrorKind.NOT_FOUND, &#34;User profile not found&#34;)
+        &gt;&gt;&gt; str(error)
+        &#39;Error: [NotFound]:404 -&gt; User profile not found&#39;
+
+        &gt;&gt;&gt; # Create a custom error
+        &gt;&gt;&gt; custom = Error(
+        ...     500,
+        ...     ErrorKind.USER_DEFINED,
+        ...     &#34;Database connection failed&#34;
+        ... )
+        &gt;&gt;&gt; str(custom)
+        &#39;Error: [UserDefined]:500 -&gt; Database connection failed&#39;
+    &#34;&#34;&#34;
+
+    def __init__(self, code: int, kind: ErrorKind, message: str):
+        &#34;&#34;&#34;Initialize a new Error instance.
+
+        Args:
+            code: Numeric error code
+            kind: Category of the error
+            message: Detailed error description
+        &#34;&#34;&#34;
+        self.code = code
+        self.kind = kind
+        self.message = message
+
+    def __str__(self) -&gt; str:
+        &#34;&#34;&#34;Get string representation of the error.
+
+        Returns:
+            str: Formatted error string with kind, code and message
+        &#34;&#34;&#34;
+        return f&#34;Error: [{self.kind}]:{self.code} -&gt; {self.message}&#34;
+
+    @classmethod
+    def new(cls, kind: ErrorKind, message: str) -&gt; &#34;Error&#34;:
+        &#34;&#34;&#34;Create a new Error instance with an automatically assigned code.
+
+        Args:
+            kind: The error kind
+            message: Detailed error message
+
+        Returns:
+            Error: A new Error instance
+
+        Examples:
+            &gt;&gt;&gt; error = Error.new(ErrorKind.NOT_FOUND, &#34;User not found&#34;)
+            &gt;&gt;&gt; str(error)
+            &#39;Error: [NotFound]:404 -&gt; User not found&#39;
+
+            &gt;&gt;&gt; custom = Error.new(ErrorKind.USER_DEFINED, &#34;Custom error&#34;)
+            &gt;&gt;&gt; str(custom)
+            &#39;Error: [UserDefined]:500 -&gt; Custom error&#39;
+        &#34;&#34;&#34;
+        # Map error kinds to appropriate codes
+        code_map = {
+            ErrorKind.BAD_REQUEST: 400,
+            ErrorKind.UNAUTHORIZED: 401,
+            ErrorKind.PAYMENT_REQUIRED: 402,
+            ErrorKind.FORBIDDEN: 403,
+            ErrorKind.NOT_FOUND: 404,
+            ErrorKind.METHOD_NOT_ALLOWED: 405,
+            ErrorKind.REQUEST_TIMEOUT: 408,
+            ErrorKind.CONFLICT: 409,
+            ErrorKind.GONE: 410,
+            ErrorKind.REQUEST_ENTITY_TOO_LARGE: 413,
+            ErrorKind.REQUESTED_RANGE_NOT_SATISFIABLE: 416,
+            ErrorKind.EXPECTATION_FAILED: 417,
+            ErrorKind.USER_DEFINED: 500,  # Custom errors use 500 by default
+            ErrorKind.NOT_IMPLEMENTED: 501,
+            ErrorKind.SERVICE_UNAVAILABLE: 503,
+        }
+
+        code = code_map.get(kind, 500)  # Default to 500 for unknown kinds
+        return cls(code, kind, message)</code></pre>
+</details>
+<div class="desc"><p>Represents an error in the SHDP protocol.</p>
+<p>This class combines an error code, kind, and message to provide detailed
+error information for protocol operations.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>code</code></strong> :&ensp;<code>int</code></dt>
+<dd>Numeric error code</dd>
+<dt><strong><code>kind</code></strong> :&ensp;<code><a title="shdp.protocol.errors.ErrorKind" href="#shdp.protocol.errors.ErrorKind">ErrorKind</a></code></dt>
+<dd>The category of error</dd>
+<dt><strong><code>message</code></strong> :&ensp;<code>str</code></dt>
+<dd>Detailed error message</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Create a not found error
+&gt;&gt;&gt; error = Error(404, ErrorKind.NOT_FOUND, &quot;User profile not found&quot;)
+&gt;&gt;&gt; str(error)
+'Error: [NotFound]:404 -&gt; User profile not found'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Create a custom error
+&gt;&gt;&gt; custom = Error(
+...     500,
+...     ErrorKind.USER_DEFINED,
+...     &quot;Database connection failed&quot;
+... )
+&gt;&gt;&gt; str(custom)
+'Error: [UserDefined]:500 -&gt; Database connection failed'
+</code></pre>
+<p>Initialize a new Error instance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>code</code></strong></dt>
+<dd>Numeric error code</dd>
+<dt><strong><code>kind</code></strong></dt>
+<dd>Category of the error</dd>
+<dt><strong><code>message</code></strong></dt>
+<dd>Detailed error description</dd>
+</dl></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.protocol.errors.Error.new"><code class="name flex">
+<span>def <span class="ident">new</span></span>(<span>kind: <a title="shdp.protocol.errors.ErrorKind" href="#shdp.protocol.errors.ErrorKind">ErrorKind</a>,<br>message: str) ‑> <a title="shdp.protocol.errors.Error" href="#shdp.protocol.errors.Error">Error</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new Error instance with an automatically assigned code.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>kind</code></strong></dt>
+<dd>The error kind</dd>
+<dt><strong><code>message</code></strong></dt>
+<dd>Detailed error message</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="shdp.protocol.errors.Error" href="#shdp.protocol.errors.Error">Error</a></code></dt>
+<dd>A new Error instance</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; error = Error.new(ErrorKind.NOT_FOUND, &quot;User not found&quot;)
+&gt;&gt;&gt; str(error)
+'Error: [NotFound]:404 -&gt; User not found'
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; custom = Error.new(ErrorKind.USER_DEFINED, &quot;Custom error&quot;)
+&gt;&gt;&gt; str(custom)
+'Error: [UserDefined]:500 -&gt; Custom error'
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind"><code class="flex name class">
+<span>class <span class="ident">ErrorKind</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ErrorKind(Enum):
+    &#34;&#34;&#34;Enumeration of standard error types in the SHDP protocol.
+
+    This enum defines standard error categories that can occur during protocol
+    operations. Each error kind maps to a specific error scenario.
+
+    Examples:
+        &gt;&gt;&gt; error = ErrorKind.NOT_FOUND
+        &gt;&gt;&gt; str(error)
+        &#39;NotFound&#39;
+        &gt;&gt;&gt; custom_error = ErrorKind.USER_DEFINED(&#34;Custom error message&#34;)
+        &gt;&gt;&gt; str(custom_error)
+        &#39;Custom error message&#39;
+    &#34;&#34;&#34;
+
+    # Client errors (4xx)
+    BAD_REQUEST = &#34;BadRequest&#34;  # Invalid request format or parameters
+    UNAUTHORIZED = &#34;Unauthorized&#34;  # Authentication required
+    PAYMENT_REQUIRED = &#34;PaymentRequired&#34;  # Payment needed for operation
+    FORBIDDEN = &#34;Forbidden&#34;  # Client lacks necessary permissions
+    NOT_FOUND = &#34;NotFound&#34;  # Requested resource doesn&#39;t exist
+    METHOD_NOT_ALLOWED = &#34;MethodNotAllowed&#34;  # Operation not supported
+    REQUEST_TIMEOUT = &#34;RequestTimeout&#34;  # Request took too long
+    CONFLICT = &#34;Conflict&#34;  # Request conflicts with current state
+    GONE = &#34;Gone&#34;  # Resource no longer available
+    REQUEST_ENTITY_TOO_LARGE = &#34;RequestEntityTooLarge&#34;  # Request data too large
+    REQUESTED_RANGE_NOT_SATISFIABLE = (
+        &#34;RequestedRangeNotSatisfiable&#34;  # Invalid range request
+    )
+    EXPECTATION_FAILED = &#34;ExpectationFailed&#34;  # Server can&#39;t meet expectations
+    EXPIRED = &#34;Expired&#34;  # Resource or token has expired
+    LOCKED = &#34;Locked&#34;  # Resource is locked
+
+    # Communication errors
+    NO_RESPONSE = &#34;NoResponse&#34;  # No response received
+    CANCELLED = &#34;Cancelled&#34;  # Operation was cancelled
+
+    # Server errors (5xx)
+    NOT_IMPLEMENTED = &#34;NotImplemented&#34;  # Operation not implemented
+    SERVICE_UNAVAILABLE = &#34;ServiceUnavailable&#34;  # Service temporarily unavailable
+
+    # Protocol errors
+    SIZE_CONSTRAINT_VIOLATION = &#34;SizeConstraintViolation&#34;  # Data size limits exceeded
+    PROTOCOL_ERROR = &#34;ProtocolError&#34;  # Protocol-level error
+    UNKNOWN_VERSION = &#34;UnknownVersion&#34;  # Unsupported protocol version
+    USER_DEFINED = &#34;UserDefined&#34;  # Base for custom errors
+
+    def __str__(self) -&gt; str:
+        &#34;&#34;&#34;Get string representation of the error kind.
+
+        Returns:
+            str: The error message or kind name
+        &#34;&#34;&#34;
+        return self.value</code></pre>
+</details>
+<div class="desc"><p>Enumeration of standard error types in the SHDP protocol.</p>
+<p>This enum defines standard error categories that can occur during protocol
+operations. Each error kind maps to a specific error scenario.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; error = ErrorKind.NOT_FOUND
+&gt;&gt;&gt; str(error)
+'NotFound'
+&gt;&gt;&gt; custom_error = ErrorKind.USER_DEFINED(&quot;Custom error message&quot;)
+&gt;&gt;&gt; str(custom_error)
+'Custom error message'
+</code></pre></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="shdp.protocol.errors.ErrorKind.BAD_REQUEST"><code class="name">var <span class="ident">BAD_REQUEST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.CANCELLED"><code class="name">var <span class="ident">CANCELLED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.CONFLICT"><code class="name">var <span class="ident">CONFLICT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.EXPECTATION_FAILED"><code class="name">var <span class="ident">EXPECTATION_FAILED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.EXPIRED"><code class="name">var <span class="ident">EXPIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.FORBIDDEN"><code class="name">var <span class="ident">FORBIDDEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.GONE"><code class="name">var <span class="ident">GONE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.LOCKED"><code class="name">var <span class="ident">LOCKED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.METHOD_NOT_ALLOWED"><code class="name">var <span class="ident">METHOD_NOT_ALLOWED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.NOT_FOUND"><code class="name">var <span class="ident">NOT_FOUND</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.NOT_IMPLEMENTED"><code class="name">var <span class="ident">NOT_IMPLEMENTED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.NO_RESPONSE"><code class="name">var <span class="ident">NO_RESPONSE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.PAYMENT_REQUIRED"><code class="name">var <span class="ident">PAYMENT_REQUIRED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.PROTOCOL_ERROR"><code class="name">var <span class="ident">PROTOCOL_ERROR</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.REQUESTED_RANGE_NOT_SATISFIABLE"><code class="name">var <span class="ident">REQUESTED_RANGE_NOT_SATISFIABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.REQUEST_ENTITY_TOO_LARGE"><code class="name">var <span class="ident">REQUEST_ENTITY_TOO_LARGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.REQUEST_TIMEOUT"><code class="name">var <span class="ident">REQUEST_TIMEOUT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.SERVICE_UNAVAILABLE"><code class="name">var <span class="ident">SERVICE_UNAVAILABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.SIZE_CONSTRAINT_VIOLATION"><code class="name">var <span class="ident">SIZE_CONSTRAINT_VIOLATION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.UNAUTHORIZED"><code class="name">var <span class="ident">UNAUTHORIZED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.UNKNOWN_VERSION"><code class="name">var <span class="ident">UNKNOWN_VERSION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="shdp.protocol.errors.ErrorKind.USER_DEFINED"><code class="name">var <span class="ident">USER_DEFINED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="shdp.protocol" href="index.html">shdp.protocol</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="shdp.protocol.errors.Error" href="#shdp.protocol.errors.Error">Error</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.errors.Error.new" href="#shdp.protocol.errors.Error.new">new</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.protocol.errors.ErrorKind" href="#shdp.protocol.errors.ErrorKind">ErrorKind</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.errors.ErrorKind.BAD_REQUEST" href="#shdp.protocol.errors.ErrorKind.BAD_REQUEST">BAD_REQUEST</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.CANCELLED" href="#shdp.protocol.errors.ErrorKind.CANCELLED">CANCELLED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.CONFLICT" href="#shdp.protocol.errors.ErrorKind.CONFLICT">CONFLICT</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.EXPECTATION_FAILED" href="#shdp.protocol.errors.ErrorKind.EXPECTATION_FAILED">EXPECTATION_FAILED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.EXPIRED" href="#shdp.protocol.errors.ErrorKind.EXPIRED">EXPIRED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.FORBIDDEN" href="#shdp.protocol.errors.ErrorKind.FORBIDDEN">FORBIDDEN</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.GONE" href="#shdp.protocol.errors.ErrorKind.GONE">GONE</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.LOCKED" href="#shdp.protocol.errors.ErrorKind.LOCKED">LOCKED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.METHOD_NOT_ALLOWED" href="#shdp.protocol.errors.ErrorKind.METHOD_NOT_ALLOWED">METHOD_NOT_ALLOWED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.NOT_FOUND" href="#shdp.protocol.errors.ErrorKind.NOT_FOUND">NOT_FOUND</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.NOT_IMPLEMENTED" href="#shdp.protocol.errors.ErrorKind.NOT_IMPLEMENTED">NOT_IMPLEMENTED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.NO_RESPONSE" href="#shdp.protocol.errors.ErrorKind.NO_RESPONSE">NO_RESPONSE</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.PAYMENT_REQUIRED" href="#shdp.protocol.errors.ErrorKind.PAYMENT_REQUIRED">PAYMENT_REQUIRED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.PROTOCOL_ERROR" href="#shdp.protocol.errors.ErrorKind.PROTOCOL_ERROR">PROTOCOL_ERROR</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.REQUESTED_RANGE_NOT_SATISFIABLE" href="#shdp.protocol.errors.ErrorKind.REQUESTED_RANGE_NOT_SATISFIABLE">REQUESTED_RANGE_NOT_SATISFIABLE</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.REQUEST_ENTITY_TOO_LARGE" href="#shdp.protocol.errors.ErrorKind.REQUEST_ENTITY_TOO_LARGE">REQUEST_ENTITY_TOO_LARGE</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.REQUEST_TIMEOUT" href="#shdp.protocol.errors.ErrorKind.REQUEST_TIMEOUT">REQUEST_TIMEOUT</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.SERVICE_UNAVAILABLE" href="#shdp.protocol.errors.ErrorKind.SERVICE_UNAVAILABLE">SERVICE_UNAVAILABLE</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.SIZE_CONSTRAINT_VIOLATION" href="#shdp.protocol.errors.ErrorKind.SIZE_CONSTRAINT_VIOLATION">SIZE_CONSTRAINT_VIOLATION</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.UNAUTHORIZED" href="#shdp.protocol.errors.ErrorKind.UNAUTHORIZED">UNAUTHORIZED</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.UNKNOWN_VERSION" href="#shdp.protocol.errors.ErrorKind.UNKNOWN_VERSION">UNKNOWN_VERSION</a></code></li>
+<li><code><a title="shdp.protocol.errors.ErrorKind.USER_DEFINED" href="#shdp.protocol.errors.ErrorKind.USER_DEFINED">USER_DEFINED</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

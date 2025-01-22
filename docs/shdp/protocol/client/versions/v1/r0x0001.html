@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>shdp.protocol.client.versions.v1.r0x0001 API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>shdp.protocol.client.versions.v1.r0x0001</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlContent"><code class="flex name class">
+<span>class <span class="ident">HtmlContent</span></span>
+<span>(</span><span>content: str | ForwardRef('<a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag">HtmlTag</a>'))</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HtmlContent:
+    &#34;&#34;&#34;Represents either text content or a child HTML tag.
+
+    A variant type that can hold either plain text or a nested HTML tag.
+
+    Example:
+        &gt;&gt;&gt; text = HtmlContent.Text(&#34;Hello&#34;)
+        &gt;&gt;&gt; div = HtmlTag(&#34;div&#34;)
+        &gt;&gt;&gt; child = HtmlContent.Child(div)
+    &#34;&#34;&#34;
+
+    _content: Union[str, &#34;HtmlTag&#34;]
+    _variant: Literal[&#34;Text&#34;, &#34;Child&#34;]
+
+    def __init__(self, content: Union[str, &#34;HtmlTag&#34;]):
+        &#34;&#34;&#34;Initialize content with either text or an HTML tag.
+
+        Args:
+            content: Either a string for text content or an HtmlTag instance
+
+        Raises:
+            ValueError: If content is neither str nor HtmlTag
+        &#34;&#34;&#34;
+        if isinstance(content, str):
+            self._variant = &#34;Text&#34;
+            self._content = content
+        elif isinstance(content, HtmlTag):
+            self._variant = &#34;Child&#34;
+            self._content = content
+        else:
+            raise ValueError(f&#34;Invalid content type: {type(content)}&#34;)
+
+    @classmethod
+    def Text(cls, text: str) -&gt; &#34;HtmlContent&#34;:
+        &#34;&#34;&#34;Create text content.
+
+        Example:
+            &gt;&gt;&gt; content = HtmlContent.Text(&#34;Hello World&#34;)
+            &gt;&gt;&gt; content.get_text()
+            &#39;Hello World&#39;
+        &#34;&#34;&#34;
+        return cls(text)
+
+    @classmethod
+    def Child(cls, tag: &#34;HtmlTag&#34;) -&gt; &#34;HtmlContent&#34;:
+        &#34;&#34;&#34;Create child tag content.
+
+        Example:
+            &gt;&gt;&gt; div = HtmlTag(&#34;div&#34;)
+            &gt;&gt;&gt; content = HtmlContent.Child(div)
+            &gt;&gt;&gt; content.get_child().get_name()
+            &#39;div&#39;
+        &#34;&#34;&#34;
+        return cls(tag)
+
+    def get_text(self) -&gt; str:
+        &#34;&#34;&#34;Get the text content if this is a Text variant.
+
+        Returns:
+            The text content if this is a Text variant, empty string otherwise
+
+        Example:
+            &gt;&gt;&gt; content = HtmlContent.Text(&#34;Hello&#34;)
+            &gt;&gt;&gt; content.get_text()
+            &#39;Hello&#39;
+            &gt;&gt;&gt; content = HtmlContent.Child(HtmlTag(&#34;div&#34;))
+            &gt;&gt;&gt; content.get_text()
+            &#39;&#39;
+        &#34;&#34;&#34;
+        if self._variant == &#34;Text&#34;:
+            return self._content if isinstance(self._content, str) else &#34;&#34;
+        else:
+            return &#34;&#34;
+
+    def get_child(self) -&gt; &#34;HtmlTag&#34;:
+        &#34;&#34;&#34;Get the child tag if this is a Child variant.
+
+        Returns:
+            The child HtmlTag if this is a Child variant, empty tag otherwise
+
+        Example:
+            &gt;&gt;&gt; div = HtmlTag(&#34;div&#34;)
+            &gt;&gt;&gt; content = HtmlContent.Child(div)
+            &gt;&gt;&gt; content.get_child().get_name()
+            &#39;div&#39;
+            &gt;&gt;&gt; content = HtmlContent.Text(&#34;Hello&#34;)
+            &gt;&gt;&gt; content.get_child().get_name()
+            &#39;&#39;
+        &#34;&#34;&#34;
+        if self._variant == &#34;Child&#34;:
+            return self._content if isinstance(self._content, HtmlTag) else HtmlTag(&#34;&#34;)
+        else:
+            return HtmlTag(&#34;&#34;)</code></pre>
+</details>
+<div class="desc"><p>Represents either text content or a child HTML tag.</p>
+<p>A variant type that can hold either plain text or a nested HTML tag.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; text = HtmlContent.Text(&quot;Hello&quot;)
+&gt;&gt;&gt; div = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; child = HtmlContent.Child(div)
+</code></pre>
+<p>Initialize content with either text or an HTML tag.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>content</code></strong></dt>
+<dd>Either a string for text content or an HtmlTag instance</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If content is neither str nor HtmlTag</dd>
+</dl></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.Child"><code class="name flex">
+<span>def <span class="ident">Child</span></span>(<span>tag: <a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag">HtmlTag</a>) ‑> <a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent">HtmlContent</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create child tag content.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; div = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; content = HtmlContent.Child(div)
+&gt;&gt;&gt; content.get_child().get_name()
+'div'
+</code></pre></div>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.Text"><code class="name flex">
+<span>def <span class="ident">Text</span></span>(<span>text: str) ‑> <a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent">HtmlContent</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create text content.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; content = HtmlContent.Text(&quot;Hello World&quot;)
+&gt;&gt;&gt; content.get_text()
+'Hello World'
+</code></pre></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.get_child"><code class="name flex">
+<span>def <span class="ident">get_child</span></span>(<span>self) ‑> <a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag">HtmlTag</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_child(self) -&gt; &#34;HtmlTag&#34;:
+    &#34;&#34;&#34;Get the child tag if this is a Child variant.
+
+    Returns:
+        The child HtmlTag if this is a Child variant, empty tag otherwise
+
+    Example:
+        &gt;&gt;&gt; div = HtmlTag(&#34;div&#34;)
+        &gt;&gt;&gt; content = HtmlContent.Child(div)
+        &gt;&gt;&gt; content.get_child().get_name()
+        &#39;div&#39;
+        &gt;&gt;&gt; content = HtmlContent.Text(&#34;Hello&#34;)
+        &gt;&gt;&gt; content.get_child().get_name()
+        &#39;&#39;
+    &#34;&#34;&#34;
+    if self._variant == &#34;Child&#34;:
+        return self._content if isinstance(self._content, HtmlTag) else HtmlTag(&#34;&#34;)
+    else:
+        return HtmlTag(&#34;&#34;)</code></pre>
+</details>
+<div class="desc"><p>Get the child tag if this is a Child variant.</p>
+<h2 id="returns">Returns</h2>
+<p>The child HtmlTag if this is a Child variant, empty tag otherwise</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; div = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; content = HtmlContent.Child(div)
+&gt;&gt;&gt; content.get_child().get_name()
+'div'
+&gt;&gt;&gt; content = HtmlContent.Text(&quot;Hello&quot;)
+&gt;&gt;&gt; content.get_child().get_name()
+''
+</code></pre></div>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.get_text"><code class="name flex">
+<span>def <span class="ident">get_text</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_text(self) -&gt; str:
+    &#34;&#34;&#34;Get the text content if this is a Text variant.
+
+    Returns:
+        The text content if this is a Text variant, empty string otherwise
+
+    Example:
+        &gt;&gt;&gt; content = HtmlContent.Text(&#34;Hello&#34;)
+        &gt;&gt;&gt; content.get_text()
+        &#39;Hello&#39;
+        &gt;&gt;&gt; content = HtmlContent.Child(HtmlTag(&#34;div&#34;))
+        &gt;&gt;&gt; content.get_text()
+        &#39;&#39;
+    &#34;&#34;&#34;
+    if self._variant == &#34;Text&#34;:
+        return self._content if isinstance(self._content, str) else &#34;&#34;
+    else:
+        return &#34;&#34;</code></pre>
+</details>
+<div class="desc"><p>Get the text content if this is a Text variant.</p>
+<h2 id="returns">Returns</h2>
+<p>The text content if this is a Text variant, empty string otherwise</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; content = HtmlContent.Text(&quot;Hello&quot;)
+&gt;&gt;&gt; content.get_text()
+'Hello'
+&gt;&gt;&gt; content = HtmlContent.Child(HtmlTag(&quot;div&quot;))
+&gt;&gt;&gt; content.get_text()
+''
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse"><code class="flex name class">
+<span>class <span class="ident">HtmlFileResponse</span></span>
+<span>(</span><span>decoder: <a title="shdp.protocol.managers.bits.decoder.BitDecoder" href="../../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.BitDecoder">BitDecoder</a>[<a title="shdp.utils.bitvec.Msb" href="../../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HtmlFileResponse(EventDecoder[Msb]):
+    &#34;&#34;&#34;Decoder for HTML file responses in SHDP protocol.
+
+    Parses binary data into an HTML structure with nested tags,
+    attributes, and text content.
+
+    Example:
+        &gt;&gt;&gt; decoder = BitDecoder(binary_data)
+        &gt;&gt;&gt; response = HtmlFileResponse(decoder)
+        &gt;&gt;&gt; response.decode(frame)
+    &#34;&#34;&#34;
+
+    def __init__(self, decoder: BitDecoder[Msb]):
+        logging.debug(&#34;[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;21m0x0001\x1b[0m received&#34;)
+
+        self.decoder = decoder
+        self.name = &#34;&#34;
+        self.parent = HtmlTag(&#34;&#34;)
+
+    def _read_utf8_chain(self, length: int) -&gt; str:
+        &#34;&#34;&#34;Read a UTF-8 encoded string of given length.
+
+        Args:
+            length: Number of bytes to read
+
+        Returns:
+            Decoded UTF-8 string
+        &#34;&#34;&#34;
+        data: list[int] = []
+        for _ in range(length):
+            data.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+
+        return bytes(data).decode(&#34;utf-8&#34;)
+
+    def decode(self, frame: Frame[Msb]) -&gt; Result[None, Error]:
+        &#34;&#34;&#34;Decode binary frame data into HTML structure.
+
+        Processes operation codes to build HTML tag hierarchy:
+        - START_OF_TAG: Begin new tag
+        - START_OF_ATTRIBUTES: Process tag attributes
+        - START_OF_DATA: Handle tag content
+        - END_OF_DATA: Close current tag
+
+        Args:
+            frame: Binary frame containing HTML data
+
+        Example:
+            &gt;&gt;&gt; decoder = BitDecoder(binary_data)
+            &gt;&gt;&gt; response = HtmlFileResponse(decoder)
+            &gt;&gt;&gt; response.decode(frame)
+            &gt;&gt;&gt; print(response.parent.get_name())  # Root tag name
+        &#34;&#34;&#34;
+        data: list[int] = []
+        temp_data: int = 0
+
+        Result.hide()
+
+        while True:
+            temp_data = self.decoder.read_data(8).unwrap().to_bytes()[0]
+
+            if temp_data == 0:
+                break
+
+            data.append(temp_data)
+
+        self.name = bytes(data).decode(&#34;utf-8&#34;)
+
+        is_in_tag = False
+        is_in_attributes = False
+        entered_in_attributes = False
+        entered_in_data = False
+        is_in_data = False
+        text = &#34;&#34;
+        attribute_name = &#34;&#34;
+        tag_name = &#34;&#34;
+        tags_controlled: list[HtmlTag] = []
+
+        tags_controlled.append(self.parent)
+
+        while True:
+            if self.decoder.position &gt;= frame.data_size + 56:
+                break
+
+            op_code = FyveImpl.get_op(self.decoder).unwrap()
+
+            if op_code.kind == OperatingCode.SYSTEM:
+                if op_code.code == OperationCode.START_OF_TAG:
+                    is_in_tag = True
+                    is_in_attributes = False
+                    is_in_data = False
+                elif op_code.code == OperationCode.START_OF_ATTRIBUTES:
+                    is_in_tag = False
+                    is_in_attributes = True
+                    is_in_data = False
+                elif op_code.code == OperationCode.START_OF_DATA:
+                    is_in_tag = False
+                    is_in_attributes = False
+                    is_in_data = True
+                elif op_code.code == OperationCode.END_OF_DATA:
+                    is_in_tag = False
+                    is_in_attributes = False
+                    is_in_data = False
+                elif op_code.code == OperationCode.UTF8_CHAIN:
+                    text_len = self.decoder.read_data(15).unwrap().to_int().unwrap()
+                    text = self._read_utf8_chain(text_len)
+                elif op_code.code == OperationCode.UNKNOWN:
+                    return Result.Err(
+                        Error.new(
+                            ErrorKind.USER_DEFINED,
+                            f&#34;Unknown operation code: {op_code.code}::{op_code.kind}::{op_code.values}&#34;,
+                        )
+                    )
+                else:
+                    return Result.Err(
+                        Error.new(
+                            ErrorKind.USER_DEFINED,
+                            f&#34;Unknown operation code: {op_code.code}::{op_code.kind}::{op_code.values}&#34;,
+                        )
+                    )
+
+                if is_in_tag:
+                    text = &#34;&#34;
+
+                if is_in_attributes and text != &#34;&#34;:
+                    tag = tags_controlled[0]
+                    tag.add_attribute(attribute_name, text)
+                    attribute_name = &#34;&#34;
+                    text = &#34;&#34;
+                elif is_in_attributes and text == &#34;&#34; and not entered_in_attributes:
+                    tag = HtmlTag(tag_name)
+                    tag_name = &#34;&#34;
+                    tags_controlled[0].data.append(HtmlContent.Child(tag))
+                    tags_controlled.insert(0, tag)
+                    entered_in_attributes = True
+
+                if is_in_data and text != &#34;&#34;:
+                    tags_controlled[0].data.append(HtmlContent.Text(text))
+                    entered_in_data = True
+
+                if is_in_data and not entered_in_attributes and not entered_in_data:
+                    tag = HtmlTag(tag_name)
+                    tag_name = &#34;&#34;
+                    tags_controlled.insert(0, tag)
+                elif not is_in_data:
+                    entered_in_data = False
+
+                if is_in_data and entered_in_attributes:
+                    entered_in_attributes = False
+
+                if not is_in_tag and not is_in_attributes and not is_in_data:
+                    tag_name = &#34;&#34;
+                    attribute_name = &#34;&#34;
+                    is_in_tag = True
+
+                    if len(tags_controlled) &gt;= 2:
+                        last_tag = tags_controlled[0]
+                        tags_controlled[1].add_data(HtmlContent.Child(last_tag))
+
+                    if len(tags_controlled) != 0:
+                        tags_controlled.pop(0)
+
+            if op_code.kind == OperatingCode.CHARACTER:
+                char = op_code.get_char().unwrap()
+
+                if is_in_tag:
+                    tag_name += char
+
+                if is_in_attributes:
+                    attribute_name += char
+
+        self.parent = tags_controlled[0]
+
+        return Result.reveal()
+
+    def get_responses(self) -&gt; Result[list[EventEncoder[ReversedR]], Error]:
+        &#34;&#34;&#34;Get list of possible response events.
+
+        Returns:
+            Empty list as this decoder doesn&#39;t generate response events
+
+        Example:
+            &gt;&gt;&gt; response = HtmlFileResponse(decoder)
+            &gt;&gt;&gt; response.get_responses()
+            []
+        &#34;&#34;&#34;
+        return Result.Ok([])</code></pre>
+</details>
+<div class="desc"><p>Decoder for HTML file responses in SHDP protocol.</p>
+<p>Parses binary data into an HTML structure with nested tags,
+attributes, and text content.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder(binary_data)
+&gt;&gt;&gt; response = HtmlFileResponse(decoder)
+&gt;&gt;&gt; response.decode(frame)
+</code></pre></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="shdp.protocol.managers.event.EventDecoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder">EventDecoder</a></li>
+<li>typing.Generic</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self,<br>frame: <a title="shdp.protocol.managers.bits.decoder.Frame" href="../../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.Frame">Frame</a>[<a title="shdp.utils.bitvec.Msb" href="../../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>]) ‑> <a title="shdp.utils.result.Result" href="../../../../utils/result.html#shdp.utils.result.Result">Result</a>[None, <a title="shdp.protocol.errors.Error" href="../../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def decode(self, frame: Frame[Msb]) -&gt; Result[None, Error]:
+    &#34;&#34;&#34;Decode binary frame data into HTML structure.
+
+    Processes operation codes to build HTML tag hierarchy:
+    - START_OF_TAG: Begin new tag
+    - START_OF_ATTRIBUTES: Process tag attributes
+    - START_OF_DATA: Handle tag content
+    - END_OF_DATA: Close current tag
+
+    Args:
+        frame: Binary frame containing HTML data
+
+    Example:
+        &gt;&gt;&gt; decoder = BitDecoder(binary_data)
+        &gt;&gt;&gt; response = HtmlFileResponse(decoder)
+        &gt;&gt;&gt; response.decode(frame)
+        &gt;&gt;&gt; print(response.parent.get_name())  # Root tag name
+    &#34;&#34;&#34;
+    data: list[int] = []
+    temp_data: int = 0
+
+    Result.hide()
+
+    while True:
+        temp_data = self.decoder.read_data(8).unwrap().to_bytes()[0]
+
+        if temp_data == 0:
+            break
+
+        data.append(temp_data)
+
+    self.name = bytes(data).decode(&#34;utf-8&#34;)
+
+    is_in_tag = False
+    is_in_attributes = False
+    entered_in_attributes = False
+    entered_in_data = False
+    is_in_data = False
+    text = &#34;&#34;
+    attribute_name = &#34;&#34;
+    tag_name = &#34;&#34;
+    tags_controlled: list[HtmlTag] = []
+
+    tags_controlled.append(self.parent)
+
+    while True:
+        if self.decoder.position &gt;= frame.data_size + 56:
+            break
+
+        op_code = FyveImpl.get_op(self.decoder).unwrap()
+
+        if op_code.kind == OperatingCode.SYSTEM:
+            if op_code.code == OperationCode.START_OF_TAG:
+                is_in_tag = True
+                is_in_attributes = False
+                is_in_data = False
+            elif op_code.code == OperationCode.START_OF_ATTRIBUTES:
+                is_in_tag = False
+                is_in_attributes = True
+                is_in_data = False
+            elif op_code.code == OperationCode.START_OF_DATA:
+                is_in_tag = False
+                is_in_attributes = False
+                is_in_data = True
+            elif op_code.code == OperationCode.END_OF_DATA:
+                is_in_tag = False
+                is_in_attributes = False
+                is_in_data = False
+            elif op_code.code == OperationCode.UTF8_CHAIN:
+                text_len = self.decoder.read_data(15).unwrap().to_int().unwrap()
+                text = self._read_utf8_chain(text_len)
+            elif op_code.code == OperationCode.UNKNOWN:
+                return Result.Err(
+                    Error.new(
+                        ErrorKind.USER_DEFINED,
+                        f&#34;Unknown operation code: {op_code.code}::{op_code.kind}::{op_code.values}&#34;,
+                    )
+                )
+            else:
+                return Result.Err(
+                    Error.new(
+                        ErrorKind.USER_DEFINED,
+                        f&#34;Unknown operation code: {op_code.code}::{op_code.kind}::{op_code.values}&#34;,
+                    )
+                )
+
+            if is_in_tag:
+                text = &#34;&#34;
+
+            if is_in_attributes and text != &#34;&#34;:
+                tag = tags_controlled[0]
+                tag.add_attribute(attribute_name, text)
+                attribute_name = &#34;&#34;
+                text = &#34;&#34;
+            elif is_in_attributes and text == &#34;&#34; and not entered_in_attributes:
+                tag = HtmlTag(tag_name)
+                tag_name = &#34;&#34;
+                tags_controlled[0].data.append(HtmlContent.Child(tag))
+                tags_controlled.insert(0, tag)
+                entered_in_attributes = True
+
+            if is_in_data and text != &#34;&#34;:
+                tags_controlled[0].data.append(HtmlContent.Text(text))
+                entered_in_data = True
+
+            if is_in_data and not entered_in_attributes and not entered_in_data:
+                tag = HtmlTag(tag_name)
+                tag_name = &#34;&#34;
+                tags_controlled.insert(0, tag)
+            elif not is_in_data:
+                entered_in_data = False
+
+            if is_in_data and entered_in_attributes:
+                entered_in_attributes = False
+
+            if not is_in_tag and not is_in_attributes and not is_in_data:
+                tag_name = &#34;&#34;
+                attribute_name = &#34;&#34;
+                is_in_tag = True
+
+                if len(tags_controlled) &gt;= 2:
+                    last_tag = tags_controlled[0]
+                    tags_controlled[1].add_data(HtmlContent.Child(last_tag))
+
+                if len(tags_controlled) != 0:
+                    tags_controlled.pop(0)
+
+        if op_code.kind == OperatingCode.CHARACTER:
+            char = op_code.get_char().unwrap()
+
+            if is_in_tag:
+                tag_name += char
+
+            if is_in_attributes:
+                attribute_name += char
+
+    self.parent = tags_controlled[0]
+
+    return Result.reveal()</code></pre>
+</details>
+<div class="desc"><p>Decode binary frame data into HTML structure.</p>
+<p>Processes operation codes to build HTML tag hierarchy:
+- START_OF_TAG: Begin new tag
+- START_OF_ATTRIBUTES: Process tag attributes
+- START_OF_DATA: Handle tag content
+- END_OF_DATA: Close current tag</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>frame</code></strong></dt>
+<dd>Binary frame containing HTML data</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; decoder = BitDecoder(binary_data)
+&gt;&gt;&gt; response = HtmlFileResponse(decoder)
+&gt;&gt;&gt; response.decode(frame)
+&gt;&gt;&gt; print(response.parent.get_name())  # Root tag name
+</code></pre></div>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse.get_responses"><code class="name flex">
+<span>def <span class="ident">get_responses</span></span>(<span>self) ‑> <a title="shdp.utils.result.Result" href="../../../../utils/result.html#shdp.utils.result.Result">Result</a>[list[<a title="shdp.protocol.managers.event.EventEncoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventEncoder">EventEncoder</a>[~ReversedR]], <a title="shdp.protocol.errors.Error" href="../../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_responses(self) -&gt; Result[list[EventEncoder[ReversedR]], Error]:
+    &#34;&#34;&#34;Get list of possible response events.
+
+    Returns:
+        Empty list as this decoder doesn&#39;t generate response events
+
+    Example:
+        &gt;&gt;&gt; response = HtmlFileResponse(decoder)
+        &gt;&gt;&gt; response.get_responses()
+        []
+    &#34;&#34;&#34;
+    return Result.Ok([])</code></pre>
+</details>
+<div class="desc"><p>Get list of possible response events.</p>
+<h2 id="returns">Returns</h2>
+<p>Empty list as this decoder doesn't generate response events</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; response = HtmlFileResponse(decoder)
+&gt;&gt;&gt; response.get_responses()
+[]
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlTag"><code class="flex name class">
+<span>class <span class="ident">HtmlTag</span></span>
+<span>(</span><span>name: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class HtmlTag:
+    &#34;&#34;&#34;Represents an HTML tag with attributes and content.
+
+    Example:
+        &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+        &gt;&gt;&gt; tag.add_attribute(&#34;class&#34;, &#34;container&#34;)
+        &gt;&gt;&gt; tag.add_data(HtmlContent.Text(&#34;Hello&#34;))
+    &#34;&#34;&#34;
+
+    def __init__(self, name: str):
+        &#34;&#34;&#34;Initialize an HTML tag with given name.
+
+        Example:
+            &gt;&gt;&gt; tag = HtmlTag(&#34;span&#34;)
+            &gt;&gt;&gt; tag.get_name()
+            &#39;span&#39;
+        &#34;&#34;&#34;
+        self.name = name
+        self.attributes: dict[str, str] = {}
+        self.data: list[HtmlContent] = []
+
+    def add_attribute(self, name: str, value: str) -&gt; None:
+        &#34;&#34;&#34;Add or update an attribute to the HTML tag.
+
+        Args:
+            name: Attribute name
+            value: Attribute value
+
+        Example:
+            &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+            &gt;&gt;&gt; tag.add_attribute(&#34;class&#34;, &#34;container&#34;)
+            &gt;&gt;&gt; tag.add_attribute(&#34;id&#34;, &#34;main&#34;)
+        &#34;&#34;&#34;
+        self.attributes[name] = value
+
+    def add_data(self, data: HtmlContent) -&gt; None:
+        &#34;&#34;&#34;Add content (text or child tag) to this tag.
+
+        Args:
+            data: HtmlContent instance (either Text or Child)
+
+        Example:
+            &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+            &gt;&gt;&gt; tag.add_data(HtmlContent.Text(&#34;Hello&#34;))
+            &gt;&gt;&gt; child = HtmlTag(&#34;span&#34;)
+            &gt;&gt;&gt; tag.add_data(HtmlContent.Child(child))
+        &#34;&#34;&#34;
+        self.data.append(data)
+
+    def get_name(self) -&gt; str:
+        &#34;&#34;&#34;Get the name of this HTML tag.
+
+        Returns:
+            The tag name (e.g., &#34;div&#34;, &#34;span&#34;, etc.)
+
+        Example:
+            &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+            &gt;&gt;&gt; tag.get_name()
+            &#39;div&#39;
+        &#34;&#34;&#34;
+        return self.name</code></pre>
+</details>
+<div class="desc"><p>Represents an HTML tag with attributes and content.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; tag = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; tag.add_attribute(&quot;class&quot;, &quot;container&quot;)
+&gt;&gt;&gt; tag.add_data(HtmlContent.Text(&quot;Hello&quot;))
+</code></pre>
+<p>Initialize an HTML tag with given name.</p>
+<h2 id="example_1">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; tag = HtmlTag(&quot;span&quot;)
+&gt;&gt;&gt; tag.get_name()
+'span'
+</code></pre></div>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlTag.add_attribute"><code class="name flex">
+<span>def <span class="ident">add_attribute</span></span>(<span>self, name: str, value: str) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_attribute(self, name: str, value: str) -&gt; None:
+    &#34;&#34;&#34;Add or update an attribute to the HTML tag.
+
+    Args:
+        name: Attribute name
+        value: Attribute value
+
+    Example:
+        &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+        &gt;&gt;&gt; tag.add_attribute(&#34;class&#34;, &#34;container&#34;)
+        &gt;&gt;&gt; tag.add_attribute(&#34;id&#34;, &#34;main&#34;)
+    &#34;&#34;&#34;
+    self.attributes[name] = value</code></pre>
+</details>
+<div class="desc"><p>Add or update an attribute to the HTML tag.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong></dt>
+<dd>Attribute name</dd>
+<dt><strong><code>value</code></strong></dt>
+<dd>Attribute value</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; tag = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; tag.add_attribute(&quot;class&quot;, &quot;container&quot;)
+&gt;&gt;&gt; tag.add_attribute(&quot;id&quot;, &quot;main&quot;)
+</code></pre></div>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlTag.add_data"><code class="name flex">
+<span>def <span class="ident">add_data</span></span>(<span>self,<br>data: <a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent">HtmlContent</a>) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_data(self, data: HtmlContent) -&gt; None:
+    &#34;&#34;&#34;Add content (text or child tag) to this tag.
+
+    Args:
+        data: HtmlContent instance (either Text or Child)
+
+    Example:
+        &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+        &gt;&gt;&gt; tag.add_data(HtmlContent.Text(&#34;Hello&#34;))
+        &gt;&gt;&gt; child = HtmlTag(&#34;span&#34;)
+        &gt;&gt;&gt; tag.add_data(HtmlContent.Child(child))
+    &#34;&#34;&#34;
+    self.data.append(data)</code></pre>
+</details>
+<div class="desc"><p>Add content (text or child tag) to this tag.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>HtmlContent instance (either Text or Child)</dd>
+</dl>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; tag = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; tag.add_data(HtmlContent.Text(&quot;Hello&quot;))
+&gt;&gt;&gt; child = HtmlTag(&quot;span&quot;)
+&gt;&gt;&gt; tag.add_data(HtmlContent.Child(child))
+</code></pre></div>
+</dd>
+<dt id="shdp.protocol.client.versions.v1.r0x0001.HtmlTag.get_name"><code class="name flex">
+<span>def <span class="ident">get_name</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_name(self) -&gt; str:
+    &#34;&#34;&#34;Get the name of this HTML tag.
+
+    Returns:
+        The tag name (e.g., &#34;div&#34;, &#34;span&#34;, etc.)
+
+    Example:
+        &gt;&gt;&gt; tag = HtmlTag(&#34;div&#34;)
+        &gt;&gt;&gt; tag.get_name()
+        &#39;div&#39;
+    &#34;&#34;&#34;
+    return self.name</code></pre>
+</details>
+<div class="desc"><p>Get the name of this HTML tag.</p>
+<h2 id="returns">Returns</h2>
+<p>The tag name (e.g., "div", "span", etc.)</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; tag = HtmlTag(&quot;div&quot;)
+&gt;&gt;&gt; tag.get_name()
+'div'
+</code></pre></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="shdp.protocol.client.versions.v1" href="index.html">shdp.protocol.client.versions.v1</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent">HtmlContent</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.Child" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent.Child">Child</a></code></li>
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.Text" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent.Text">Text</a></code></li>
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.get_child" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent.get_child">get_child</a></code></li>
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlContent.get_text" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlContent.get_text">get_text</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse">HtmlFileResponse</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse.decode" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse.decode">decode</a></code></li>
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse.get_responses" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlFileResponse.get_responses">get_responses</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag">HtmlTag</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag.add_attribute" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag.add_attribute">add_attribute</a></code></li>
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag.add_data" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag.add_data">add_data</a></code></li>
+<li><code><a title="shdp.protocol.client.versions.v1.r0x0001.HtmlTag.get_name" href="#shdp.protocol.client.versions.v1.r0x0001.HtmlTag.get_name">get_name</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>
