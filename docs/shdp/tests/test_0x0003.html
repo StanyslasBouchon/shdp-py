@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.tests.test_0x0000 API documentation</title>
-<meta name="description" content="Tests for the 0x0000 protocol message (ComponentNeedsRequest) …">
+<title>shdp.tests.test_0x0003 API documentation</title>
+<meta name="description" content="Tests for the 0x0003 protocol message (ComponentNeedsResponse) …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,12 +33,12 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.tests.test_0x0000</code></h1>
+<h1 class="title">Module <code>shdp.tests.test_0x0003</code></h1>
 </header>
 <section id="section-intro">
-<p>Tests for the 0x0000 protocol message (ComponentNeedsRequest).</p>
-<p>This test suite verifies the encoding and decoding of the ComponentNeedsRequest message,
-which is used to request specific components from the server.</p>
+<p>Tests for the 0x0003 protocol message (ComponentNeedsResponse).</p>
+<p>This test suite verifies the encoding and decoding of the ComponentNeedsResponse message,
+which is used to transmit component requirements between server and client.</p>
 </section>
 <section>
 </section>
@@ -49,8 +49,8 @@ which is used to request specific components from the server.</p>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="shdp.tests.test_0x0000.Test0x0000"><code class="flex name class">
-<span>class <span class="ident">Test0x0000</span></span>
+<dt id="shdp.tests.test_0x0003.Test0x0003"><code class="flex name class">
+<span>class <span class="ident">Test0x0003</span></span>
 <span>(</span><span>methodName='runTest')</span>
 </code></dt>
 <dd>
@@ -58,31 +58,72 @@ which is used to request specific components from the server.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Test0x0000(unittest.TestCase):
-    def test_component_needs_request(self):
-        &#34;&#34;&#34;Test encoding and decoding of ComponentNeedsRequest message.
+<pre><code class="python">class Test0x0003(unittest.TestCase):
+    def test_component_needs_response_basic(self):
+        &#34;&#34;&#34;Test encoding and decoding of basic ComponentNeedsResponse message.
 
         This test:
-        1. Creates a ComponentNeedsRequest with a test component name
+        1. Creates a ComponentNeedsResponse with just a component name
         2. Encodes it using LSB frame encoding
         3. Decodes it using MSB frame decoding
         4. Verifies the decoded component name matches the original
         &#34;&#34;&#34;
+        component_name = &#34;test-component&#34;
+
+        # Encode component needs response
         encoder = FrameEncoder(Version.V1.value)
-        frame = encoder.encode(ComponentNeedsRequest(&#34;test&#34;))
+        frame = encoder.encode(ComponentNeedsResponse(component_name, None, []))
 
-        logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
-
+        # Decode response
         decoder = BitDecoder(frame.unwrap())
         frame_decoder = FrameDecoder(decoder)
         data = frame_decoder.decode().unwrap()
         decoder = frame_decoder.get_decoder()
 
-        decoded_data = ServerComponentNeedsRequest(decoder)
+        # Decode component data
+        decoded_data = ClientComponentNeedsResponse(decoder)
         decoded_data_result = decoded_data.decode(data)
 
         if decoded_data_result.is_ok():
-            self.assertEqual(decoded_data.requested_component_name, &#34;test&#34;)
+            self.assertEqual(decoded_data.component_name, component_name)
+            self.assertEqual(decoded_data.title, &#34;&#34;)
+            self.assertEqual(decoded_data.files, [])
+        else:
+            self.fail(decoded_data_result.unwrap_err())
+
+    def test_component_needs_response_full(self):
+        &#34;&#34;&#34;Test encoding and decoding of ComponentNeedsResponse with all fields.
+
+        This test:
+        1. Creates a ComponentNeedsResponse with name, title and required files
+        2. Encodes it using LSB frame encoding
+        3. Decodes it using MSB frame decoding
+        4. Verifies all decoded fields match the original
+        &#34;&#34;&#34;
+        component_name = &#34;test-component&#34;
+        title = &#34;Test Component&#34;
+        files = [&#34;style.css&#34;, &#34;script.js&#34;]
+
+        # Encode component needs response
+        encoder = FrameEncoder(Version.V1.value)
+        frame = encoder.encode(ComponentNeedsResponse(component_name, title, files))
+
+        logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
+
+        # Decode response
+        decoder = BitDecoder(frame.unwrap())
+        frame_decoder = FrameDecoder(decoder)
+        data = frame_decoder.decode().unwrap()
+        decoder = frame_decoder.get_decoder()
+
+        # Decode component data
+        decoded_data = ClientComponentNeedsResponse(decoder)
+        decoded_data_result = decoded_data.decode(data)
+
+        if decoded_data_result.is_ok():
+            self.assertEqual(decoded_data.component_name, component_name)
+            self.assertEqual(decoded_data.title, title)
+            self.assertEqual(decoded_data.files, files)
         else:
             self.fail(decoded_data_result.unwrap_err())</code></pre>
 </details>
@@ -120,47 +161,103 @@ not have a method with the specified name.</p></div>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="shdp.tests.test_0x0000.Test0x0000.test_component_needs_request"><code class="name flex">
-<span>def <span class="ident">test_component_needs_request</span></span>(<span>self)</span>
+<dt id="shdp.tests.test_0x0003.Test0x0003.test_component_needs_response_basic"><code class="name flex">
+<span>def <span class="ident">test_component_needs_response_basic</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def test_component_needs_request(self):
-    &#34;&#34;&#34;Test encoding and decoding of ComponentNeedsRequest message.
+<pre><code class="python">def test_component_needs_response_basic(self):
+    &#34;&#34;&#34;Test encoding and decoding of basic ComponentNeedsResponse message.
 
     This test:
-    1. Creates a ComponentNeedsRequest with a test component name
+    1. Creates a ComponentNeedsResponse with just a component name
     2. Encodes it using LSB frame encoding
     3. Decodes it using MSB frame decoding
     4. Verifies the decoded component name matches the original
     &#34;&#34;&#34;
+    component_name = &#34;test-component&#34;
+
+    # Encode component needs response
     encoder = FrameEncoder(Version.V1.value)
-    frame = encoder.encode(ComponentNeedsRequest(&#34;test&#34;))
+    frame = encoder.encode(ComponentNeedsResponse(component_name, None, []))
 
-    logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
-
+    # Decode response
     decoder = BitDecoder(frame.unwrap())
     frame_decoder = FrameDecoder(decoder)
     data = frame_decoder.decode().unwrap()
     decoder = frame_decoder.get_decoder()
 
-    decoded_data = ServerComponentNeedsRequest(decoder)
+    # Decode component data
+    decoded_data = ClientComponentNeedsResponse(decoder)
     decoded_data_result = decoded_data.decode(data)
 
     if decoded_data_result.is_ok():
-        self.assertEqual(decoded_data.requested_component_name, &#34;test&#34;)
+        self.assertEqual(decoded_data.component_name, component_name)
+        self.assertEqual(decoded_data.title, &#34;&#34;)
+        self.assertEqual(decoded_data.files, [])
     else:
         self.fail(decoded_data_result.unwrap_err())</code></pre>
 </details>
-<div class="desc"><p>Test encoding and decoding of ComponentNeedsRequest message.</p>
+<div class="desc"><p>Test encoding and decoding of basic ComponentNeedsResponse message.</p>
 <p>This test:
-1. Creates a ComponentNeedsRequest with a test component name
+1. Creates a ComponentNeedsResponse with just a component name
 2. Encodes it using LSB frame encoding
 3. Decodes it using MSB frame decoding
 4. Verifies the decoded component name matches the original</p></div>
+</dd>
+<dt id="shdp.tests.test_0x0003.Test0x0003.test_component_needs_response_full"><code class="name flex">
+<span>def <span class="ident">test_component_needs_response_full</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_component_needs_response_full(self):
+    &#34;&#34;&#34;Test encoding and decoding of ComponentNeedsResponse with all fields.
+
+    This test:
+    1. Creates a ComponentNeedsResponse with name, title and required files
+    2. Encodes it using LSB frame encoding
+    3. Decodes it using MSB frame decoding
+    4. Verifies all decoded fields match the original
+    &#34;&#34;&#34;
+    component_name = &#34;test-component&#34;
+    title = &#34;Test Component&#34;
+    files = [&#34;style.css&#34;, &#34;script.js&#34;]
+
+    # Encode component needs response
+    encoder = FrameEncoder(Version.V1.value)
+    frame = encoder.encode(ComponentNeedsResponse(component_name, title, files))
+
+    logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
+
+    # Decode response
+    decoder = BitDecoder(frame.unwrap())
+    frame_decoder = FrameDecoder(decoder)
+    data = frame_decoder.decode().unwrap()
+    decoder = frame_decoder.get_decoder()
+
+    # Decode component data
+    decoded_data = ClientComponentNeedsResponse(decoder)
+    decoded_data_result = decoded_data.decode(data)
+
+    if decoded_data_result.is_ok():
+        self.assertEqual(decoded_data.component_name, component_name)
+        self.assertEqual(decoded_data.title, title)
+        self.assertEqual(decoded_data.files, files)
+    else:
+        self.fail(decoded_data_result.unwrap_err())</code></pre>
+</details>
+<div class="desc"><p>Test encoding and decoding of ComponentNeedsResponse with all fields.</p>
+<p>This test:
+1. Creates a ComponentNeedsResponse with name, title and required files
+2. Encodes it using LSB frame encoding
+3. Decodes it using MSB frame decoding
+4. Verifies all decoded fields match the original</p></div>
 </dd>
 </dl>
 </dd>
@@ -180,9 +277,10 @@ not have a method with the specified name.</p></div>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="shdp.tests.test_0x0000.Test0x0000" href="#shdp.tests.test_0x0000.Test0x0000">Test0x0000</a></code></h4>
+<h4><code><a title="shdp.tests.test_0x0003.Test0x0003" href="#shdp.tests.test_0x0003.Test0x0003">Test0x0003</a></code></h4>
 <ul class="">
-<li><code><a title="shdp.tests.test_0x0000.Test0x0000.test_component_needs_request" href="#shdp.tests.test_0x0000.Test0x0000.test_component_needs_request">test_component_needs_request</a></code></li>
+<li><code><a title="shdp.tests.test_0x0003.Test0x0003.test_component_needs_response_basic" href="#shdp.tests.test_0x0003.Test0x0003.test_component_needs_response_basic">test_component_needs_response_basic</a></code></li>
+<li><code><a title="shdp.tests.test_0x0003.Test0x0003.test_component_needs_response_full" href="#shdp.tests.test_0x0003.Test0x0003.test_component_needs_response_full">test_component_needs_response_full</a></code></li>
 </ul>
 </li>
 </ul>

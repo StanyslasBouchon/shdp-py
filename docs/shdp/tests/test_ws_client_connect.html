@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.protocol.server.versions.v1.r0x0005 API documentation</title>
-<meta name="description" content="">
+<title>shdp.tests.test_ws_client_connect API documentation</title>
+<meta name="description" content="Tests for WebSocket client connection functionality …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,126 +33,169 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.protocol.server.versions.v1.r0x0005</code></h1>
+<h1 class="title">Module <code>shdp.tests.test_ws_client_connect</code></h1>
 </header>
 <section id="section-intro">
+<p>Tests for WebSocket client connection functionality.</p>
+<p>This test suite verifies the WebSocket client's ability to connect to a server,
+handle connection states, and properly manage disconnection scenarios.</p>
 </section>
 <section>
 </section>
 <section>
 </section>
 <section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="shdp.protocol.server.versions.v1.r0x0005.InteractionRequest"><code class="flex name class">
-<span>class <span class="ident">InteractionRequest</span></span>
-<span>(</span><span>decoder: <a title="shdp.protocol.managers.bits.decoder.BitDecoder" href="../../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.BitDecoder">BitDecoder</a>[<a title="shdp.utils.bitvec.Msb" href="../../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>])</span>
+<dt id="shdp.tests.test_ws_client_connect.find_free_port"><code class="name flex">
+<span>def <span class="ident">find_free_port</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class InteractionRequest(EventDecoder[Msb]):
-    def __init__(self, decoder: BitDecoder[Msb]):
-        logging.debug(
-            &#34;[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;125m0x0005\x1b[0m received&#34;
-        )
-
-        self.decoder = decoder
-        self.request_id = 0
-        self.parent_name = &#34;&#34;
-        self.function_name = &#34;&#34;
-        self.object_id: Optional[int] = None
-        self.params: Optional[dict[str, Any]] = None
-        self.token: Optional[str] = None
-
-    def decode(self, frame: Frame) -&gt; Result[None, Error]:
-        self.request_id = self.decoder.read_data(64).unwrap().to_int().unwrap()
-        byte_length = (frame.data_size - 64) // 8
-        data_bytes = []
-
-        for _ in range(byte_length):
-            byte = self.decoder.read_data(8).unwrap().to_byte_list()[0]
-            data_bytes.append(byte)
-
-        string = bytes(data_bytes).decode(&#34;utf-8&#34;)
-        parts = string.split(&#34;\x00&#34;)
-
-        self.function_name = parts[0]
-        self.parent_name = parts[1]
-
-        if self.parent_name == &#34;&#34;:
-            return Result.Err(Error.new(ErrorKind.BAD_REQUEST, &#34;Parent name is empty&#34;))
-
-        if self.function_name == &#34;&#34;:
-            return Result.Err(
-                Error.new(ErrorKind.BAD_REQUEST, &#34;Function name is empty&#34;)
-            )
-
-        self.token = parts[2] if parts[2] != &#34;&#34; else None
-        self.object_id = int(parts[3]) if parts[3] != &#34;&#34; else None
-        self.params = json.loads(parts[4]) if parts[4] != &#34;&#34; else None
-
-        logging.debug(
-            f&#34;[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;125m0x0005\x1b[0m: function_name: {self.function_name}, table: {self.parent_name}, object_id: {self.object_id}, params: {self.params}, token: {self.token}&#34;
-        )
-
-        return Result.Ok(None)
-
-    def get_responses(self) -&gt; Result[list[EventEncoder[ReversedR]], Error]:
-        listeners = EVENT_REGISTRY_MSB.get_listeners((1, 0x0005))
-
-        if listeners is None:
-            return Result.Ok([])
-
-        all_args = [listener(self) for listener in listeners]
-        responses: list[EventEncoder[Lsb]] = []
-
-        for args_list in all_args:
-            result_response = args_list[0].to_opt_value()
-
-            if result_response.is_ok():
-                response = result_response.unwrap()
-            else:
-                return Result.Err(result_response.unwrap_err())
-
-            responses.append(InteractionResponse(self.request_id, response))
-
-        return Result.Ok(cast(list[EventEncoder[ReversedR]], responses))</code></pre>
+<pre><code class="python">def find_free_port():
+    &#34;&#34;&#34;Trouve un port disponible sur le système.&#34;&#34;&#34;
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((&#34;&#34;, 0))
+        s.listen(1)
+        port = s.getsockname()[1]
+        return port</code></pre>
 </details>
-<div class="desc"><p>Abstract base class for decoding protocol events.</p>
-<p>This class defines the interface for decoding events in the protocol.
-Each event type should implement this interface to specify how it should
-be decoded from bits and what responses it can generate.</p>
-<h2 id="example">Example</h2>
-<pre><code class="language-python-repl">&gt;&gt;&gt; class LoginDecoder(EventDecoder[R]):
-...     def decode(self, frame: Frame[R]) -&gt; Result[None, Error]:
-...         user_id = frame.read_int(8)  # Read event data
-...         return Result.Ok(None)
-...
-...     def get_responses(self) -&gt; Result[list[EventEncoder[ReversedR]], Error]:
-...         return Result.Ok([LoginSuccessEvent, LoginFailedEvent])
-</code></pre></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="shdp.protocol.managers.event.EventDecoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder">EventDecoder</a></li>
-<li>typing.Generic</li>
-<li>abc.ABC</li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="shdp.protocol.managers.event.EventDecoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder">EventDecoder</a></b></code>:
-<ul class="hlist">
-<li><code><a title="shdp.protocol.managers.event.EventDecoder.decode" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder.decode">decode</a></code></li>
-<li><code><a title="shdp.protocol.managers.event.EventDecoder.get_responses" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder.get_responses">get_responses</a></code></li>
-</ul>
-</li>
-</ul>
+<div class="desc"><p>Trouve un port disponible sur le système.</p></div>
+</dd>
+<dt id="shdp.tests.test_ws_client_connect.test_client_connection"><code class="name flex">
+<span>async def <span class="ident">test_client_connection</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_client_connection():
+    &#34;&#34;&#34;Test successful WebSocket client connection to server.&#34;&#34;&#34;
+    logging.basicConfig(level=logging.DEBUG)
+
+    test_port = find_free_port()
+    keys_dir = Path(__file__).parent / &#34;keys&#34;
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / &#34;cert.pem&#34;,
+        key_path=keys_dir / &#34;key.pem&#34;,
+    )
+    assert (
+        server_result.is_ok()
+    ), f&#34;Server failed to start: {server_result.unwrap_err()}&#34;
+    server = server_result.unwrap()
+
+    try:
+
+        # Attendre que la connexion soit établie
+        await asyncio.sleep(10)
+
+        # Créer une instance du client pour les tests
+        client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
+            (&#34;localhost&#34;, test_port)
+        )
+        assert client_result.is_ok(), client_result.unwrap_err()
+        client = client_result.unwrap()
+
+        try:
+            addr_result = client.get_address()
+            assert addr_result.is_ok(), &#34;Failed to get client address&#34;
+            assert addr_result.unwrap() == (
+                &#34;localhost&#34;,
+                test_port,
+            ), &#34;Client address mismatch&#34;
+
+            clients_result = server.get_clients()
+            assert clients_result.is_ok(), &#34;Failed to get server clients&#34;
+            assert (
+                len(clients_result.unwrap()) == 1
+            ), &#34;Server should have exactly one client&#34;
+
+        finally:
+            await client.disconnect()
+
+    finally:
+        # Nettoyage final
+        await server.stop()</code></pre>
+</details>
+<div class="desc"><p>Test successful WebSocket client connection to server.</p></div>
+</dd>
+<dt id="shdp.tests.test_ws_client_connect.test_client_double_disconnect"><code class="name flex">
+<span>async def <span class="ident">test_client_double_disconnect</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_client_double_disconnect():
+    &#34;&#34;&#34;Test client behavior when attempting to disconnect twice.&#34;&#34;&#34;
+    test_port = find_free_port()
+    keys_dir = Path(__file__).parent / &#34;keys&#34;
+    server_result = await ShdpWsServer.listen(
+        port=test_port,
+        cert_path=keys_dir / &#34;cert.pem&#34;,
+        key_path=keys_dir / &#34;key.pem&#34;,
+    )
+    assert server_result.is_ok()
+    server = server_result.unwrap()
+
+    try:
+
+        # Créer une instance du client pour les tests
+        client_result: Result[ShdpWsClient, Error] = await ShdpWsClient.connect(
+            (&#34;localhost&#34;, test_port)
+        )
+        assert client_result.is_ok(), client_result.unwrap_err()
+        client = client_result.unwrap()
+
+        try:
+            # Premier disconnect
+            disconnect_result = await client.disconnect()
+            assert disconnect_result.is_ok()
+
+            # Second disconnect
+            disconnect_result = await client.disconnect()
+            assert disconnect_result.is_err()
+            assert disconnect_result.unwrap_err().kind == ErrorKind.SERVICE_UNAVAILABLE
+
+        finally:
+            await client.disconnect()
+
+    finally:
+        # Nettoyage final
+        await server.stop()</code></pre>
+</details>
+<div class="desc"><p>Test client behavior when attempting to disconnect twice.</p></div>
+</dd>
+<dt id="shdp.tests.test_ws_client_connect.test_client_invalid_connection"><code class="name flex">
+<span>async def <span class="ident">test_client_invalid_connection</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pytest.mark.asyncio
+async def test_client_invalid_connection():
+    &#34;&#34;&#34;Test client behavior when connecting to invalid address.&#34;&#34;&#34;
+    invalid_port = -1
+    result = await ShdpWsClient.connect((&#34;localhost&#34;, invalid_port))
+    assert result.is_err(), &#34;Client should fail to connect to invalid port&#34;
+    error = result.unwrap_err()
+    assert error.kind == ErrorKind.USER_DEFINED, &#34;Incorrect error type returned&#34;</code></pre>
+</details>
+<div class="desc"><p>Test client behavior when connecting to invalid address.</p></div>
 </dd>
 </dl>
+</section>
+<section>
 </section>
 </article>
 <nav id="sidebar">
@@ -162,14 +205,15 @@ be decoded from bits and what responses it can generate.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="shdp.protocol.server.versions.v1" href="index.html">shdp.protocol.server.versions.v1</a></code></li>
+<li><code><a title="shdp.tests" href="index.html">shdp.tests</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="shdp.protocol.server.versions.v1.r0x0005.InteractionRequest" href="#shdp.protocol.server.versions.v1.r0x0005.InteractionRequest">InteractionRequest</a></code></h4>
-</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="shdp.tests.test_ws_client_connect.find_free_port" href="#shdp.tests.test_ws_client_connect.find_free_port">find_free_port</a></code></li>
+<li><code><a title="shdp.tests.test_ws_client_connect.test_client_connection" href="#shdp.tests.test_ws_client_connect.test_client_connection">test_client_connection</a></code></li>
+<li><code><a title="shdp.tests.test_ws_client_connect.test_client_double_disconnect" href="#shdp.tests.test_ws_client_connect.test_client_double_disconnect">test_client_double_disconnect</a></code></li>
+<li><code><a title="shdp.tests.test_ws_client_connect.test_client_invalid_connection" href="#shdp.tests.test_ws_client_connect.test_client_invalid_connection">test_client_invalid_connection</a></code></li>
 </ul>
 </li>
 </ul>

@@ -123,7 +123,7 @@ This module handles component needs responses from the server, including:
         # Read all bytes and decode as UTF-8
         data_bytes: list[int] = []
         for _ in range(frame.data_size // 8):
-            data_bytes.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+            data_bytes.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
         data: str = bytes(data_bytes).decode(&#34;utf-8&#34;)
 
@@ -230,7 +230,7 @@ The response contains:
     # Read all bytes and decode as UTF-8
     data_bytes: list[int] = []
     for _ in range(frame.data_size // 8):
-        data_bytes.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+        data_bytes.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
     data: str = bytes(data_bytes).decode(&#34;utf-8&#34;)
 

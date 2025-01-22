@@ -89,7 +89,7 @@ el.replaceWith(d);
 
         self.encoder = BitEncoder[Lsb]()
         self.component_name = component_name
-        self.title = title
+        self.title = &#34;&#34; if title is None else title
         self.files = files
 
     def encode(self) -&gt; Result[None, Error]:

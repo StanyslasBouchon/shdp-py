@@ -105,7 +105,11 @@ el.replaceWith(d);
             &gt;&gt;&gt; if result.is_ok():
             ...     print(&#34;File encoded successfully&#34;)
         &#34;&#34;&#34;
-        file_name = self.path.split(&#34;/&#34;)[-1]
+        file_name = (
+            self.path.split(&#34;/&#34;)[-1]
+            if os.name == &#34;posix&#34;
+            else self.path.split(&#34;\\&#34;)[-1]
+        )
 
         Result.hide()
 
@@ -113,10 +117,10 @@ el.replaceWith(d);
         self.encoder.add_data(0, 8)
 
         with open(self.path, &#34;rb&#34;) as file:
-            content = str(file.read())
+            content = file.read().decode(&#34;utf-8&#34;)
 
-        for byte in content:
-            self.encoder.add_vec(CHARS[byte])
+        for char in content:
+            self.encoder.add_vec(CHARS[char])
 
         return Result.reveal()
 
@@ -204,7 +208,11 @@ el.replaceWith(d);
         &gt;&gt;&gt; if result.is_ok():
         ...     print(&#34;File encoded successfully&#34;)
     &#34;&#34;&#34;
-    file_name = self.path.split(&#34;/&#34;)[-1]
+    file_name = (
+        self.path.split(&#34;/&#34;)[-1]
+        if os.name == &#34;posix&#34;
+        else self.path.split(&#34;\\&#34;)[-1]
+    )
 
     Result.hide()
 
@@ -212,10 +220,10 @@ el.replaceWith(d);
     self.encoder.add_data(0, 8)
 
     with open(self.path, &#34;rb&#34;) as file:
-        content = str(file.read())
+        content = file.read().decode(&#34;utf-8&#34;)
 
-    for byte in content:
-        self.encoder.add_vec(CHARS[byte])
+    for char in content:
+        self.encoder.add_vec(CHARS[char])
 
     return Result.reveal()</code></pre>
 </details>

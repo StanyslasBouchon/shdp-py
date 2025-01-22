@@ -120,7 +120,7 @@ This module handles error responses from the server, including error codes and m
         # Read remaining bytes as UTF-8 message
         data: list[int] = []
         for _ in range((frame.data_size - 24) // 8):
-            data.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+            data.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
         self.message = &#34;&#34;.join(chr(d) for d in data)
 
@@ -211,7 +211,7 @@ Each error response contains:
     # Read remaining bytes as UTF-8 message
     data: list[int] = []
     for _ in range((frame.data_size - 24) // 8):
-        data.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+        data.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
     self.message = &#34;&#34;.join(chr(d) for d in data)
 

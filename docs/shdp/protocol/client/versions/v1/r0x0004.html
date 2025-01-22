@@ -110,14 +110,13 @@ This module handles decoding of fyve-encoded file contents with filenames.</p>
         # Read filename until null byte
         data_bytes: list[int] = []
         while True:
-            byte = self.decoder.read_data(8).unwrap().to_bytes()[0]
+            byte = self.decoder.read_data(8).unwrap().to_byte_list()[0]
             if byte == 0:
                 break
             data_bytes.append(byte)
 
         self.filename = bytes(data_bytes).decode(&#34;utf-8&#34;)
 
-        # Read content using fyve encoding
         content = &#34;&#34;
         while True:
             if self.decoder.position &gt;= frame.data_size + 56:
@@ -211,14 +210,13 @@ This module handles decoding of fyve-encoded file contents with filenames.</p>
     # Read filename until null byte
     data_bytes: list[int] = []
     while True:
-        byte = self.decoder.read_data(8).unwrap().to_bytes()[0]
+        byte = self.decoder.read_data(8).unwrap().to_byte_list()[0]
         if byte == 0:
             break
         data_bytes.append(byte)
 
     self.filename = bytes(data_bytes).decode(&#34;utf-8&#34;)
 
-    # Read content using fyve encoding
     content = &#34;&#34;
     while True:
         if self.decoder.position &gt;= frame.data_size + 56:

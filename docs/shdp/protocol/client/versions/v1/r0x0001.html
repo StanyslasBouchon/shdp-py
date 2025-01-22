@@ -147,7 +147,13 @@ el.replaceWith(d);
         if self._variant == &#34;Child&#34;:
             return self._content if isinstance(self._content, HtmlTag) else HtmlTag(&#34;&#34;)
         else:
-            return HtmlTag(&#34;&#34;)</code></pre>
+            return HtmlTag(&#34;&#34;)
+
+    def __str__(self) -&gt; str:
+        if self._variant == &#34;Text&#34;:
+            return self.get_text()
+        else:
+            return str(self.get_child())</code></pre>
 </details>
 <div class="desc"><p>Represents either text content or a child HTML tag.</p>
 <p>A variant type that can hold either plain text or a nested HTML tag.</p>
@@ -316,7 +322,9 @@ el.replaceWith(d);
         &#34;&#34;&#34;
         data: list[int] = []
         for _ in range(length):
-            data.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+            data.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
+
+        logging.debug(f&#34;data: {len(data)} :: {data}&#34;)
 
         return bytes(data).decode(&#34;utf-8&#34;)
 
@@ -344,7 +352,7 @@ el.replaceWith(d);
         Result.hide()
 
         while True:
-            temp_data = self.decoder.read_data(8).unwrap().to_bytes()[0]
+            temp_data = self.decoder.read_data(8).unwrap().to_byte_list()[0]
 
             if temp_data == 0:
                 break
@@ -521,7 +529,7 @@ attributes, and text content.</p>
     Result.hide()
 
     while True:
-        temp_data = self.decoder.read_data(8).unwrap().to_bytes()[0]
+        temp_data = self.decoder.read_data(8).unwrap().to_byte_list()[0]
 
         if temp_data == 0:
             break
@@ -757,7 +765,22 @@ class HtmlTag:
             &gt;&gt;&gt; tag.get_name()
             &#39;div&#39;
         &#34;&#34;&#34;
-        return self.name</code></pre>
+        return self.name
+
+    def __str__(self) -&gt; str:
+        result = f&#34;&lt;{self.name}&#34;
+
+        for key, value in self.attributes.items():
+            result += f&#39; {key}=&#34;{value}&#34;&#39;
+
+        result += &#34;&gt;&#34;
+
+        for data in self.data:
+            result += str(data)
+
+        result += f&#34;&lt;/{self.name}&gt;&#34;
+
+        return result</code></pre>
 </details>
 <div class="desc"><p>Represents an HTML tag with attributes and content.</p>
 <h2 id="example">Example</h2>

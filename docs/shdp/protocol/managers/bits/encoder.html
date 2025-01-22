@@ -143,7 +143,9 @@ el.replaceWith(d);
         &#34;&#34;&#34;
         Result.hide()
 
-        for byte in data:
+        logging.debug(f&#34;data: {len(list(data))} :: {list(data)}&#34;)
+
+        for byte in list(data):
             self.add_data(byte, 8)
 
         return Result.reveal()
@@ -269,7 +271,9 @@ It supports operations like adding individual bits, bytes, and bit vectors.</p>
     &#34;&#34;&#34;
     Result.hide()
 
-    for byte in data:
+    logging.debug(f&#34;data: {len(list(data))} :: {list(data)}&#34;)
+
+    for byte in list(data):
         self.add_data(byte, 8)
 
     return Result.reveal()</code></pre>
@@ -575,7 +579,7 @@ Err if frame size limit would be exceeded</dd>
         self.encoder: BitEncoder[R] = BitEncoder[R]()
         self.version: int = version
 
-    def encode(self, frame: &#34;EventEncoder[R]&#34;) -&gt; Result[Union[BitVec[R], None], Error]:
+    def encode(self, frame: &#34;EventEncoder[R]&#34;) -&gt; Result[BitVec[R], Error]:
         &#34;&#34;&#34;Encode a complete protocol frame.
 
         Process:
@@ -645,7 +649,7 @@ Err if frame size limit would be exceeded</dd>
 
         r: Result[None, Error] = Result.reveal()
         if r.is_err():
-            return Result[BitVec[R] | None, Error].Err(r.unwrap_err())
+            return Result[BitVec[R], Error].Err(r.unwrap_err())
 
         return Result.Ok(self.encoder.encode())</code></pre>
 </details>
@@ -691,14 +695,14 @@ Err if frame size limit would be exceeded</dd>
 <h3>Methods</h3>
 <dl>
 <dt id="shdp.protocol.managers.bits.encoder.FrameEncoder.encode"><code class="name flex">
-<span>def <span class="ident">encode</span></span>(<span>self, frame: EventEncoder[R]) ‑> <a title="shdp.utils.result.Result" href="../../../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.utils.bitvec.BitVec" href="../../../utils/bitvec.html#shdp.utils.bitvec.BitVec">BitVec</a>[~R] | None, <a title="shdp.protocol.errors.Error" href="../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
+<span>def <span class="ident">encode</span></span>(<span>self, frame: EventEncoder[R]) ‑> <a title="shdp.utils.result.Result" href="../../../utils/result.html#shdp.utils.result.Result">Result</a>[<a title="shdp.utils.bitvec.BitVec" href="../../../utils/bitvec.html#shdp.utils.bitvec.BitVec">BitVec</a>[~R], <a title="shdp.protocol.errors.Error" href="../../errors.html#shdp.protocol.errors.Error">Error</a>]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def encode(self, frame: &#34;EventEncoder[R]&#34;) -&gt; Result[Union[BitVec[R], None], Error]:
+<pre><code class="python">def encode(self, frame: &#34;EventEncoder[R]&#34;) -&gt; Result[BitVec[R], Error]:
     &#34;&#34;&#34;Encode a complete protocol frame.
 
     Process:
@@ -768,7 +772,7 @@ Err if frame size limit would be exceeded</dd>
 
     r: Result[None, Error] = Result.reveal()
     if r.is_err():
-        return Result[BitVec[R] | None, Error].Err(r.unwrap_err())
+        return Result[BitVec[R], Error].Err(r.unwrap_err())
 
     return Result.Ok(self.encoder.encode())</code></pre>
 </details>

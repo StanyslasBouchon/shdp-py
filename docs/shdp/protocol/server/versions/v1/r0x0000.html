@@ -83,19 +83,12 @@ el.replaceWith(d);
     def decode(self, frame: Frame[Msb]) -&gt; Result[None, Error]:
         data_bytes = []
 
-        logging.debug(f&#34;{self.decoder}&#34;)
-
         for _ in range(frame.data_size // 8):
-            logging.debug(
-                f&#34;Reading {frame.data_size} bytes, position {self.decoder.position}&#34;
-            )
             temp_data = self.decoder.read_data(8)
             if temp_data.is_ok():
-                data_bytes.append(BitVec(temp_data.unwrap()).to_bytes()[0])
+                data_bytes.append(BitVec(temp_data.unwrap()).to_byte_list()[0])
             else:
                 return Result.Err(temp_data.unwrap_err())
-
-        logging.debug(f&#34;Decoded data: {data_bytes}&#34;)
 
         self.requested_component_name = &#34;&#34;.join([chr(b) for b in data_bytes])
 

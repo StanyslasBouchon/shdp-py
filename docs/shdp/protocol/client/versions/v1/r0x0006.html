@@ -113,11 +113,15 @@ This module handles server responses to interaction requests, including JSON-for
         self.request_id = self.decoder.read_data(64).unwrap().to_int().unwrap()
 
         data_bytes: list[int] = []
-        for _ in range(frame.data_size - 64 // 8):
-            data_bytes.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+        for _ in range((frame.data_size - 64) // 8):
+            data_bytes.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
         data = bytes(data_bytes).decode(&#34;utf-8&#34;)
-        self.response = json.loads(data)
+
+        if data != &#34;&#34;:
+            self.response = json.loads(data)
+        else:
+            self.response = None
 
         return Result.Ok(None)
 
@@ -199,11 +203,15 @@ Each response contains:
     self.request_id = self.decoder.read_data(64).unwrap().to_int().unwrap()
 
     data_bytes: list[int] = []
-    for _ in range(frame.data_size - 64 // 8):
-        data_bytes.append(self.decoder.read_data(8).unwrap().to_bytes()[0])
+    for _ in range((frame.data_size - 64) // 8):
+        data_bytes.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
     data = bytes(data_bytes).decode(&#34;utf-8&#34;)
-    self.response = json.loads(data)
+
+    if data != &#34;&#34;:
+        self.response = json.loads(data)
+    else:
+        self.response = None
 
     return Result.Ok(None)</code></pre>
 </details>

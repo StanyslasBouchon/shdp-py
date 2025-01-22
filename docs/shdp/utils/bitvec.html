@@ -85,10 +85,10 @@ Ok(5)
 </summary>
 <pre><code class="python">def reverse_bit_order(order: Type[R]) -&gt; Type[Union[Lsb, Msb]]:
     &#34;&#34;&#34;Reverses the bit ordering.
-    
+
     Args:
         order: Current bit order (Lsb or Msb)
-    
+
     Returns:
         The opposite bit order
     &#34;&#34;&#34;
@@ -121,11 +121,12 @@ Ok(5)
 </summary>
 <pre><code class="python">class BitOrder(Enum):
     &#34;&#34;&#34;Bit ordering enumeration.
-    
+
     Attributes:
         LSB: Least Significant Bit first
         MSB: Most Significant Bit first
     &#34;&#34;&#34;
+
     LSB = 0
     MSB = 1</code></pre>
 </details>
@@ -180,7 +181,7 @@ Ok(5)
         [1, 0, 1, 0]
         &gt;&gt;&gt; bits[1:3]  # Slicing returns a new BitVec
         [0, 1]
-        
+
         Converting to other formats:
         &gt;&gt;&gt; class MsbBits(BitVec[Msb]): pass
         &gt;&gt;&gt; bits = MsbBits([1,1,0,0, 0,1,0,1])
@@ -204,20 +205,20 @@ Ok(5)
     @property
     def is_msb(self) -&gt; bool:
         &#34;&#34;&#34;Check if this BitVec uses MSB-first ordering.
-        
+
         Returns:
             bool: True if MSB-first, False otherwise
         &#34;&#34;&#34;
-        return isinstance(self, BitVec[Msb])
+        return isinstance(self, Msb)
 
     @property
     def is_lsb(self) -&gt; bool:
         &#34;&#34;&#34;Check if this BitVec uses LSB-first ordering.
-        
+
         Returns:
             bool: True if LSB-first, False otherwise
         &#34;&#34;&#34;
-        return isinstance(self, BitVec[Lsb])
+        return isinstance(self, Lsb)
 
     def __getitem__(self, index):
         &#34;&#34;&#34;Get a bit or slice of bits at the specified index.
@@ -321,7 +322,7 @@ Ok(5)
                 result |= bit &lt;&lt; (len(self) - i - 1)
         return Result.Ok(result)
 
-    def to_bytes(self) -&gt; list[int]:
+    def to_byte_list(self) -&gt; list[int]:
         &#34;&#34;&#34;Converts the list of bits to a list of bytes.
 
         The conversion uses MSB-first or LSB-first ordering based on the class type.
@@ -341,8 +342,20 @@ Ok(5)
             bytes_list.append(byte)
         return bytes_list
 
+    def to_bytes(self) -&gt; bytes:
+        return bytes(self.to_byte_list())
+
     def to_hex(self) -&gt; str:
-        return str([f&#34;{byte:02x}&#34; for byte in self.to_bytes()])</code></pre>
+        return str([f&#34;{byte:02x}&#34; for byte in self.to_byte_list()])
+
+    @staticmethod
+    def from_bytes(bytes: bytes) -&gt; &#34;BitVec[R]&#34;:
+        result = BitVec[R]()
+        for byte in bytes:
+            for i in range(8):
+                bit = (byte &amp; (1 &lt;&lt; i)) != 0
+                result.append(bit)
+        return result</code></pre>
 </details>
 <div class="desc"><p>A specialized list for handling bit vectors with configurable bit ordering.</p>
 <p>BitVec extends the built-in list to provide specialized handling of boolean values
@@ -382,6 +395,28 @@ Ok(197)
 <li>typing.Generic</li>
 <li>builtins.list</li>
 </ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="shdp.utils.bitvec.BitVec.from_bytes"><code class="name flex">
+<span>def <span class="ident">from_bytes</span></span>(<span>bytes: bytes) ‑> <a title="shdp.utils.bitvec.BitVec" href="#shdp.utils.bitvec.BitVec">BitVec</a>[~R]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def from_bytes(bytes: bytes) -&gt; &#34;BitVec[R]&#34;:
+    result = BitVec[R]()
+    for byte in bytes:
+        for i in range(8):
+            bit = (byte &amp; (1 &lt;&lt; i)) != 0
+            result.append(bit)
+    return result</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="shdp.utils.bitvec.BitVec.is_lsb"><code class="name">prop <span class="ident">is_lsb</span> : bool</code></dt>
@@ -393,11 +428,11 @@ Ok(197)
 <pre><code class="python">@property
 def is_lsb(self) -&gt; bool:
     &#34;&#34;&#34;Check if this BitVec uses LSB-first ordering.
-    
+
     Returns:
         bool: True if LSB-first, False otherwise
     &#34;&#34;&#34;
-    return isinstance(self, BitVec[Lsb])</code></pre>
+    return isinstance(self, Lsb)</code></pre>
 </details>
 <div class="desc"><p>Check if this BitVec uses LSB-first ordering.</p>
 <h2 id="returns">Returns</h2>
@@ -415,11 +450,11 @@ def is_lsb(self) -&gt; bool:
 <pre><code class="python">@property
 def is_msb(self) -&gt; bool:
     &#34;&#34;&#34;Check if this BitVec uses MSB-first ordering.
-    
+
     Returns:
         bool: True if MSB-first, False otherwise
     &#34;&#34;&#34;
-    return isinstance(self, BitVec[Msb])</code></pre>
+    return isinstance(self, Msb)</code></pre>
 </details>
 <div class="desc"><p>Check if this BitVec uses MSB-first ordering.</p>
 <h2 id="returns">Returns</h2>
@@ -477,15 +512,15 @@ def is_msb(self) -&gt; bool:
 <dd>Iterable of values to append (each converted to bool)</dd>
 </dl></div>
 </dd>
-<dt id="shdp.utils.bitvec.BitVec.to_bytes"><code class="name flex">
-<span>def <span class="ident">to_bytes</span></span>(<span>self) ‑> list[int]</span>
+<dt id="shdp.utils.bitvec.BitVec.to_byte_list"><code class="name flex">
+<span>def <span class="ident">to_byte_list</span></span>(<span>self) ‑> list[int]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def to_bytes(self) -&gt; list[int]:
+<pre><code class="python">def to_byte_list(self) -&gt; list[int]:
     &#34;&#34;&#34;Converts the list of bits to a list of bytes.
 
     The conversion uses MSB-first or LSB-first ordering based on the class type.
@@ -513,6 +548,19 @@ def is_msb(self) -&gt; bool:
 <dd>List of bytes (0-255)</dd>
 </dl></div>
 </dd>
+<dt id="shdp.utils.bitvec.BitVec.to_bytes"><code class="name flex">
+<span>def <span class="ident">to_bytes</span></span>(<span>self) ‑> bytes</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_bytes(self) -&gt; bytes:
+    return bytes(self.to_byte_list())</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
 <dt id="shdp.utils.bitvec.BitVec.to_hex"><code class="name flex">
 <span>def <span class="ident">to_hex</span></span>(<span>self) ‑> str</span>
 </code></dt>
@@ -522,7 +570,7 @@ def is_msb(self) -&gt; bool:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def to_hex(self) -&gt; str:
-    return str([f&#34;{byte:02x}&#34; for byte in self.to_bytes()])</code></pre>
+    return str([f&#34;{byte:02x}&#34; for byte in self.to_byte_list()])</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -629,10 +677,11 @@ Err(Error(SIZE_CONSTRAINT_VIOLATION, &quot;BitVec length must be less than 64 bi
 </summary>
 <pre><code class="python">class Lsb:
     &#34;&#34;&#34;Marker class for LSB-first bit ordering.
-    
+
     Used as a type parameter for BitVec to indicate that bits should be processed
     from least significant (rightmost) to most significant (leftmost).
     &#34;&#34;&#34;
+
     pass</code></pre>
 </details>
 <div class="desc"><p>Marker class for LSB-first bit ordering.</p>
@@ -649,10 +698,11 @@ from least significant (rightmost) to most significant (leftmost).</p></div>
 </summary>
 <pre><code class="python">class Msb:
     &#34;&#34;&#34;Marker class for MSB-first bit ordering.
-    
+
     Used as a type parameter for BitVec to indicate that bits should be processed
     from most significant (leftmost) to least significant (rightmost).
     &#34;&#34;&#34;
+
     pass</code></pre>
 </details>
 <div class="desc"><p>Marker class for MSB-first bit ordering.</p>
@@ -691,8 +741,10 @@ from most significant (leftmost) to least significant (rightmost).</p></div>
 <ul class="two-column">
 <li><code><a title="shdp.utils.bitvec.BitVec.append" href="#shdp.utils.bitvec.BitVec.append">append</a></code></li>
 <li><code><a title="shdp.utils.bitvec.BitVec.extend" href="#shdp.utils.bitvec.BitVec.extend">extend</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.from_bytes" href="#shdp.utils.bitvec.BitVec.from_bytes">from_bytes</a></code></li>
 <li><code><a title="shdp.utils.bitvec.BitVec.is_lsb" href="#shdp.utils.bitvec.BitVec.is_lsb">is_lsb</a></code></li>
 <li><code><a title="shdp.utils.bitvec.BitVec.is_msb" href="#shdp.utils.bitvec.BitVec.is_msb">is_msb</a></code></li>
+<li><code><a title="shdp.utils.bitvec.BitVec.to_byte_list" href="#shdp.utils.bitvec.BitVec.to_byte_list">to_byte_list</a></code></li>
 <li><code><a title="shdp.utils.bitvec.BitVec.to_bytes" href="#shdp.utils.bitvec.BitVec.to_bytes">to_bytes</a></code></li>
 <li><code><a title="shdp.utils.bitvec.BitVec.to_hex" href="#shdp.utils.bitvec.BitVec.to_hex">to_hex</a></code></li>
 <li><code><a title="shdp.utils.bitvec.BitVec.to_int" href="#shdp.utils.bitvec.BitVec.to_int">to_int</a></code></li>

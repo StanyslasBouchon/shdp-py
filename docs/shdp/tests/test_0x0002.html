@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.protocol.server.versions.v1.r0x0005 API documentation</title>
-<meta name="description" content="">
+<title>shdp.tests.test_0x0002 API documentation</title>
+<meta name="description" content="Tests for the 0x0002 protocol message (ErrorResponse) …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,9 +33,12 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.protocol.server.versions.v1.r0x0005</code></h1>
+<h1 class="title">Module <code>shdp.tests.test_0x0002</code></h1>
 </header>
 <section id="section-intro">
+<p>Tests for the 0x0002 protocol message (ErrorResponse).</p>
+<p>This test suite verifies the encoding and decoding of the ErrorResponse message,
+which is used to transmit errors between server and client.</p>
 </section>
 <section>
 </section>
@@ -46,111 +49,134 @@ el.replaceWith(d);
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="shdp.protocol.server.versions.v1.r0x0005.InteractionRequest"><code class="flex name class">
-<span>class <span class="ident">InteractionRequest</span></span>
-<span>(</span><span>decoder: <a title="shdp.protocol.managers.bits.decoder.BitDecoder" href="../../../managers/bits/decoder.html#shdp.protocol.managers.bits.decoder.BitDecoder">BitDecoder</a>[<a title="shdp.utils.bitvec.Msb" href="../../../../utils/bitvec.html#shdp.utils.bitvec.Msb">Msb</a>])</span>
+<dt id="shdp.tests.test_0x0002.Test0x0002"><code class="flex name class">
+<span>class <span class="ident">Test0x0002</span></span>
+<span>(</span><span>methodName='runTest')</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class InteractionRequest(EventDecoder[Msb]):
-    def __init__(self, decoder: BitDecoder[Msb]):
-        logging.debug(
-            &#34;[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;125m0x0005\x1b[0m received&#34;
-        )
+<pre><code class="python">class Test0x0002(unittest.TestCase):
+    def test_error_response(self):
+        &#34;&#34;&#34;Test encoding and decoding of ErrorResponse message.
 
-        self.decoder = decoder
-        self.request_id = 0
-        self.parent_name = &#34;&#34;
-        self.function_name = &#34;&#34;
-        self.object_id: Optional[int] = None
-        self.params: Optional[dict[str, Any]] = None
-        self.token: Optional[str] = None
+        This test:
+        1. Creates an ErrorResponse with an error code and message
+        2. Encodes it using LSB frame encoding
+        3. Decodes it using MSB frame decoding
+        4. Verifies the decoded error code and message match the original
+        &#34;&#34;&#34;
+        # Create test error
+        test_error = Error(404, ErrorKind.NOT_FOUND, &#34;Resource not found&#34;)
 
-    def decode(self, frame: Frame) -&gt; Result[None, Error]:
-        self.request_id = self.decoder.read_data(64).unwrap().to_int().unwrap()
-        byte_length = (frame.data_size - 64) // 8
-        data_bytes = []
+        # Encode error response
+        encoder = FrameEncoder(Version.V1.value)
+        frame = encoder.encode(ErrorResponse(test_error))
 
-        for _ in range(byte_length):
-            byte = self.decoder.read_data(8).unwrap().to_byte_list()[0]
-            data_bytes.append(byte)
+        logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
 
-        string = bytes(data_bytes).decode(&#34;utf-8&#34;)
-        parts = string.split(&#34;\x00&#34;)
+        # Decode response
+        decoder = BitDecoder(frame.unwrap())
+        frame_decoder = FrameDecoder(decoder)
+        data = frame_decoder.decode().unwrap()
+        decoder = frame_decoder.get_decoder()
 
-        self.function_name = parts[0]
-        self.parent_name = parts[1]
+        # Decode error data
+        decoded_data = ClientErrorResponse(decoder)
+        decoded_data_result = decoded_data.decode(data)
 
-        if self.parent_name == &#34;&#34;:
-            return Result.Err(Error.new(ErrorKind.BAD_REQUEST, &#34;Parent name is empty&#34;))
-
-        if self.function_name == &#34;&#34;:
-            return Result.Err(
-                Error.new(ErrorKind.BAD_REQUEST, &#34;Function name is empty&#34;)
-            )
-
-        self.token = parts[2] if parts[2] != &#34;&#34; else None
-        self.object_id = int(parts[3]) if parts[3] != &#34;&#34; else None
-        self.params = json.loads(parts[4]) if parts[4] != &#34;&#34; else None
-
-        logging.debug(
-            f&#34;[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;125m0x0005\x1b[0m: function_name: {self.function_name}, table: {self.parent_name}, object_id: {self.object_id}, params: {self.params}, token: {self.token}&#34;
-        )
-
-        return Result.Ok(None)
-
-    def get_responses(self) -&gt; Result[list[EventEncoder[ReversedR]], Error]:
-        listeners = EVENT_REGISTRY_MSB.get_listeners((1, 0x0005))
-
-        if listeners is None:
-            return Result.Ok([])
-
-        all_args = [listener(self) for listener in listeners]
-        responses: list[EventEncoder[Lsb]] = []
-
-        for args_list in all_args:
-            result_response = args_list[0].to_opt_value()
-
-            if result_response.is_ok():
-                response = result_response.unwrap()
-            else:
-                return Result.Err(result_response.unwrap_err())
-
-            responses.append(InteractionResponse(self.request_id, response))
-
-        return Result.Ok(cast(list[EventEncoder[ReversedR]], responses))</code></pre>
+        if decoded_data_result.is_ok():
+            self.assertEqual(decoded_data.code, test_error.code)
+            self.assertEqual(decoded_data.message, test_error.message)
+        else:
+            self.fail(decoded_data_result.unwrap_err())</code></pre>
 </details>
-<div class="desc"><p>Abstract base class for decoding protocol events.</p>
-<p>This class defines the interface for decoding events in the protocol.
-Each event type should implement this interface to specify how it should
-be decoded from bits and what responses it can generate.</p>
-<h2 id="example">Example</h2>
-<pre><code class="language-python-repl">&gt;&gt;&gt; class LoginDecoder(EventDecoder[R]):
-...     def decode(self, frame: Frame[R]) -&gt; Result[None, Error]:
-...         user_id = frame.read_int(8)  # Read event data
-...         return Result.Ok(None)
-...
-...     def get_responses(self) -&gt; Result[list[EventEncoder[ReversedR]], Error]:
-...         return Result.Ok([LoginSuccessEvent, LoginFailedEvent])
-</code></pre></div>
+<div class="desc"><p>A class whose instances are single test cases.</p>
+<p>By default, the test code itself should be placed in a method named
+'runTest'.</p>
+<p>If the fixture may be used for many test cases, create as
+many test methods as are needed. When instantiating such a TestCase
+subclass, specify in the constructor arguments the name of the test method
+that the instance is to execute.</p>
+<p>Test authors should subclass TestCase for their own tests. Construction
+and deconstruction of the test's environment ('fixture') can be
+implemented by overriding the 'setUp' and 'tearDown' methods respectively.</p>
+<p>If it is necessary to override the <strong>init</strong> method, the base class
+<strong>init</strong> method must always be called. It is important that subclasses
+should not change the signature of their <strong>init</strong> method, since instances
+of the classes are instantiated automatically by parts of the framework
+in order to be run.</p>
+<p>When subclassing TestCase, you can set these attributes:
+* failureException: determines which exception will be raised when
+the instance's assertion methods fail; test methods raising this
+exception will be deemed to have 'failed' rather than 'errored'.
+* longMessage: determines whether long messages (including repr of
+objects used in assert methods) will be printed on failure in <em>addition</em>
+to any explicit message passed.
+* maxDiff: sets the maximum length of a diff in failure messages
+by assert methods using difflib. It is looked up as an instance
+attribute so can be configured by individual tests if required.</p>
+<p>Create an instance of the class that will use the named test
+method when executed. Raises a ValueError if the instance does
+not have a method with the specified name.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="shdp.protocol.managers.event.EventDecoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder">EventDecoder</a></li>
-<li>typing.Generic</li>
-<li>abc.ABC</li>
+<li>unittest.case.TestCase</li>
 </ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="shdp.protocol.managers.event.EventDecoder" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder">EventDecoder</a></b></code>:
-<ul class="hlist">
-<li><code><a title="shdp.protocol.managers.event.EventDecoder.decode" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder.decode">decode</a></code></li>
-<li><code><a title="shdp.protocol.managers.event.EventDecoder.get_responses" href="../../../managers/event.html#shdp.protocol.managers.event.EventDecoder.get_responses">get_responses</a></code></li>
-</ul>
-</li>
-</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="shdp.tests.test_0x0002.Test0x0002.test_error_response"><code class="name flex">
+<span>def <span class="ident">test_error_response</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_error_response(self):
+    &#34;&#34;&#34;Test encoding and decoding of ErrorResponse message.
+
+    This test:
+    1. Creates an ErrorResponse with an error code and message
+    2. Encodes it using LSB frame encoding
+    3. Decodes it using MSB frame decoding
+    4. Verifies the decoded error code and message match the original
+    &#34;&#34;&#34;
+    # Create test error
+    test_error = Error(404, ErrorKind.NOT_FOUND, &#34;Resource not found&#34;)
+
+    # Encode error response
+    encoder = FrameEncoder(Version.V1.value)
+    frame = encoder.encode(ErrorResponse(test_error))
+
+    logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
+
+    # Decode response
+    decoder = BitDecoder(frame.unwrap())
+    frame_decoder = FrameDecoder(decoder)
+    data = frame_decoder.decode().unwrap()
+    decoder = frame_decoder.get_decoder()
+
+    # Decode error data
+    decoded_data = ClientErrorResponse(decoder)
+    decoded_data_result = decoded_data.decode(data)
+
+    if decoded_data_result.is_ok():
+        self.assertEqual(decoded_data.code, test_error.code)
+        self.assertEqual(decoded_data.message, test_error.message)
+    else:
+        self.fail(decoded_data_result.unwrap_err())</code></pre>
+</details>
+<div class="desc"><p>Test encoding and decoding of ErrorResponse message.</p>
+<p>This test:
+1. Creates an ErrorResponse with an error code and message
+2. Encodes it using LSB frame encoding
+3. Decodes it using MSB frame decoding
+4. Verifies the decoded error code and message match the original</p></div>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -162,13 +188,16 @@ be decoded from bits and what responses it can generate.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="shdp.protocol.server.versions.v1" href="index.html">shdp.protocol.server.versions.v1</a></code></li>
+<li><code><a title="shdp.tests" href="index.html">shdp.tests</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="shdp.protocol.server.versions.v1.r0x0005.InteractionRequest" href="#shdp.protocol.server.versions.v1.r0x0005.InteractionRequest">InteractionRequest</a></code></h4>
+<h4><code><a title="shdp.tests.test_0x0002.Test0x0002" href="#shdp.tests.test_0x0002.Test0x0002">Test0x0002</a></code></h4>
+<ul class="">
+<li><code><a title="shdp.tests.test_0x0002.Test0x0002.test_error_response" href="#shdp.tests.test_0x0002.Test0x0002.test_error_response">test_error_response</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

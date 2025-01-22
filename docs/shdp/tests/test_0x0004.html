@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.5">
-<title>shdp.tests.test_0x0000 API documentation</title>
-<meta name="description" content="Tests for the 0x0000 protocol message (ComponentNeedsRequest) …">
+<title>shdp.tests.test_0x0004 API documentation</title>
+<meta name="description" content="Tests for the 0x0004 protocol message (FullFyveResponse) …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,12 +33,12 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>shdp.tests.test_0x0000</code></h1>
+<h1 class="title">Module <code>shdp.tests.test_0x0004</code></h1>
 </header>
 <section id="section-intro">
-<p>Tests for the 0x0000 protocol message (ComponentNeedsRequest).</p>
-<p>This test suite verifies the encoding and decoding of the ComponentNeedsRequest message,
-which is used to request specific components from the server.</p>
+<p>Tests for the 0x0004 protocol message (FullFyveResponse).</p>
+<p>This test suite verifies the encoding and decoding of the FullFyveResponse message,
+which is used to transmit Fyve files with their contents between server and client.</p>
 </section>
 <section>
 </section>
@@ -49,8 +49,8 @@ which is used to request specific components from the server.</p>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="shdp.tests.test_0x0000.Test0x0000"><code class="flex name class">
-<span>class <span class="ident">Test0x0000</span></span>
+<dt id="shdp.tests.test_0x0004.Test0x0004"><code class="flex name class">
+<span>class <span class="ident">Test0x0004</span></span>
 <span>(</span><span>methodName='runTest')</span>
 </code></dt>
 <dd>
@@ -58,33 +58,83 @@ which is used to request specific components from the server.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Test0x0000(unittest.TestCase):
-    def test_component_needs_request(self):
-        &#34;&#34;&#34;Test encoding and decoding of ComponentNeedsRequest message.
+<pre><code class="python">class Test0x0004(unittest.TestCase):
+    def test_fyve_file_response_empty(self):
+        &#34;&#34;&#34;Test encoding and decoding of FullFyveResponse with empty file.
 
         This test:
-        1. Creates a ComponentNeedsRequest with a test component name
-        2. Encodes it using LSB frame encoding
-        3. Decodes it using MSB frame decoding
-        4. Verifies the decoded component name matches the original
+        1. Creates a temporary empty Fyve file
+        2. Creates a FullFyveResponse with the file
+        3. Encodes it using LSB frame encoding
+        4. Decodes it using MSB frame decoding
+        5. Verifies the decoded filename and empty content
         &#34;&#34;&#34;
-        encoder = FrameEncoder(Version.V1.value)
-        frame = encoder.encode(ComponentNeedsRequest(&#34;test&#34;))
+        with NamedTemporaryFile(suffix=&#34;.fyve&#34;, delete=False) as temp_file:
+            temp_path = Path(temp_file.name)
 
-        logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
+        try:
+            # Encode fyve response
+            encoder = FrameEncoder(Version.V1.value)
+            frame = encoder.encode(FullFyveResponse(str(temp_path)))
 
-        decoder = BitDecoder(frame.unwrap())
-        frame_decoder = FrameDecoder(decoder)
-        data = frame_decoder.decode().unwrap()
-        decoder = frame_decoder.get_decoder()
+            # Decode response
+            decoder = BitDecoder(frame.unwrap())
+            frame_decoder = FrameDecoder(decoder)
+            data = frame_decoder.decode().unwrap()
+            decoder = frame_decoder.get_decoder()
 
-        decoded_data = ServerComponentNeedsRequest(decoder)
-        decoded_data_result = decoded_data.decode(data)
+            # Decode fyve data
+            decoded_data = ClientFullFyveResponse(decoder)
+            decoded_data_result = decoded_data.decode(data)
 
-        if decoded_data_result.is_ok():
-            self.assertEqual(decoded_data.requested_component_name, &#34;test&#34;)
-        else:
-            self.fail(decoded_data_result.unwrap_err())</code></pre>
+            if decoded_data_result.is_ok():
+                self.assertEqual(decoded_data.filename, temp_path.name)
+                self.assertEqual(decoded_data.content, &#34;&#34;)
+            else:
+                self.fail(decoded_data_result.unwrap_err())
+
+        finally:
+            temp_path.unlink()
+
+    def test_fyve_file_response_with_content(self):
+        &#34;&#34;&#34;Test encoding and decoding of FullFyveResponse with file content.
+
+        This test:
+        1. Creates a temporary Fyve file with test content
+        2. Creates a FullFyveResponse with the file
+        3. Encodes it using LSB frame encoding
+        4. Decodes it using MSB frame decoding
+        5. Verifies the decoded filename and content match the original
+        &#34;&#34;&#34;
+        test_content = &#34;component Button {style: primary; text: &#39;Click me&#39;;}&#34;
+
+        with NamedTemporaryFile(suffix=&#34;.fyve&#34;, mode=&#34;w&#34;, delete=False) as temp_file:
+            temp_file.write(test_content)
+            temp_path = Path(temp_file.name)
+
+        try:
+            # Encode fyve response
+            encoder = FrameEncoder(Version.V1.value)
+            frame = encoder.encode(FullFyveResponse(str(temp_path)))
+
+            # Decode response
+            decoder = BitDecoder(frame.unwrap())
+            frame_decoder = FrameDecoder(decoder)
+            data = frame_decoder.decode().unwrap()
+            decoder = frame_decoder.get_decoder()
+
+            # Decode fyve data
+            decoded_data = ClientFullFyveResponse(decoder)
+            decoded_data_result = decoded_data.decode(data)
+
+            if decoded_data_result.is_ok():
+                self.assertEqual(decoded_data.filename, temp_path.name)
+                self.assertEqual(decoded_data.content, test_content)
+            else:
+                self.fail(decoded_data_result.unwrap_err())
+
+        finally:
+            temp_path.unlink()</code></pre>
 </details>
 <div class="desc"><p>A class whose instances are single test cases.</p>
 <p>By default, the test code itself should be placed in a method named
@@ -120,47 +170,114 @@ not have a method with the specified name.</p></div>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="shdp.tests.test_0x0000.Test0x0000.test_component_needs_request"><code class="name flex">
-<span>def <span class="ident">test_component_needs_request</span></span>(<span>self)</span>
+<dt id="shdp.tests.test_0x0004.Test0x0004.test_fyve_file_response_empty"><code class="name flex">
+<span>def <span class="ident">test_fyve_file_response_empty</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def test_component_needs_request(self):
-    &#34;&#34;&#34;Test encoding and decoding of ComponentNeedsRequest message.
+<pre><code class="python">def test_fyve_file_response_empty(self):
+    &#34;&#34;&#34;Test encoding and decoding of FullFyveResponse with empty file.
 
     This test:
-    1. Creates a ComponentNeedsRequest with a test component name
-    2. Encodes it using LSB frame encoding
-    3. Decodes it using MSB frame decoding
-    4. Verifies the decoded component name matches the original
+    1. Creates a temporary empty Fyve file
+    2. Creates a FullFyveResponse with the file
+    3. Encodes it using LSB frame encoding
+    4. Decodes it using MSB frame decoding
+    5. Verifies the decoded filename and empty content
     &#34;&#34;&#34;
-    encoder = FrameEncoder(Version.V1.value)
-    frame = encoder.encode(ComponentNeedsRequest(&#34;test&#34;))
+    with NamedTemporaryFile(suffix=&#34;.fyve&#34;, delete=False) as temp_file:
+        temp_path = Path(temp_file.name)
 
-    logging.debug(f&#34;Encoded frame: {frame.unwrap().to_hex()}&#34;)
+    try:
+        # Encode fyve response
+        encoder = FrameEncoder(Version.V1.value)
+        frame = encoder.encode(FullFyveResponse(str(temp_path)))
 
-    decoder = BitDecoder(frame.unwrap())
-    frame_decoder = FrameDecoder(decoder)
-    data = frame_decoder.decode().unwrap()
-    decoder = frame_decoder.get_decoder()
+        # Decode response
+        decoder = BitDecoder(frame.unwrap())
+        frame_decoder = FrameDecoder(decoder)
+        data = frame_decoder.decode().unwrap()
+        decoder = frame_decoder.get_decoder()
 
-    decoded_data = ServerComponentNeedsRequest(decoder)
-    decoded_data_result = decoded_data.decode(data)
+        # Decode fyve data
+        decoded_data = ClientFullFyveResponse(decoder)
+        decoded_data_result = decoded_data.decode(data)
 
-    if decoded_data_result.is_ok():
-        self.assertEqual(decoded_data.requested_component_name, &#34;test&#34;)
-    else:
-        self.fail(decoded_data_result.unwrap_err())</code></pre>
+        if decoded_data_result.is_ok():
+            self.assertEqual(decoded_data.filename, temp_path.name)
+            self.assertEqual(decoded_data.content, &#34;&#34;)
+        else:
+            self.fail(decoded_data_result.unwrap_err())
+
+    finally:
+        temp_path.unlink()</code></pre>
 </details>
-<div class="desc"><p>Test encoding and decoding of ComponentNeedsRequest message.</p>
+<div class="desc"><p>Test encoding and decoding of FullFyveResponse with empty file.</p>
 <p>This test:
-1. Creates a ComponentNeedsRequest with a test component name
-2. Encodes it using LSB frame encoding
-3. Decodes it using MSB frame decoding
-4. Verifies the decoded component name matches the original</p></div>
+1. Creates a temporary empty Fyve file
+2. Creates a FullFyveResponse with the file
+3. Encodes it using LSB frame encoding
+4. Decodes it using MSB frame decoding
+5. Verifies the decoded filename and empty content</p></div>
+</dd>
+<dt id="shdp.tests.test_0x0004.Test0x0004.test_fyve_file_response_with_content"><code class="name flex">
+<span>def <span class="ident">test_fyve_file_response_with_content</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_fyve_file_response_with_content(self):
+    &#34;&#34;&#34;Test encoding and decoding of FullFyveResponse with file content.
+
+    This test:
+    1. Creates a temporary Fyve file with test content
+    2. Creates a FullFyveResponse with the file
+    3. Encodes it using LSB frame encoding
+    4. Decodes it using MSB frame decoding
+    5. Verifies the decoded filename and content match the original
+    &#34;&#34;&#34;
+    test_content = &#34;component Button {style: primary; text: &#39;Click me&#39;;}&#34;
+
+    with NamedTemporaryFile(suffix=&#34;.fyve&#34;, mode=&#34;w&#34;, delete=False) as temp_file:
+        temp_file.write(test_content)
+        temp_path = Path(temp_file.name)
+
+    try:
+        # Encode fyve response
+        encoder = FrameEncoder(Version.V1.value)
+        frame = encoder.encode(FullFyveResponse(str(temp_path)))
+
+        # Decode response
+        decoder = BitDecoder(frame.unwrap())
+        frame_decoder = FrameDecoder(decoder)
+        data = frame_decoder.decode().unwrap()
+        decoder = frame_decoder.get_decoder()
+
+        # Decode fyve data
+        decoded_data = ClientFullFyveResponse(decoder)
+        decoded_data_result = decoded_data.decode(data)
+
+        if decoded_data_result.is_ok():
+            self.assertEqual(decoded_data.filename, temp_path.name)
+            self.assertEqual(decoded_data.content, test_content)
+        else:
+            self.fail(decoded_data_result.unwrap_err())
+
+    finally:
+        temp_path.unlink()</code></pre>
+</details>
+<div class="desc"><p>Test encoding and decoding of FullFyveResponse with file content.</p>
+<p>This test:
+1. Creates a temporary Fyve file with test content
+2. Creates a FullFyveResponse with the file
+3. Encodes it using LSB frame encoding
+4. Decodes it using MSB frame decoding
+5. Verifies the decoded filename and content match the original</p></div>
 </dd>
 </dl>
 </dd>
@@ -180,9 +297,10 @@ not have a method with the specified name.</p></div>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="shdp.tests.test_0x0000.Test0x0000" href="#shdp.tests.test_0x0000.Test0x0000">Test0x0000</a></code></h4>
+<h4><code><a title="shdp.tests.test_0x0004.Test0x0004" href="#shdp.tests.test_0x0004.Test0x0004">Test0x0004</a></code></h4>
 <ul class="">
-<li><code><a title="shdp.tests.test_0x0000.Test0x0000.test_component_needs_request" href="#shdp.tests.test_0x0000.Test0x0000.test_component_needs_request">test_component_needs_request</a></code></li>
+<li><code><a title="shdp.tests.test_0x0004.Test0x0004.test_fyve_file_response_empty" href="#shdp.tests.test_0x0004.Test0x0004.test_fyve_file_response_empty">test_fyve_file_response_empty</a></code></li>
+<li><code><a title="shdp.tests.test_0x0004.Test0x0004.test_fyve_file_response_with_content" href="#shdp.tests.test_0x0004.Test0x0004.test_fyve_file_response_with_content">test_fyve_file_response_with_content</a></code></li>
 </ul>
 </li>
 </ul>

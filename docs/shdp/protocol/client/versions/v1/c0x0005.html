@@ -131,7 +131,7 @@ This module handles client-side interaction requests, including function calls a
         self.encoder.add_data(0, 8)  # Null terminator
 
         if self.object_id is not None:
-            self.encoder.add_data(self.object_id, 32)
+            self.encoder.add_bytes(str(self.object_id).encode(&#34;utf-8&#34;))
 
         self.encoder.add_data(0, 8)  # Null terminator
 
@@ -244,7 +244,7 @@ Data is encoded using LSB (Least Significant Bit) encoding.</p>
     self.encoder.add_data(0, 8)  # Null terminator
 
     if self.object_id is not None:
-        self.encoder.add_data(self.object_id, 32)
+        self.encoder.add_bytes(str(self.object_id).encode(&#34;utf-8&#34;))
 
     self.encoder.add_data(0, 8)  # Null terminator
 
