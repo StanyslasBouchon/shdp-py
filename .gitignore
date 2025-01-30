@@ -35,5 +35,5 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
 .pypirc
+temp.pfx
