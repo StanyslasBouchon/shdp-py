@@ -16,14 +16,14 @@ Examples:
     Bit ordering:
     >>> class MsbBitVec(BitVec[Msb]): pass  # MSB-first ordering
     >>> class LsbBitVec(BitVec[Lsb]): pass  # LSB-first ordering
-    
+
     >>> # MSB-first: bits are read from left to right
     >>> msb = MsbBitVec([1,0,1,0, 0,0,0,0])
     >>> msb.to_bytes()
     [160]  # 10100000 = 0xA0
     >>> msb.to_int()
     Ok(160)
-    
+
     >>> # LSB-first: bits are read from right to left
     >>> lsb = LsbBitVec([1,0,1,0, 0,0,0,0])
     >>> lsb.to_bytes()

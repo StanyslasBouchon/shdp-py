@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from enum import auto
 from typing import Any, Union
 
 from ..lib import Result
@@ -28,12 +27,12 @@ class Arg:
     value: Any
 
     # Supported argument types
-    TEXT = auto()  # For strings
-    INT = auto()  # For integers
-    BOOL = auto()  # For booleans
-    VEC_TEXT = auto()  # For string lists
-    OPT_TEXT = auto()  # For optional strings
-    OPT_VALUE = auto()  # For optional complex values (dict/list)
+    TEXT = 1  # For strings
+    INT = 2  # For integers
+    BOOL = 3  # For booleans
+    VEC_TEXT = 4  # For string lists
+    OPT_TEXT = 5  # For optional strings
+    OPT_VALUE = 6  # For optional complex values (dict/list)
 
     def __init__(self, arg_type: int, value: Any = None):
         """Initialize a new argument with its type and value.

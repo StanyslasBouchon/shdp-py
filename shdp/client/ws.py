@@ -3,7 +3,7 @@ import logging
 from typing import Optional, Tuple
 
 import websockets
-from websockets.client import WebSocketClientProtocol
+from websockets.asyncio.client import ClientConnection, connect
 
 from ..lib import IShdpClient
 from ..protocol.errors import Error, ErrorKind
@@ -16,7 +16,7 @@ from ..utils.bitvec import BitVec
 from ..utils.result import Result
 
 
-class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
+class ShdpWsClient(IShdpClient[ClientConnection]):
     """WebSocket implementation of the SHDP client protocol.
 
     This class implements a WebSocket client that handles SHDP protocol connections.
@@ -29,7 +29,7 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
 
     def __init__(self) -> None:
         """Initialize a new SHDP WebSocket client instance."""
-        self._websocket: Optional[WebSocketClientProtocol] = None
+        self._websocket: Optional[ClientConnection] = None
         self._address: Optional[Tuple[str, int]] = None
 
     async def send(self, event: EventEncoder) -> Result[None, Error]:
@@ -57,8 +57,8 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
 
     @staticmethod
     async def connect(
-        to: Tuple[str, int]
-    ) -> Result[IShdpClient[WebSocketClientProtocol], Error]:
+        to: Tuple[str, int],
+    ) -> Result[IShdpClient[ClientConnection], Error]:
         """Connect to a server at the specified address.
 
         Args:
@@ -72,9 +72,7 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
             client = ShdpWsClient()
             uri = f"ws://{to[0]}:{to[1]}"
 
-            client._websocket = await websockets.connect(
-                uri, ping_interval=20, ping_timeout=20
-            )
+            client._websocket = await connect(uri, ping_interval=20, ping_timeout=20)
             client._address = to
 
             asyncio.create_task(client._accept())
@@ -149,6 +147,9 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
                                 ErrorKind.NO_RESPONSE, "Connection closed by server"
                             )
                         )
+
+                    if not isinstance(message, bytes):
+                        raise ValueError("Message is not bytes")
 
                     decoder = BitDecoder(BitVec.from_bytes(message))
                     frame_decoder = FrameDecoder(decoder)

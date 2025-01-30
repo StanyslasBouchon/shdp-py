@@ -1,9 +1,10 @@
 import asyncio
 import logging
+from pathlib import Path
 from typing import Dict, Optional, Set
 
 import websockets
-from websockets.server import WebSocketServerProtocol, serve
+from websockets.asyncio.server import Server, ServerConnection, serve
 
 from ..lib import IShdpServer
 from ..protocol.errors import Error, ErrorKind
@@ -15,7 +16,7 @@ from ..utils.bitvec import BitVec
 from ..utils.result import Result
 
 
-class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
+class ShdpWsServer(IShdpServer[ServerConnection, None]):
     """WebSocket implementation of the SHDP server protocol.
 
     This class implements a WebSocket server that handles SHDP protocol connections.
@@ -23,26 +24,29 @@ class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
 
     Attributes:
         _server (Optional[websockets.server.WebSocketServer]): The WebSocket server instance
-        _clients (Dict[str, WebSocketServerProtocol]): Dictionary of connected clients
+        _clients (Dict[str, ServerConnection]): Dictionary of connected clients
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize a new SHDP WebSocket server instance."""
-        self._server: Optional[websockets.server.WebSocketServer] = None
-        self._clients: Dict[str, WebSocketServerProtocol] = {}
-        self._active_connections: Set[WebSocketServerProtocol] = set()
+        self._server: Optional[Server] = None
+        self._clients: Dict[str, ServerConnection] = {}
+        self._active_connections: Set[ServerConnection] = set()
 
     @staticmethod
     async def listen(
         port: int = 15150,
-    ) -> Result[IShdpServer[WebSocketServerProtocol, None], Error]:
+        *,
+        cert_path: Optional[Path] = None,
+        key_path: Optional[Path] = None,
+    ) -> Result[IShdpServer[ServerConnection, None], Error]:
         """Start listening for WebSocket connections on the specified port.
 
         Args:
             port: Port number to listen on, defaults to 15150
 
         Returns:
-            Result[IShdpServer[WebSocketServerProtocol], Error]: Ok with server instance if successful,
+            Result[IShdpServer[ServerConnection], Error]: Ok with server instance if successful,
                                           Err with error details if failed
         """
         try:
@@ -58,12 +62,10 @@ class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
 
             ws_server._server = server
             logging.info(f"SHDP WebSocket server listening on port {port}")
-            return Result[IShdpServer[WebSocketServerProtocol, None], Error].Ok(
-                ws_server
-            )
+            return Result[IShdpServer[ServerConnection, None], Error].Ok(ws_server)
 
         except Exception as e:
-            return Result[IShdpServer[WebSocketServerProtocol, None], Error].Err(
+            return Result[IShdpServer[ServerConnection, None], Error].Err(
                 Error.new(ErrorKind.USER_DEFINED, str(e))
             )
 
@@ -79,7 +81,6 @@ class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
                     Error.new(ErrorKind.SERVICE_UNAVAILABLE, "Server not listening")
                 )
 
-            # Fermer toutes les connexions clients actives
             close_tasks = [client.close() for client in self._active_connections]
             if close_tasks:
                 await asyncio.gather(*close_tasks, return_exceptions=True)
@@ -97,16 +98,16 @@ class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
         except Exception as e:
             return Result[None, Error].Err(Error.new(ErrorKind.USER_DEFINED, str(e)))
 
-    def get_clients(self) -> Result[Dict[str, WebSocketServerProtocol], Error]:
+    def get_clients(self) -> Result[Dict[str, ServerConnection], Error]:
         """Get a dictionary of all connected clients.
 
         Returns:
-            Result[Dict[str, WebSocketServerProtocol], Error]: Ok with clients dict if successful,
+            Result[Dict[str, ServerConnection], Error]: Ok with clients dict if successful,
                                                              Err if failed
         """
-        return Result[Dict[str, WebSocketServerProtocol], Error].Ok(self._clients)
+        return Result[Dict[str, ServerConnection], Error].Ok(self._clients)
 
-    async def _accept(self, websocket: WebSocketServerProtocol) -> None:
+    async def _accept(self, websocket: ServerConnection) -> None:
         """Handle incoming WebSocket connection.
 
         Args:
@@ -121,6 +122,9 @@ class ShdpWsServer(IShdpServer[WebSocketServerProtocol, None]):
             async for message in websocket:
                 if not message:
                     continue
+
+                if not isinstance(message, bytes):
+                    raise ValueError("Message is not bytes")
 
                 decoder = BitDecoder(BitVec.from_bytes(message))
                 frame_decoder = FrameDecoder(decoder)

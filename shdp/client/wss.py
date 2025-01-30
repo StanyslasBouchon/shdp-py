@@ -4,7 +4,7 @@ import ssl
 from typing import Optional, Tuple
 
 import websockets
-from websockets.client import WebSocketClientProtocol
+from websockets.asyncio.client import ClientConnection, connect
 
 from ..lib import IShdpClient
 from ..protocol.errors import Error, ErrorKind
@@ -17,20 +17,20 @@ from ..utils.bitvec import BitVec
 from ..utils.result import Result
 
 
-class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
-    """WebSocket implementation of the SHDP client protocol.
+class ShdpWssClient(IShdpClient[ClientConnection]):
+    """WebSocket Secure implementation of the SHDP client protocol.
 
     This class implements a secure WebSocket client that handles SHDP protocol connections.
     It manages the connection to a server and provides methods for client operations.
 
     Attributes:
-        _websocket (Optional[WebSocketClientProtocol]): The WebSocket connection
+        _websocket (Optional[ClientConnection]): The WebSocket connection
         _address (Optional[Tuple[str, int]]): The (host, port) of the connected server
     """
 
     def __init__(self) -> None:
         """Initialize a new SHDP WebSocket client instance."""
-        self._websocket: Optional[WebSocketClientProtocol] = None
+        self._websocket: Optional[ClientConnection] = None
         self._address: Optional[Tuple[str, int]] = None
 
     async def send(self, event: EventEncoder) -> Result[None, Error]:
@@ -58,8 +58,8 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
 
     @staticmethod
     async def connect(
-        to: Tuple[str, int]
-    ) -> Result[IShdpClient[WebSocketClientProtocol], Error]:
+        to: Tuple[str, int],
+    ) -> Result[IShdpClient[ClientConnection], Error]:
         """Connect to a server at the specified address.
 
         Args:
@@ -76,10 +76,10 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
             ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
             ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
 
-            client = ShdpWsClient()
+            client = ShdpWssClient()
             uri = f"wss://{to[0]}:{to[1]}"
 
-            client._websocket = await websockets.connect(
+            client._websocket = await connect(
                 uri, ssl=ssl_context, ping_interval=20, ping_timeout=20
             )
             client._address = to
@@ -157,6 +157,9 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
                             )
                         )
 
+                    if not isinstance(message, bytes):
+                        raise ValueError("Message is not bytes")
+
                     decoder = BitDecoder(BitVec.from_bytes(message))
                     frame_decoder = FrameDecoder(decoder)
                     data = frame_decoder.decode().unwrap()
@@ -187,3 +190,12 @@ class ShdpWsClient(IShdpClient[WebSocketClientProtocol]):
 
         except Exception as e:
             return Result.Err(Error.new(ErrorKind.USER_DEFINED, str(e)))
+
+
+# Alias for backwards compatibility
+ShdpWsClient = ShdpWssClient  # type: ignore
+"""Deprecated alias for ShdpWssClient.
+
+This alias is maintained for backwards compatibility but should not be used in new code.
+Use ShdpWssClient instead.
+"""

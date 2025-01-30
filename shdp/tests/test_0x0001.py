@@ -7,7 +7,11 @@ which is used to transfer HTML files between server and client.
 import unittest
 from pathlib import Path
 
-from shdp.protocol.client.versions.v1.r0x0001 import HtmlContent, HtmlFileResponse, HtmlTag
+from shdp.protocol.client.versions.v1.r0x0001 import (
+    HtmlContent,
+    HtmlFileResponse,
+    HtmlTag,
+)
 from shdp.protocol.managers.bits.decoder import BitDecoder, FrameDecoder
 from shdp.protocol.managers.bits.encoder import FrameEncoder
 from shdp.protocol.server.versions.v1.c0x0001 import HtmlFileResponse as ServerHtmlFileResponse
