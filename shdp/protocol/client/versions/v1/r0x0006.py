@@ -11,6 +11,7 @@ from .....utils.result import Result
 from ....errors import Error
 from ....managers.bits.decoder import BitDecoder, Frame
 from ....managers.event import EventDecoder, EventEncoder
+from ....managers.registry import EVENT_REGISTRY_MSB
 
 
 class InteractionResponse(EventDecoder[Msb]):
@@ -33,7 +34,7 @@ class InteractionResponse(EventDecoder[Msb]):
         >>> print(f"Response to request {response.request_id}:", response.response)
     """
 
-    def __init__(self, decoder: BitDecoder[Msb]):
+    def __init__(self, decoder: BitDecoder[Msb]) -> None:
         """Initialize interaction response decoder.
 
         Args:
@@ -45,7 +46,7 @@ class InteractionResponse(EventDecoder[Msb]):
         """
         logging.debug("[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;21m0x0006\x1b[0m received")
 
-        self.decoder = decoder
+        self.decoder: BitDecoder[Msb] = decoder
         self.request_id = 0
         self.response: dict | list | None = None
 
@@ -71,7 +72,7 @@ class InteractionResponse(EventDecoder[Msb]):
         for _ in range((frame.data_size - 64) // 8):
             data_bytes.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
-        data = bytes(data_bytes).decode("utf-8")
+        data: str = bytes(data_bytes).decode("utf-8")
 
         if data != "":
             self.response = json.loads(data)
@@ -92,3 +93,10 @@ class InteractionResponse(EventDecoder[Msb]):
             []
         """
         return Result.Ok([])
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event((1, 0x0006), lambda decoder: InteractionResponse(decoder))

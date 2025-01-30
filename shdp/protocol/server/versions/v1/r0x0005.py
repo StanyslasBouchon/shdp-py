@@ -78,3 +78,10 @@ class InteractionRequest(EventDecoder[Msb]):
             responses.append(InteractionResponse(self.request_id, response))
 
         return Result.Ok(cast(list[EventEncoder[ReversedR]], responses))
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event((1, 0x0005), lambda decoder: InteractionRequest(decoder))

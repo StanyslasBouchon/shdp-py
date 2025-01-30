@@ -93,3 +93,12 @@ class ComponentNeedsRequest(EventDecoder[Msb]):
         )
 
         return Result.Ok(cast(list[EventEncoder[ReversedR]], responses))
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event(
+    (1, 0x0000), lambda decoder: ComponentNeedsRequest(decoder)
+)

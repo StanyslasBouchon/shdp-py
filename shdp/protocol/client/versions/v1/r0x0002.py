@@ -10,6 +10,7 @@ from .....utils.result import Result
 from ....errors import Error
 from ....managers.bits.decoder import BitDecoder
 from ....managers.event import EventDecoder, EventEncoder, Frame
+from ....managers.registry import EVENT_REGISTRY_MSB
 
 
 class ErrorResponse(EventDecoder[Msb]):
@@ -33,7 +34,7 @@ class ErrorResponse(EventDecoder[Msb]):
         >>> print(f"Error {response.code}: {response.message}")
     """
 
-    def __init__(self, decoder: BitDecoder[Msb]):
+    def __init__(self, decoder: BitDecoder[Msb]) -> None:
         """Initialize error response decoder.
 
         Args:
@@ -45,9 +46,9 @@ class ErrorResponse(EventDecoder[Msb]):
         """
         logging.debug("[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;21m0x0002\x1b[0m received")
 
-        self.decoder = decoder
-        self.code = 0
-        self.message = ""
+        self.decoder: BitDecoder[Msb] = decoder
+        self.code: int = 0
+        self.message: str = ""
 
     def decode(self, frame: Frame[Msb]) -> Result[None, Error]:
         """Decode error response from binary frame data.
@@ -92,3 +93,10 @@ class ErrorResponse(EventDecoder[Msb]):
             []
         """
         return Result.Ok([])
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event((1, 0x0002), lambda decoder: ErrorResponse(decoder))

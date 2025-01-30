@@ -10,6 +10,7 @@ from .....utils.result import Result
 from ....errors import Error, ErrorKind
 from ....managers.bits.decoder import BitDecoder
 from ....managers.event import EventDecoder, EventEncoder, Frame
+from ....managers.registry import EVENT_REGISTRY_MSB
 from ...bits.utils import FyveImpl, OperatingCode
 
 
@@ -31,7 +32,7 @@ class FullFyveResponse(EventDecoder[Msb]):
         >>> print(f"Content: {response.content}")
     """
 
-    def __init__(self, decoder: BitDecoder[Msb]):
+    def __init__(self, decoder: BitDecoder[Msb]) -> None:
         """Initialize fyve response decoder.
 
         Args:
@@ -43,9 +44,9 @@ class FullFyveResponse(EventDecoder[Msb]):
         """
         logging.debug("[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;21m0x0004\x1b[0m received")
 
-        self.decoder = decoder
-        self.filename = ""
-        self.content = ""
+        self.decoder: BitDecoder[Msb] = decoder
+        self.filename: str = ""
+        self.content: str = ""
 
     def decode(self, frame: Frame[Msb]) -> Result[None, Error]:
         """Decode file response from binary frame data.
@@ -62,7 +63,6 @@ class FullFyveResponse(EventDecoder[Msb]):
             >>> response.decode(frame)
             >>> print(f"Loaded {response.filename}")
         """
-        # Read filename until null byte
         data_bytes: list[int] = []
         while True:
             byte = self.decoder.read_data(8).unwrap().to_byte_list()[0]
@@ -72,7 +72,7 @@ class FullFyveResponse(EventDecoder[Msb]):
 
         self.filename = bytes(data_bytes).decode("utf-8")
 
-        content = ""
+        content: str = ""
         while True:
             if self.decoder.position >= frame.data_size + 56:
                 break
@@ -102,3 +102,10 @@ class FullFyveResponse(EventDecoder[Msb]):
             []
         """
         return Result.Ok([])
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event((1, 0x0004), lambda decoder: FullFyveResponse(decoder))

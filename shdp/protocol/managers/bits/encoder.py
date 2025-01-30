@@ -29,12 +29,16 @@ class BitEncoder(Generic[R]):
 
     frame: BitVec[R]
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize a new empty bit encoder."""
-        self.frame = BitVec[R]()
+        self.frame: BitVec[R] = BitVec[R]()
 
-    def __iter__(self) -> Iterator[BitVec[R]]:
-        """Make the encoder iterable over its frame bits."""
+    def __iter__(self) -> Iterator[bool]:
+        """Make the encoder iterable over its frame bits.
+
+        Returns:
+            Iterator[bool]: Iterator over the individual bits in the frame
+        """
         return iter(self.frame)
 
     def __len__(self) -> int:
@@ -76,7 +80,7 @@ class BitEncoder(Generic[R]):
             )
 
         for i in range(n).__reversed__():
-            bit = (data >> i) & 1 == 1
+            bit: bool = (data >> i) & 1 == 1
             self.frame.append(bit)
 
         return Result.Ok(None)
@@ -99,8 +103,6 @@ class BitEncoder(Generic[R]):
             >>> # Frame now contains: [1, 0, 0, 0, 0, 0, 1, 0]
         """
         Result.hide()
-
-        logging.debug(f"data: {len(list(data))} :: {list(data)}")
 
         for byte in list(data):
             self.add_data(byte, 8)
@@ -202,7 +204,7 @@ class FrameEncoder(Generic[R]):
         >>> # Result contains: [V1][0x0001][32][PING][pad]
     """
 
-    def __init__(self, version: int):
+    def __init__(self, version: int) -> None:
         """Initialize a new frame encoder.
 
         Args:
@@ -253,7 +255,7 @@ class FrameEncoder(Generic[R]):
 
         self.encoder.add_data(self.version, 8)
         frame.encode()
-        data_size = len(frame.get_encoder().frame)
+        data_size: int = len(frame.get_encoder().frame)
 
         if data_size > 1 << 32:
             return Result.Err(

@@ -33,7 +33,7 @@ Examples:
 """
 
 from enum import Enum
-from typing import Generic, Type, TypeVar, Union
+from typing import Generic, SupportsIndex, Type, TypeVar, Union, overload
 
 from ..protocol.errors import Error, ErrorKind
 from .result import Result
@@ -119,7 +119,7 @@ class BitVec(Generic[R], list[bool]):
         ['c5']
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """Initialize a new bit vector.
 
         Args:
@@ -146,7 +146,15 @@ class BitVec(Generic[R], list[bool]):
         """
         return isinstance(self, Lsb)
 
-    def __getitem__(self, index):
+    @overload
+    def __getitem__(self, index: SupportsIndex) -> bool: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> "BitVec[R]": ...
+
+    def __getitem__(
+        self, index: Union[SupportsIndex, slice]
+    ) -> Union[bool, "list[bool]"]:
         """Get a bit or slice of bits at the specified index.
 
         Args:
@@ -165,10 +173,10 @@ class BitVec(Generic[R], list[bool]):
         """
         result = super().__getitem__(index)
         if isinstance(index, slice):
-            return BitVec(result)
+            return type(self)(result)
         return result
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value) -> None:
         """Set a bit at the specified index, ensuring boolean value.
 
         Args:
@@ -180,7 +188,7 @@ class BitVec(Generic[R], list[bool]):
     def __str__(self) -> str:
         return str([1 if bit else 0 for bit in self])
 
-    def append(self, value):
+    def append(self, value) -> None:
         """Append a new bit, ensuring boolean value.
 
         Args:
@@ -188,7 +196,7 @@ class BitVec(Generic[R], list[bool]):
         """
         super().append(bool(value))
 
-    def extend(self, values):
+    def extend(self, values) -> None:
         """Extend with multiple bits, ensuring boolean values.
 
         Args:
@@ -256,7 +264,7 @@ class BitVec(Generic[R], list[bool]):
         Returns:
             list[int]: List of bytes (0-255)
         """
-        bytes_list = []
+        bytes_list: list[int] = []
         for i in range(0, len(self), 8):
             byte = 0
             for j in range(min(8, len(self) - i)):
@@ -269,16 +277,85 @@ class BitVec(Generic[R], list[bool]):
         return bytes_list
 
     def to_bytes(self) -> bytes:
+        """Convert the bit vector to a bytes object.
+
+        The conversion uses MSB-first or LSB-first ordering based on the class type.
+
+        Returns:
+            bytes: The converted bytes object
+
+        Examples:
+            >>> # MSB-first ordering
+            >>> msb_bits = MsbBitVec([1,1,0,0, 0,1,0,1])
+            >>> msb_bits.to_bytes()
+            b'\\xc5'  # 11000101 = 0xC5
+
+            >>> # LSB-first ordering
+            >>> lsb_bits = LsbBitVec([1,1,0,0, 0,1,0,1])
+            >>> lsb_bits.to_bytes()
+            b'\\xa3'  # 10100011 = 0xA3
+        """
         return bytes(self.to_byte_list())
 
     def to_hex(self) -> str:
-        return str([f"{byte:02x}" for byte in self.to_byte_list()])
+        """Convert the bit vector to a hexadecimal string representation.
+
+        The conversion uses MSB-first or LSB-first ordering based on the class type.
+        Each byte is represented as a two-digit hexadecimal number.
+
+        Returns:
+            str: The hexadecimal string representation
+
+        Examples:
+            >>> # MSB-first ordering
+            >>> msb_bits = MsbBitVec([1,1,0,0, 0,1,0,1])
+            >>> msb_bits.to_hex()
+            'c5'
+
+            >>> # Multiple bytes
+            >>> bits = MsbBitVec([1,1,0,0, 0,1,0,1, 1,0,1,0, 1,1,1,1])
+            >>> bits.to_hex()
+            'c5af'
+        """
+        return "".join([f"{byte:02x}" for byte in self.to_byte_list()])
 
     @staticmethod
-    def from_bytes(bytes: bytes) -> "BitVec[R]":
+    def from_bytes(bytes: bytes, order: Type[R] = Msb) -> "BitVec[R]":  # type: ignore[assignment]
+        """Convert a bytes object to a BitVec.
+
+        Creates a new BitVec from a bytes object using the specified bit ordering.
+
+        Args:
+            bytes: The bytes object to convert
+            order: The bit ordering to use (Msb or Lsb), defaults to Msb
+
+        Returns:
+            BitVec[R]: A new BitVec with the specified ordering
+
+        Examples:
+            >>> # MSB-first ordering (default)
+            >>> bytes_data = b'\\xc5'  # 11000101
+            >>> bits = BitVec.from_bytes(bytes_data)
+            >>> bits  # MSB ordering: bits read left-to-right
+            [1, 1, 0, 0, 0, 1, 0, 1]
+
+            >>> # LSB-first ordering
+            >>> bits = BitVec.from_bytes(bytes_data, Lsb)
+            >>> bits  # LSB ordering: bits read right-to-left
+            [1, 0, 1, 0, 0, 0, 1, 1]
+
+            >>> # Multiple bytes
+            >>> bytes_data = b'\\xc5\\xaf'  # 11000101 10101111
+            >>> bits = BitVec.from_bytes(bytes_data)
+            >>> bits.to_hex()
+            'c5af'
+        """
         result = BitVec[R]()
         for byte in bytes:
             for i in range(8):
-                bit = (byte & (1 << i)) != 0
+                if order is Lsb:
+                    bit: bool = (byte & (1 << i)) != 0
+                else:
+                    bit: bool = (byte & (1 << (7 - i))) != 0  # type: ignore[no-redef]
                 result.append(bit)
         return result

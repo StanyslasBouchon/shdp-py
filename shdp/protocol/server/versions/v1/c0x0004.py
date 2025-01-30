@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 
 from .....utils.bitvec import Lsb
 from .....utils.result import Result
@@ -27,7 +28,7 @@ class FullFyveResponse(EventEncoder[Lsb]):
         >>> encoder = response.get_encoder()
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path: str) -> None:
         """Initialize a full Fyve file response.
 
         Args:
@@ -41,7 +42,7 @@ class FullFyveResponse(EventEncoder[Lsb]):
         )
 
         self.encoder = BitEncoder[Lsb]()
-        self.path = path
+        self.path: str = path
 
     def encode(self) -> Result[None, Error]:
         """Encode the Fyve file content into binary format.
@@ -59,7 +60,7 @@ class FullFyveResponse(EventEncoder[Lsb]):
             >>> if result.is_ok():
             ...     print("File encoded successfully")
         """
-        file_name = (
+        file_name: str = (
             self.path.split("/")[-1]
             if os.name == "posix"
             else self.path.split("\\")[-1]
@@ -71,7 +72,8 @@ class FullFyveResponse(EventEncoder[Lsb]):
         self.encoder.add_data(0, 8)
 
         with open(self.path, "rb") as file:
-            content = file.read().decode("utf-8")
+            content: str = file.read().decode("utf-8")
+            content = re.sub(r"[\t\n\r]", "", content)
 
         for char in content:
             self.encoder.add_vec(CHARS[char])

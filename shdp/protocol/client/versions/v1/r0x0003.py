@@ -13,6 +13,7 @@ from .....utils.result import Result
 from ....errors import Error
 from ....managers.bits.decoder import BitDecoder
 from ....managers.event import EventDecoder, EventEncoder, Frame
+from ....managers.registry import EVENT_REGISTRY_MSB
 
 
 class ComponentNeedsResponse(EventDecoder[Msb]):
@@ -38,7 +39,7 @@ class ComponentNeedsResponse(EventDecoder[Msb]):
         >>> print("Required files:", response.files)
     """
 
-    def __init__(self, decoder: BitDecoder[Msb]):
+    def __init__(self, decoder: BitDecoder[Msb]) -> None:
         """Initialize component needs response decoder.
 
         Args:
@@ -50,9 +51,9 @@ class ComponentNeedsResponse(EventDecoder[Msb]):
         """
         logging.debug("[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;21m0x0003\x1b[0m received")
 
-        self.decoder = decoder
-        self.component_name = ""
-        self.title = ""
+        self.decoder: BitDecoder[Msb] = decoder
+        self.component_name: str = ""
+        self.title: str = ""
         self.files: list[str] = []
 
     def decode(self, frame: Frame[Msb]) -> Result[None, Error]:
@@ -79,21 +80,15 @@ class ComponentNeedsResponse(EventDecoder[Msb]):
             data_bytes.append(self.decoder.read_data(8).unwrap().to_byte_list()[0])
 
         data: str = bytes(data_bytes).decode("utf-8")
-
-        # Split on null bytes to separate component info from files
         parts: list[str] = data.split("\0")
-
-        # First part contains component name and optional title
         component_names: list[str] = parts[0].split("\x01")
-        parts.pop(0)  # Remove component info part
+        parts.pop(0)
 
         self.component_name = component_names[0]
 
-        # Get title if provided
         if component_names[1]:
             self.title = component_names[1]
 
-        # Remaining parts are required files
         for part in parts:
             self.files.append(part)
 
@@ -111,3 +106,12 @@ class ComponentNeedsResponse(EventDecoder[Msb]):
             []
         """
         return Result.Ok([])
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event(
+    (1, 0x0003), lambda decoder: ComponentNeedsResponse(decoder)
+)

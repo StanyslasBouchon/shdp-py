@@ -1,18 +1,21 @@
+"""
+HTML content parser and decoder for SHDP protocol version 0x0001.
+This module handles HTML tag structures and their attributes using MSB (Most Significant Bit) encoding.
+"""
+
 import logging
 from dataclasses import dataclass
 from typing import Literal, Union
+
+from shdp.protocol.client.bits.utils import Operation
 
 from .....utils.bitvec import Msb, ReversedR
 from .....utils.result import Result
 from ....errors import Error, ErrorKind
 from ....managers.bits.decoder import BitDecoder
 from ....managers.event import EventDecoder, EventEncoder, Frame
+from ....managers.registry import EVENT_REGISTRY_MSB
 from ...bits.utils import FyveImpl, OperatingCode, OperationCode
-
-"""
-HTML content parser and decoder for SHDP protocol version 0x0001.
-This module handles HTML tag structures and their attributes using MSB (Most Significant Bit) encoding.
-"""
 
 
 class HtmlContent:
@@ -29,7 +32,7 @@ class HtmlContent:
     _content: Union[str, "HtmlTag"]
     _variant: Literal["Text", "Child"]
 
-    def __init__(self, content: Union[str, "HtmlTag"]):
+    def __init__(self, content: Union[str, "HtmlTag"]) -> None:
         """Initialize content with either text or an HTML tag.
 
         Args:
@@ -126,7 +129,7 @@ class HtmlTag:
         >>> tag.add_data(HtmlContent.Text("Hello"))
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         """Initialize an HTML tag with given name.
 
         Example:
@@ -134,7 +137,7 @@ class HtmlTag:
             >>> tag.get_name()
             'span'
         """
-        self.name = name
+        self.name: str = name
         self.attributes: dict[str, str] = {}
         self.data: list[HtmlContent] = []
 
@@ -180,7 +183,7 @@ class HtmlTag:
         return self.name
 
     def __str__(self) -> str:
-        result = f"<{self.name}"
+        result: str = f"<{self.name}"
 
         for key, value in self.attributes.items():
             result += f' {key}="{value}"'
@@ -207,12 +210,12 @@ class HtmlFileResponse(EventDecoder[Msb]):
         >>> response.decode(frame)
     """
 
-    def __init__(self, decoder: BitDecoder[Msb]):
+    def __init__(self, decoder: BitDecoder[Msb]) -> None:
         logging.debug("[\x1b[38;5;187mSHDP\x1b[0m] \x1b[38;5;21m0x0001\x1b[0m received")
 
-        self.decoder = decoder
-        self.name = ""
-        self.parent = HtmlTag("")
+        self.decoder: BitDecoder[Msb] = decoder
+        self.name: str = ""
+        self.parent: HtmlTag = HtmlTag("")
 
     def _read_utf8_chain(self, length: int) -> str:
         """Read a UTF-8 encoded string of given length.
@@ -265,13 +268,13 @@ class HtmlFileResponse(EventDecoder[Msb]):
         self.name = bytes(data).decode("utf-8")
 
         is_in_tag = False
-        is_in_attributes = False
-        entered_in_attributes = False
-        entered_in_data = False
-        is_in_data = False
-        text = ""
-        attribute_name = ""
-        tag_name = ""
+        is_in_attributes: bool = False
+        entered_in_attributes: bool = False
+        entered_in_data: bool = False
+        is_in_data: bool = False
+        text: str = ""
+        attribute_name: str = ""
+        tag_name: str = ""
         tags_controlled: list[HtmlTag] = []
 
         tags_controlled.append(self.parent)
@@ -280,7 +283,7 @@ class HtmlFileResponse(EventDecoder[Msb]):
             if self.decoder.position >= frame.data_size + 56:
                 break
 
-            op_code = FyveImpl.get_op(self.decoder).unwrap()
+            op_code: Operation = FyveImpl.get_op(self.decoder).unwrap()
 
             if op_code.kind == OperatingCode.SYSTEM:
                 if op_code.code == OperationCode.START_OF_TAG:
@@ -321,7 +324,7 @@ class HtmlFileResponse(EventDecoder[Msb]):
                     text = ""
 
                 if is_in_attributes and text != "":
-                    tag = tags_controlled[0]
+                    tag: HtmlTag = tags_controlled[0]
                     tag.add_attribute(attribute_name, text)
                     attribute_name = ""
                     text = ""
@@ -352,14 +355,14 @@ class HtmlFileResponse(EventDecoder[Msb]):
                     is_in_tag = True
 
                     if len(tags_controlled) >= 2:
-                        last_tag = tags_controlled[0]
+                        last_tag: HtmlTag = tags_controlled[0]
                         tags_controlled[1].add_data(HtmlContent.Child(last_tag))
 
                     if len(tags_controlled) != 0:
                         tags_controlled.pop(0)
 
             if op_code.kind == OperatingCode.CHARACTER:
-                char = op_code.get_char().unwrap()
+                char: str = op_code.get_char().unwrap()
 
                 if is_in_tag:
                     tag_name += char
@@ -383,3 +386,10 @@ class HtmlFileResponse(EventDecoder[Msb]):
             []
         """
         return Result.Ok([])
+
+
+#
+# REGISTRY
+#
+
+EVENT_REGISTRY_MSB.add_event((1, 0x0001), lambda decoder: HtmlFileResponse(decoder))

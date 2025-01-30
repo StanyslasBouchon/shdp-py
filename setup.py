@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -16,14 +16,14 @@ except UnicodeDecodeError:
 
 setup(
     name="shdp",
-    version="1.1.1",
+    version="1.1.4",
     author="Devling",
     author_email="contact@devling.fr",
     description="A new network protocol",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/StanyslasBouchon/shdp-py",
-    packages=find_packages(include=["shdp", "shdp.*"]),
+    packages=find_namespace_packages(include=["shdp", "shdp.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
