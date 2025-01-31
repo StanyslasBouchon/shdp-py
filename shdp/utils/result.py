@@ -235,3 +235,26 @@ class Result(Generic[T, E]):
             if result.is_err():
                 return Result.Err(result.unwrap_err())
         return Result.Ok([r.unwrap() for r in results])
+
+    def __str__(self) -> str:
+        """Convert the Result instance to its string representation.
+
+        Returns a string in the format "Ok(value)" for success results
+        or "Err(error)" for error results.
+
+        Returns:
+            str: String representation of the Result
+
+        Examples:
+            >>> result = Result.Ok(42)
+            >>> str(result)  # Returns: "Ok(42)"
+            
+            >>> error = Result.Err("not found")
+            >>> str(error)  # Returns: "Err(not found)"
+            
+            >>> complex_result = Result.Ok({"key": "value"})
+            >>> str(complex_result)  # Returns: 'Ok({"key": "value"})'
+        """
+        if self.is_ok():
+            return f"Ok({self.unwrap()})"
+        return f"Err({self.unwrap_err()})"

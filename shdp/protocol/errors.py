@@ -53,6 +53,7 @@ class ErrorKind(Enum):
     PROTOCOL_ERROR = "ProtocolError"  # Protocol-level error
     UNKNOWN_VERSION = "UnknownVersion"  # Unsupported protocol version
     USER_DEFINED = "UserDefined"  # Base for custom errors
+    INTERACTION_ERROR = "InteractionError"  # Error during interaction
 
     def __str__(self) -> str:
         """Get string representation of the error kind.
@@ -147,6 +148,7 @@ class Error:
             ErrorKind.USER_DEFINED: 500,  # Custom errors use 500 by default
             ErrorKind.NOT_IMPLEMENTED: 501,
             ErrorKind.SERVICE_UNAVAILABLE: 503,
+            ErrorKind.INTERACTION_ERROR: 460,
         }
 
         code = code_map.get(kind, 500)  # Default to 500 for unknown kinds
