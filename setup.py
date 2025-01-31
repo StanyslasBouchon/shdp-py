@@ -16,7 +16,7 @@ except UnicodeDecodeError:
 
 setup(
     name="shdp",
-    version="1.1.4",
+    version="1.2.0",
     author="Devling",
     author_email="contact@devling.fr",
     description="A new network protocol",

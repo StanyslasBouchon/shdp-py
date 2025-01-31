@@ -166,11 +166,14 @@ class ShdpWsClient(IShdpClient[ClientConnection]):
                         event = factory(decoder)
                         event.decode(data)
 
-                        responses = event.get_responses().unwrap()
-                        for response in responses:
-                            encoder = FrameEncoder(data.version)
-                            frame = encoder.encode(response)
-                            await self._websocket.send(frame.unwrap().to_bytes())
+                        responses = event.get_responses()
+                        if responses.is_ok():
+                            for response in responses.unwrap():
+                                encoder = FrameEncoder(data.version)
+                                frame = encoder.encode(response)
+                                await self._websocket.send(frame.unwrap().to_bytes())
+                        else:
+                            return Result.Err(responses.unwrap_err())
 
                 except websockets.exceptions.ConnectionClosed:
                     logging.debug("[SHDP:WS::C] WebSocket connection closed")

@@ -11,7 +11,6 @@ from ..protocol.errors import Error, ErrorKind
 from ..protocol.managers.bits.decoder import BitDecoder, FrameDecoder
 from ..protocol.managers.bits.encoder import FrameEncoder
 from ..protocol.managers.registry import EVENT_REGISTRY_MSB
-from ..protocol.server.versions.v1.c0x0002 import ErrorResponse
 from ..utils.bitvec import BitVec
 from ..utils.result import Result
 
@@ -146,11 +145,18 @@ class ShdpWsServer(IShdpServer[ServerConnection, None]):
                     event = factory(decoder)
                     event.decode(data)
 
-                    responses = event.get_responses().unwrap()
-                    for response in responses:
-                        encoder = FrameEncoder(data.version)
-                        frame = encoder.encode(response)
-                        await websocket.send(frame.unwrap().to_bytes())
+                    responses = event.get_responses()
+                    if responses.is_ok():
+                        for response in responses.unwrap():
+                            encoder = FrameEncoder(data.version)
+                            frame = encoder.encode(response)
+                            await websocket.send(frame.unwrap().to_bytes())
+                    else:
+                        await websocket.send(
+                            await self._answer_error(
+                                data.version, responses.unwrap_err()
+                            )
+                        )
 
         except websockets.exceptions.ConnectionClosed:
             logging.debug(f"[SHDP:WS::S] Connection closed by client {client_addr}")
@@ -172,4 +178,4 @@ class ShdpWsServer(IShdpServer[ServerConnection, None]):
             bytes: Encoded error frame
         """
         encoder = FrameEncoder(version)
-        return encoder.encode(ErrorResponse(error)).unwrap().to_bytes()
+        return encoder.encode(error.to_error_response()).unwrap().to_bytes()

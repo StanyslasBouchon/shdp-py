@@ -1,7 +1,9 @@
 from typing import Callable, Generic
 
 from ...utils.bitvec import Lsb, Msb, R
+from ...utils.result import Result
 from ..args import Arg
+from ..errors import Error
 from .bits.decoder import BitDecoder
 from .event import EventDecoder
 
@@ -11,7 +13,7 @@ EventId = tuple[int, int]
 # Type alias for event handler functions
 EventFn = Callable[[BitDecoder[R]], EventDecoder[R]]
 # Type alias for event listener functions
-ListenerFn = Callable[[EventDecoder[R]], list[Arg]]
+ListenerFn = Callable[[EventDecoder[R]], Result[list[Arg], Error]]
 
 
 class EventRegistry(Generic[R]):

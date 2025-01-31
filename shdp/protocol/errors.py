@@ -151,3 +151,24 @@ class Error:
 
         code = code_map.get(kind, 500)  # Default to 500 for unknown kinds
         return cls(code, kind, message)
+
+    def to_error_response(self):
+        """Convert this error to an ErrorResponse object.
+
+        This method creates an ErrorResponse that can be sent back to the client
+        containing the error details.
+
+        Returns:
+            ErrorResponse: A response object containing this error
+
+        Examples:
+            >>> error = Error.new(ErrorKind.NOT_FOUND, "User not found")
+            >>> response = error.to_error_response()
+            >>> response.error.message
+            'User not found'
+            >>> response.error.code
+            404
+        """
+        from .server.versions.v1.c0x0002 import ErrorResponse
+
+        return ErrorResponse(self)

@@ -56,12 +56,15 @@ class ComponentNeedsRequest(EventDecoder[Msb]):
         if listeners is None:
             return Result.Ok([])
 
-        all_args = [listener(self) for listener in listeners]
+        all_arg_responses = [listener(self) for listener in listeners]
         responses: list[EventEncoder[Lsb]] = []
         files_name = []
 
-        for args_list in all_args:
-            Result.hide()
+        for arg_response in all_arg_responses:
+            if arg_response.is_ok():
+                args_list = arg_response.unwrap()
+            else:
+                return Result.Err(arg_response.unwrap_err())
 
             result_title = args_list[0].to_opt_text()
 

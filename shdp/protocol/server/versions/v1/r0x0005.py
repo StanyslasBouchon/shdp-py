@@ -64,10 +64,15 @@ class InteractionRequest(EventDecoder[Msb]):
         if listeners is None:
             return Result.Ok([])
 
-        all_args = [listener(self) for listener in listeners]
+        all_arg_responses = [listener(self) for listener in listeners]
         responses: list[EventEncoder[Lsb]] = []
 
-        for args_list in all_args:
+        for arg_response in all_arg_responses:
+            if arg_response.is_ok():
+                args_list = arg_response.unwrap()
+            else:
+                return Result.Err(arg_response.unwrap_err())
+
             result_response = args_list[0].to_opt_value()
 
             if result_response.is_ok():
