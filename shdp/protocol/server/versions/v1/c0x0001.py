@@ -134,8 +134,12 @@ class HtmlFileResponse(EventEncoder[Lsb]):
                 self.encoder.add_data(17, 10)
 
                 for attr_name, attr_value in node.attrs.items():
-                    self._append_fyve_text(attr_name)
-                    self._append_text(node, str(attr_value))
+                    if type(attr_value) == list:
+                        self._append_fyve_text(attr_name)
+                        self._append_text(node, str(" ".join(attr_value)))
+                    else:
+                        self._append_fyve_text(attr_name)
+                        self._append_text(node, str(attr_value))
 
             self.encoder.add_data(24, 10)
 
