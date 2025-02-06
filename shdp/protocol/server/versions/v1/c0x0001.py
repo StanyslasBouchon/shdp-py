@@ -1,3 +1,4 @@
+import html
 import logging
 import sys
 
@@ -73,6 +74,11 @@ class HtmlFileResponse(EventEncoder[Lsb]):
 
         Result.hide()
 
+        text = "".join(
+            f"&{html.entities.codepoint2name[ord(c)]};" if ord(c) > 127 else c
+            for c in text
+        )
+
         self.encoder.add_data(0, 10)
         self.encoder.add_data(len(text), 15)
         self.encoder.add_bytes(text.encode("utf-8"))
@@ -134,7 +140,7 @@ class HtmlFileResponse(EventEncoder[Lsb]):
                 self.encoder.add_data(17, 10)
 
                 for attr_name, attr_value in node.attrs.items():
-                    if type(attr_value) == list:
+                    if isinstance(attr_value, list):
                         self._append_fyve_text(attr_name)
                         self._append_text(node, str(" ".join(attr_value)))
                     else:

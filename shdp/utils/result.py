@@ -248,10 +248,10 @@ class Result(Generic[T, E]):
         Examples:
             >>> result = Result.Ok(42)
             >>> str(result)  # Returns: "Ok(42)"
-            
+
             >>> error = Result.Err("not found")
             >>> str(error)  # Returns: "Err(not found)"
-            
+
             >>> complex_result = Result.Ok({"key": "value"})
             >>> str(complex_result)  # Returns: 'Ok({"key": "value"})'
         """
