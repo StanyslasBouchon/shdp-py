@@ -74,10 +74,7 @@ class HtmlFileResponse(EventEncoder[Lsb]):
 
         Result.hide()
 
-        text = "".join(
-            f"&{html.entities.codepoint2name[ord(c)]};" if ord(c) > 127 else c
-            for c in text
-        )
+        text = "".join(f"&#{ord(c)};" if ord(c) > 127 else c for c in text)
 
         self.encoder.add_data(0, 10)
         self.encoder.add_data(len(text), 15)
